@@ -1,42 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUGEN后台管理</title>
 <style>
-.box{max-width:550px}
-input,textarea{width:100%;margin:6px 0;padding:7px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,"PingFang SC",sans-serif}
+body{background:#f5f2ed;padding:20px;color:#443e37;min-height:100vh}
+.app{max-width:1300px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.header h1{font-size:24px;color:#548a6b}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tabs button{padding:10px 26px;border:none;border-radius:10px;cursor:pointer;font-size:15px;background:#e9e3d6;color:#666;transition:.2s}
+.tabs button.active{background:#a8ccb8;color:#fff}
+.tabs button:hover{background:#d5cec2}
+.tab-content{display:none;gap:20px}
+.tab-content.active{display:flex;flex-wrap:wrap}
+.card{background:#fff;border-radius:12px;padding:20px 24px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.card h2{font-size:16px;font-weight:600;margin-bottom:14px;color:#443e37;padding-bottom:10px;border-bottom:1px solid #f0ede8}
+.card h2 .badge{background:#a8ccb8;color:#fff;font-size:12px;padding:0 10px;border-radius:12px;margin-left:8px;font-weight:400}
+.row{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.row label{width:72px;font-size:14px;color:#888;flex-shrink:0}
+.row input,.row textarea{flex:1;min-width:140px;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;background:#fafaf8;transition:.2s}
+.row input:focus,.row textarea:focus{outline:none;border-color:#a8ccb8;background:#fff}
+.row textarea{min-height:44px;resize:vertical}
+.btn{padding:8px 20px;border:none;border-radius:8px;cursor:pointer;font-size:14px;transition:.2s}
+.btn-primary{background:#a8ccb8;color:#fff}
+.btn-primary:hover{background:#8fb8a0}
+.btn-danger{background:#e8b4b4;color:#fff}
+.btn-danger:hover{background:#d49a9a}
+.btn-success{background:#548a6b;color:#fff}
+.btn-success:hover{background:#3d6b52}
+.btn-outline{background:transparent;border:1px solid #ddd;color:#666}
+.btn-outline:hover{background:#f5f2ed}
+.btn-sm{padding:5px 14px;font-size:13px}
+.actions-bar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.resource-list-wrap{max-height:380px;overflow-y:auto;padding-right:4px}
+.resource-list-wrap::-webkit-scrollbar{width:6px}
+.resource-list-wrap::-webkit-scrollbar-track{background:#f0ede8;border-radius:4px}
+.resource-list-wrap::-webkit-scrollbar-thumb{background:#d5cec2;border-radius:4px}
+.resource-list-wrap::-webkit-scrollbar-thumb:hover{background:#b8b0a5}
+.resource-item{background:#faf8f5;border-radius:8px;padding:10px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;border:1px solid #f0ede8}
+.resource-item .info{flex:1;min-width:0}
+.resource-item .info .title{font-weight:500;font-size:15px}
+.resource-item .info .meta{font-size:13px;color:#999;margin-top:2px}
+.resource-item .actions{display:flex;gap:6px;flex-shrink:0}
+.empty-state{color:#bbb;padding:20px 0;text-align:center;font-size:15px}
+.user-list{display:flex;flex-direction:column;gap:6px}
+.user-card{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:#faf8f5;border-radius:8px;border:1px solid #f0ede8;transition:.2s;position:relative}
+.user-card:hover{background:#f0ede8}
+.user-card .left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.user-card .avatar{width:34px;height:34px;border-radius:50%;background:#e9e3d6;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;color:#999;border:1px solid #ddd;flex-shrink:0}
+.user-card .avatar img{width:100%;height:100%;object-fit:cover}
+.user-card .name{font-weight:500;font-size:15px}
+.user-card .account{font-size:14px;color:#999;margin-left:8px}
+.user-card .actions{display:flex;gap:6px;flex-shrink:0}
+.user-card .hover-detail{display:none;position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:10px;padding:14px 18px;box-shadow:0 8px 30px rgba(0,0,0,.12);border:1px solid #f0ede8;min-width:220px;z-index:50;font-size:14px;line-height:1.8}
+.user-card .hover-detail .hd-row{display:flex;padding:3px 0;border-bottom:1px solid #f5f2ed}
+.user-card .hover-detail .hd-row:last-child{border-bottom:none}
+.user-card .hover-detail .hd-lbl{color:#999;width:55px;flex-shrink:0}
+.user-card .hover-detail .hd-val{color:#443e37;word-break:break-all}
+.user-card .hover-detail .hd-avatar{width:36px;height:36px;border-radius:50%;background:#e9e3d6;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:11px;color:#999;border:1px solid #ddd}
+.user-card .hover-detail .hd-avatar img{width:100%;height:100%;object-fit:cover}
+.user-card:hover .hover-detail{display:block}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:999;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;max-width:440px;width:100%;border-radius:12px;padding:28px 30px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeIn .2s ease;position:relative}
+.modal-box .modal-close{position:absolute;top:12px;right:16px;width:34px;height:34px;border-radius:50%;background:#f0eeea;border:none;font-size:20px;cursor:pointer;color:#666;display:flex;align-items:center;justify-content:center}
+.modal-box .modal-close:hover{background:#e0dbd2}
+.modal-box h3{font-size:18px;font-weight:600;margin-bottom:16px;color:#443e37}
+.modal-box .row{margin-bottom:10px}
+.modal-box .row label{width:65px;font-size:14px}
+.modal-box .actions-bar{margin-top:6px}
+@keyframes fadeIn{0%{opacity:0;transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
+.preview-box{background:#f8f6f2;border-radius:8px;padding:14px;font-size:12px;font-family:monospace;white-space:pre-wrap;word-break:break-all;max-height:320px;overflow:auto;border:1px solid #e9e3d6;margin-top:10px}
+@media(max-width:768px){body{padding:14px}.card{padding:16px}.row{flex-direction:column;align-items:stretch}.row label{width:100%}.modal-box{padding:20px 18px}.user-card .hover-detail{left:-10px;right:-10px;min-width:auto}}
 </style>
 </head>
 <body>
-<div class="box">
-<h3>新增MUGEN外链</h3>
-<input id="t" placeholder="资源名称">
-<input id="ty" placeholder="类型：人物/场景/画面包">
-<input id="v" placeholder="适配版本：1.0/1.1/WinMUGEN">
-<input id="lv" placeholder="强度：标准/凶恶/论外">
-<textarea id="i" placeholder="简介"></textarea>
-<input id="lk" placeholder="完整网盘外链">
-<input id="pw" placeholder="解压提取码">
-<button onclick="gen()">生成JSON</button>
-<textarea id="out" readonly style="height:130px;margin-top:8px"></textarea>
-<p>复制内容，粘贴到仓库data.json数组末尾提交</p>
+<div class="app">
+<div class="header"><h1>📦 MUGEN 后台管理</h1></div>
+<div class="tabs">
+<button class="active" data-tab="resources">资源管理</button>
+<button data-tab="profile">个人信息管理</button>
+<button data-tab="export">导出数据</button>
 </div>
-<                                                                                                                                                                                                                                                                                                                                                                                                                                                           script>
-function gen(){
-    const item={
-        id:Date.now(),
-        title:document.getElementById("t").value,
-        type:document.getElementById("ty").value,
-        mugenVer:document.getElementById("v").value,
-        level:document.getElementById("lv").value,
-        intro:document.getElementById("i").value,
-        link:document.getElementById("lk").value,
-        pwd:document.getElementById("pw").value,
-        date:new Date().toLocaleDateString()
-    };
-    document.getElementById("out").value=JSON.stringify(item);
-}
+
+<div class="tab-content active" id="tab-resources">
+<div class="card" style="flex:1;min-width:280px;">
+<h2>添加资源</h2>
+<div class="row"><label>标题</label><input id="resTitle"></div>
+<div class="row"><label>大小</label><input id="resSize"></div>
+<div class="row"><label>日期</label><input id="resDate"></div>
+<div class="row"><label>下载链接</label><input id="resLink"></div>
+<div class="row"><label>图片链接</label><input id="resImage"></div>
+<div class="actions-bar"><button class="btn btn-primary" id="addResBtn">添加</button><button class="btn btn-outline" id="refreshResBtn">刷新</button></div>
+</div>
+<div class="card" style="flex:2;min-width:300px;">
+<h2>资源列表 <span class="badge" id="resCount">0</span></h2>
+<div class="resource-list-wrap" id="resourceList"><div class="empty-state">暂无资源</div></div>
+</div>
+</div>
+
+<div class="tab-content" id="tab-profile">
+<div class="card" style="max-width:100%;">
+<h2>用户列表 <span class="badge" id="userCount">0</span></h2>
+<div class="user-list" id="userList"></div>
+</div>
+</div>
+
+<div class="tab-content" id="tab-export">
+<div class="card">
+<h2>导出 data.json</h2>
+<p style="font-size:13px;color:#999;margin-bottom:10px;">复制下方 JSON，到 GitHub 仓库替换 <code>data.json</code></p>
+<div class="preview-box" id="jsonPreview">加载中...</div>
+<div class="actions-bar"><button class="btn btn-primary" id="copyJsonBtn">复制 JSON</button><button class="btn btn-outline" id="downloadJsonBtn">下载 .json</button></div>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="editResModal">
+<div class="modal-box">
+<button class="modal-close" id="editResClose">✕</button>
+<h3 id="editResTitle">编辑资源</h3>
+<div class="row"><label>标题</label><input id="editResTitleInput"></div>
+<div class="row"><label>大小</label><input id="editResSize"></div>
+<div class="row"><label>日期</label><input id="editResDate"></div>
+<div class="row"><label>下载链接</label><input id="editResLink"></div>
+<div class="row"><label>图片链接</label><input id="editResImage"></div>
+<div class="actions-bar"><button class="btn btn-success" id="editResSaveBtn">保存</button><button class="btn btn-outline" id="editResCancelBtn">取消</button></div>
+</div>
+</div>
+
+<div class="modal-overlay" id="editUserModal">
+<div class="modal-box">
+<button class="modal-close" id="editUserClose">✕</button>
+<h3 id="editUserTitle">编辑用户</h3>
+<div class="row"><label>名称</label><input id="editUserName"></div>
+<div class="row"><label>账户</label><input id="editUserAccount"></div>
+<div class="row"><label>密码</label><input id="editUserPassword" type="text"></div>
+<div class="row"><label>头像</label><textarea id="editUserAvatar" rows="2" placeholder="粘贴 base64 图片数据"></textarea></div>
+<div class="actions-bar"><button class="btn btn-success" id="editUserSaveBtn">保存</button><button class="btn btn-outline" id="editUserCancelBtn">取消</button></div>
+</div>
+</div>
+
+<script>
+(function(){
+const K='mugen_admin_data';
+let D={resources:[],profile:{name:'',account:'',password:'',avatar:''}};
+let editingResIndex=null;
+
+function load(){const r=localStorage.getItem(K);if(r){try{const p=JSON.parse(r);D.resources=p.resources||[];D.profile=p.profile||{name:'',account:'',password:'',avatar:''};return}catch(_){}}D.resources=[{id:1,title:'经典街机人物整合包',size:'2.3GB',date:'2026-08-01',image:'',downloadLink:'https://example.com/classic.zip'}];D.profile={name:'MUGEN玩家',account:'mugen_user@example.com',password:'123456',avatar:''}}
+function save(){localStorage.setItem(K,JSON.stringify(D))}
+
+function renderResources(){const c=document.getElementById('resourceList'),b=document.getElementById('resCount');b.textContent=D.resources.length;if(!D.resources.length){c.innerHTML='<div class="empty-state">暂无资源</div>';return}c.innerHTML=D.resources.map((r,i)=>`<div class="resource-item"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.size||'—'} · ${r.date||'—'} · ${r.downloadLink?'有链接':'无链接'}</div></div><div class="actions"><button class="btn btn-outline btn-sm" onclick="openEditRes(${i})">编辑</button><button class="btn btn-danger btn-sm" onclick="deleteResource(${i})">删除</button></div></div>`).join('')}
+
+function renderUsers(){const c=document.getElementById('userList'),b=document.getElementById('userCount');b.textContent=1;const p=D.profile;const avatarHtml=p.avatar&&p.avatar.startsWith('data:image')?`<img src="${p.avatar}">`:'<span>无</span>';const passwordDisplay=p.password?'••••••••':'未设置';c.innerHTML=`<div class="user-card"><div class="left"><div class="avatar">${avatarHtml}</div><div><span class="name">${p.name||'未命名'}</span><span class="account">${p.account||'无账户'}</span></div></div><div class="actions"><button class="btn btn-outline btn-sm" onclick="openEditUser()">编辑</button><button class="btn btn-danger btn-sm" onclick="deleteUser()">删除</button></div><div class="hover-detail"><div class="hd-row"><span class="hd-lbl">名称</span><span class="hd-val">${p.name||'—'}</span></div><div class="hd-row"><span class="hd-lbl">账户</span><span class="hd-val">${p.account||'—'}</span></div><div class="hd-row"><span class="hd-lbl">密码</span><span class="hd-val">${passwordDisplay}</span></div><div class="hd-row"><span class="hd-lbl">头像</span><span class="hd-val"><span class="hd-avatar">${avatarHtml}</span></span></div></div></div>`}
+
+function updatePreview(){document.getElementById('jsonPreview').textContent=JSON.stringify(D,null,2)}
+function refreshAll(){renderResources();renderUsers();updatePreview()}
+load();save();refreshAll();
+
+document.getElementById('addResBtn').addEventListener('click',function(){const t=document.getElementById('resTitle').value.trim(),s=document.getElementById('resSize').value.trim(),d=document.getElementById('resDate').value.trim(),l=document.getElementById('resLink').value.trim(),i=document.getElementById('resImage').value.trim();if(!t){alert('请填写标题');return}const mid=D.resources.reduce((m,r)=>Math.max(m,r.id||0),0);D.resources.push({id:mid+1,title:t,size:s,date:d,image:i,downloadLink:l});document.getElementById('resTitle').value='';document.getElementById('resSize').value='';document.getElementById('resDate').value='';document.getElementById('resLink').value='';document.getElementById('resImage').value='';save();refreshAll()});
+
+window.openEditRes=function(i){editingResIndex=i;const r=D.resources[i];document.getElementById('editResTitleInput').value=r.title||'';document.getElementById('editResSize').value=r.size||'';document.getElementById('editResDate').value=r.date||'';document.getElementById('editResLink').value=r.downloadLink||'';document.getElementById('editResImage').value=r.image||'';document.getElementById('editResModal').classList.add('active')};
+
+document.getElementById('editResSaveBtn').addEventListener('click',function(){if(editingResIndex===null){alert('请先选择要编辑的资源');return}const t=document.getElementById('editResTitleInput').value.trim(),s=document.getElementById('editResSize').value.trim(),d=document.getElementById('editResDate').value.trim(),l=document.getElementById('editResLink').value.trim(),i=document.getElementById('editResImage').value.trim();if(!t){alert('请填写标题');return}D.resources[editingResIndex]={...D.resources[editingResIndex],title:t,size:s,date:d,downloadLink:l,image:i};save();refreshAll();document.getElementById('editResModal').classList.remove('active');editingResIndex=null});
+
+function closeEditRes(){document.getElementById('editResModal').classList.remove('active');editingResIndex=null}
+document.getElementById('editResClose').addEventListener('click',closeEditRes);
+document.getElementById('editResCancelBtn').addEventListener('click',closeEditRes);
+document.getElementById('editResModal').addEventListener('click',function(e){if(e.target===this)closeEditRes()});
+
+window.deleteResource=function(i){if(!confirm('确定删除此资源？'))return;D.resources.splice(i,1);save();refreshAll()};
+document.getElementById('refreshResBtn').addEventListener('click',refreshAll);
+
+window.openEditUser=function(){const p=D.profile;document.getElementById('editUserName').value=p.name||'';document.getElementById('editUserAccount').value=p.account||'';document.getElementById('editUserPassword').value=p.password||'';document.getElementById('editUserAvatar').value=p.avatar||'';document.getElementById('editUserModal').classList.add('active')};
+
+function closeEditUser(){document.getElementById('editUserModal').classList.remove('active')}
+
+document.getElementById('editUserSaveBtn').addEventListener('click',function(){const n=document.getElementById('editUserName').value.trim(),a=document.getElementById('editUserAccount').value.trim(),p=document.getElementById('editUserPassword').value.trim(),v=document.getElementById('editUserAvatar').value.trim();if(!n){alert('请填写名称');return}if(!a){alert('请填写账户');return}D.profile.name=n;D.profile.account=a;D.profile.password=p||D.profile.password;D.profile.avatar=v;save();refreshAll();closeEditUser();alert('已保存！')});
+
+document.getElementById('editUserClose').addEventListener('click',closeEditUser);
+document.getElementById('editUserCancelBtn').addEventListener('click',closeEditUser);
+document.getElementById('editUserModal').addEventListener('click',function(e){if(e.target===this)closeEditUser()});
+
+window.deleteUser=function(){if(!confirm('确定要删除此用户吗？此操作不可撤销！'))return;D.profile={name:'',account:'',password:'',avatar:''};save();refreshAll();alert('用户已删除')};
+
+document.getElementById('copyJsonBtn').addEventListener('click',function(){const t=document.getElementById('jsonPreview').textContent;if(navigator.clipboard?.writeText){navigator.clipboard.writeText(t).then(()=>alert('JSON已复制！')).catch(()=>fallback(t))}else{fallback(t)}});
+function fallback(t){const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;left:-9999px;top:-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');alert('JSON已复制！')}catch(_){alert('复制失败，请手动复制')}document.body.removeChild(ta)}
+document.getElementById('downloadJsonBtn').addEventListener('click',function(){const t=document.getElementById('jsonPreview').textContent;const b=new Blob([t],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='data.json';a.click();URL.revokeObjectURL(u)});
+
+document.querySelectorAll('.tabs button').forEach(b=>{b.addEventListener('click',function(){document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));document.getElementById('tab-'+this.dataset.tab).classList.add('active');if(this.dataset.tab==='export')updatePreview();if(this.dataset.tab==='profile')renderUsers()})});
+})();
 </script>
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
