@@ -1,17 +1,25 @@
 {
   "resources": [
     {
-      "id": 1,
-      "title": "经典街机人物整合包",
-      "size": "2.3GB",
-      "date": "2026-08-01",
+      "id": 6,
+      "title": "k",
+      "size": "",
+      "date": "",
       "image": "",
-      "downloadLink": "https://example.com/classic.zip"
+      "downloadLink": ""
+    },
+    {
+      "id": 7,
+      "title": "o",
+      "size": "200mb",
+      "date": "",
+      "image": "",
+      "downloadLink": ""
     }
   ],
   "profile": {
     "name": "MUGEN玩家",
-    "account": "mugen_user@example.com",
+    "account": "mugen_user@example.co",
     "password": "123456",
     "avatar": ""
   }
