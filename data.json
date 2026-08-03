@@ -1,14 +1,18 @@
-[    
-    {        
-        "id":1,        
-        "title":"八神",        
-        "type":"人物",        
-        "mugenVer":"1.1",       
-         "level":"标准",        
-         "intro":"测试用角色包",        
-         "link":"网盘完整外链",        
-         "pwd":"提取码",        
-         "date":"2026-08-03"    
-         }
-]
-                                                                                                                                                                                                        
+{
+  "resources": [
+    {
+      "id": 1,
+      "title": "经典街机人物整合包",
+      "size": "2.3GB",
+      "date": "2026-08-01",
+      "image": "",
+      "downloadLink": "https://example.com/classic.zip"
+    }
+  ],
+  "profile": {
+    "name": "MUGEN玩家",
+    "account": "mugen_user@example.com",
+    "password": "123456",
+    "avatar": ""
+  }
+}
