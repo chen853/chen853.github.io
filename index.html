@@ -66,7 +66,7 @@ body{display:flex;background:var(--bg);color:var(--text);min-height:100vh;transi
 .profile-item{display:flex;align-items:center;padding:12px 16px;background:var(--item-bg);border-radius:10px;border:1px solid var(--border);transition:background .3s,border-color .3s}
 .profile-item .label{width:70px;font-size:14px;color:var(--light-gray);flex-shrink:0}
 .profile-item .value{font-size:14px;color:var(--text);flex:1}
-.profile-item .edit-icon{color:#68a882;font-size:16px;cursor:pointer;padding:2px 8px;border-radius:4px;line-height:1}
+.profile-item .edit-icon{color:#68a882;font-size:16px;cursor:pointer;padding:2px 8px;border-radius:4px;line-height:1;background:transparent;border:none}
 .profile-item .edit-icon:hover{background:var(--border)}
 .settings-card{background:var(--card);border-radius:12px;padding:24px 30px;box-shadow:var(--shadow);max-width:600px;transition:background .3s,box-shadow .3s}
 .settings-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
@@ -166,6 +166,8 @@ body{display:flex;background:var(--bg);color:var(--text);min-height:100vh;transi
 .contact-item .label{width:100%}
 .sponsor-box{padding:24px 18px 20px}
 .sponsor-box .sponsor-title{font-size:19px}
+.profile-avatar{width:56px;height:56px}
+.profile-avatar .upload-hint{font-size:9px}
 }
 </style>
 </head>
@@ -200,12 +202,31 @@ body{display:flex;background:var(--bg);color:var(--text);min-height:100vh;transi
 <div class="page" id="page-profile">
 <div class="page-title">个人中心</div>
 <div class="profile-card">
-<div class="profile-header"><div class="profile-avatar" id="avatarUpload"><span class="placeholder-text" id="avatarPlaceholder">头像</span><span class="upload-hint">点击上传</span><img id="avatarImg" style="display:none" alt="头像"><input type="file" id="avatarInput" accept="image/*" style="display:none"></div>
-<div class="profile-name-area"><span class="profile-name" id="displayName">MUGEN玩家</span><button class="profile-edit-btn" id="editNameBtn">编辑名称</button></div></div>
+<div class="profile-header">
+  <div class="profile-avatar" id="avatarUpload">
+    <span class="placeholder-text" id="avatarPlaceholder">头像</span>
+    <span class="upload-hint">点击上传</span>
+    <img id="avatarImg" style="display:none" alt="头像">
+    <input type="file" id="avatarInput" accept="image/*" style="display:none">
+  </div>
+  <div class="profile-name-area">
+    <span class="profile-name" id="displayName">MUGEN玩家</span>
+    <button class="profile-edit-btn" id="editNameBtn">编辑名称</button>
+  </div>
+</div>
 <div class="profile-body">
-<div class="profile-item"><span class="label">账户</span><span class="value" id="displayAccount">mugen_user@example.com</span><span class="edit-icon" id="editAccountBtn">&#9998;</span></div>
-<div class="profile-item"><span class="label">密码</span><span class="value" id="displayPassword">••••••••</span><span class="edit-icon" id="editPasswordBtn">&#9998;</span></div>
-</div></div></div>
+  <div class="profile-item">
+    <span class="label">账户</span>
+    <span class="value" id="displayAccount">mugen_user@example.com</span>
+    <button class="edit-icon" id="editAccountBtn">&#9998;</button>
+  </div>
+  <div class="profile-item">
+    <span class="label">密码</span>
+    <span class="value" id="displayPassword">••••••••</span>
+    <button class="edit-icon" id="editPasswordBtn">&#9998;</button>
+  </div>
+</div>
+</div></div>
 <div class="page" id="page-favorites"><div class="page-title">&#9829; 我的收藏</div><div class="resource-list" id="favList"><div class="empty-tip visible" style="display:block">还没有收藏任何资源</div></div></div>
 <div class="page" id="page-purchased"><div class="page-title">已购买</div><div class="empty-tip visible" style="display:block">暂无购买记录</div></div>
 <div class="page" id="page-updates"><div class="page-title">更新内容</div><div class="empty-tip visible" style="display:block">暂无更新</div></div>
@@ -257,7 +278,6 @@ let appResources=[];
 let profileData={};
 
 function loadData(){
-  // 从 data.json 加载（外来用户走这个）
   fetch('data.json?'+Date.now())
     .then(res=>{if(!res.ok)throw new Error('data.json加载失败');return res.json()})
     .then(data=>{
@@ -279,7 +299,6 @@ function loadData(){
           return;
         }catch(_){}
       }
-      // 最终降级：默认数据
       appResources=[{id:1,title:'经典街机人物整合包',size:'2.3GB',date:'2026-08-01',image:'',downloadLink:'#'}];
       profileData={name:'MUGEN玩家',account:'mugen_user@example.com',password:'123456',avatar:''};
       renderAll();
@@ -318,7 +337,6 @@ function renderResources(resources){
       </div>
     </div>
   `).join('');
-  // 重新绑定事件
   container.querySelectorAll('.download-btn').forEach(b=>{
     b.addEventListener('click',function(e){e.stopPropagation();openModal(this.dataset.resource||'资源');});
   });
@@ -342,7 +360,6 @@ function renderProfile(profile){
     avatarImg.style.display='none';
     avatarPlaceholder.style.display='block';
   }
-  // 更新右上角头像
   const headerImg=document.getElementById('headerAvatarImg');
   const headerDefault=document.getElementById('headerDefaultIcon');
   if(profile.avatar&&profile.avatar!=''){
@@ -435,30 +452,94 @@ function fallbackCopy(t){
   document.body.removeChild(ta);
 }
 
-// ===== 个人中心 =====
-const au=document.getElementById('avatarUpload'),ai=document.getElementById('avatarInput');
-au.addEventListener('click',()=>ai.click());
-ai.addEventListener('change',function(e){
-  const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
+// ===== 个人中心 - 头像上传（兼容手机端） =====
+const avatarUpload=document.getElementById('avatarUpload');
+const avatarInput=document.getElementById('avatarInput');
+
+avatarUpload.addEventListener('click',function(e){
+  e.stopPropagation();
+  avatarInput.click();
+});
+
+avatarInput.addEventListener('change',function(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
     const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
     profile.av=ev.target.result;
     localStorage.setItem('mp',JSON.stringify(profile));
-    renderProfile(profile);
+    profileData.avatar=ev.target.result;
+    renderProfile(profileData);
+    showToast('头像已更新');
   };
-  r.readAsDataURL(f);
+  reader.readAsDataURL(file);
+  avatarInput.value='';
 });
 
+// ===== 个人中心 - 编辑名称 =====
 document.getElementById('editNameBtn').addEventListener('click',function(){
-  const v=prompt('请输入新名称：',document.getElementById('displayName').textContent);
+  const currentName=document.getElementById('displayName').textContent;
+  const v=prompt('请输入新名称：',currentName);
   if(v!==null&&v.trim()){
     const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
     profile.n=v.trim();
     localStorage.setItem('mp',JSON.stringify(profile));
-    renderProfile(profile);
+    profileData.name=v.trim();
+    renderProfile(profileData);
+    showToast('名称已更新');
   }
 });
+
+// ===== 个人中心 - 编辑账户 =====
+document.getElementById('editAccountBtn').addEventListener('click',function(e){
+  e.stopPropagation();
+  const currentAccount=document.getElementById('displayAccount').textContent;
+  const v=prompt('请输入新账户（邮箱或手机号）：',currentAccount);
+  if(v!==null&&v.trim()){
+    const val=v.trim();
+    const isEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    const isPhone=/^1[3-9]\d{9}$/.test(val);
+    if(!isEmail&&!isPhone){
+      showToast('请输入正确的邮箱或手机号');
+      return;
+    }
+    const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
+    profile.a=val;
+    localStorage.setItem('mp',JSON.stringify(profile));
+    profileData.account=val;
+    renderProfile(profileData);
+    showToast('账户已更新');
+  }
+});
+
+// ===== 个人中心 - 编辑密码 =====
+document.getElementById('editPasswordBtn').addEventListener('click',function(e){
+  e.stopPropagation();
+  const v=prompt('请输入新密码（8-16位数字或字母）：');
+  if(v!==null&&v.trim()){
+    const val=v.trim();
+    if(!/^[A-Za-z0-9]{8,16}$/.test(val)){
+      showToast('密码需为8-16位数字或字母');
+      return;
+    }
+    const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
+    profile.p=val;
+    localStorage.setItem('mp',JSON.stringify(profile));
+    profileData.password=val;
+    renderProfile(profileData);
+    showToast('密码已更新');
+  }
+});
+
+// ===== Toast 提示 =====
+function showToast(msg){
+  const toast=document.getElementById('toast');
+  toast.textContent=msg;
+  toast.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),2000);
+}
 
 // ===== 主题切换 =====
 let theme=localStorage.getItem('mugen_theme')||'light';
@@ -473,22 +554,14 @@ document.getElementById('themeSwitch').addEventListener('click',function(){
   const cur=localStorage.getItem('mugen_theme')||'light';
   const next=cur==='light'?'dark':'light';
   applyTheme(next);
-  document.getElementById('toast').textContent=next==='dark'?'已切换至夜间模式':'已切换至日间模式';
-  document.getElementById('toast').classList.add('show');
-  clearTimeout(window._toastTimer);
-  window._toastTimer=setTimeout(()=>document.getElementById('toast').classList.remove('show'),1500);
+  showToast(next==='dark'?'已切换至夜间模式':'已切换至日间模式');
 });
 
 // ===== 联系作者 =====
 document.getElementById('copyQQBtn').addEventListener('click',function(){
   const qq=document.getElementById('authorQQ').textContent;
   if(navigator.clipboard?.writeText){
-    navigator.clipboard.writeText(qq).then(()=>{
-      document.getElementById('toast').textContent='QQ号已复制：'+qq;
-      document.getElementById('toast').classList.add('show');
-      clearTimeout(window._toastTimer);
-      window._toastTimer=setTimeout(()=>document.getElementById('toast').classList.remove('show'),1500);
-    }).catch(()=>fallbackCopyQQ(qq));
+    navigator.clipboard.writeText(qq).then(()=>showToast('QQ号已复制：'+qq)).catch(()=>fallbackCopyQQ(qq));
   }else{fallbackCopyQQ(qq);}
 });
 function fallbackCopyQQ(t){
@@ -497,12 +570,8 @@ function fallbackCopyQQ(t){
   ta.style.cssText='position:fixed;left:-999px;top:-999px';
   document.body.appendChild(ta);
   ta.select();
-  try{document.execCommand('copy');
-    document.getElementById('toast').textContent='QQ号已复制：'+t;
-    document.getElementById('toast').classList.add('show');
-    clearTimeout(window._toastTimer);
-    window._toastTimer=setTimeout(()=>document.getElementById('toast').classList.remove('show'),1500);
-  }catch(_){alert('复制失败，请手动复制');}
+  try{document.execCommand('copy');showToast('QQ号已复制：'+t);}
+  catch(_){alert('复制失败，请手动复制');}
   document.body.removeChild(ta);
 }
 
