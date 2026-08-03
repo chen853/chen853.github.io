@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+.box{max-width:550px}
+input,textarea{width:100%;margin:6px 0;padding:7px}
+</style>
+</head>
+<body>
+<div class="box">
+<h3>新增MUGEN外链</h3>
+<input id="t" placeholder="资源名称">
+<input id="ty" placeholder="类型：人物/场景/画面包">
+<input id="v" placeholder="适配版本：1.0/1.1/WinMUGEN">
+<input id="lv" placeholder="强度：标准/凶恶/论外">
+<textarea id="i" placeholder="简介"></textarea>
+<input id="lk" placeholder="完整网盘外链">
+<input id="pw" placeholder="解压提取码">
+<button onclick="gen()">生成JSON</button>
+<textarea id="out" readonly style="height:130px;margin-top:8px"></textarea>
+<p>复制内容，粘贴到仓库data.json数组末尾提交</p>
+</div>
+<                                                                                                                                                                                                                                                                                                                                                                                                                                                           script>
+function gen(){
+    const item={
+        id:Date.now(),
+        title:document.getElementById("t").value,
+        type:document.getElementById("ty").value,
+        mugenVer:document.getElementById("v").value,
+        level:document.getElementById("lv").value,
+        intro:document.getElementById("i").value,
+        link:document.getElementById("lk").value,
+        pwd:document.getElementById("pw").value,
+        date:new Date().toLocaleDateString()
+    };
+    document.getElementById("out").value=JSON.stringify(item);
+}
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            

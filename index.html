@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>MUGEN资源外链站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{max-width:1100px;margin:0 auto;padding:15px}
+.search{margin:15px 0}
+input{padding:7px;width:260px}
+.card{border:1px #eee solid;border-radius:6px;padding:12px;margin:10px 0}
+.copy{margin-top:8px;padding:5px 10px;cursor:pointer}
+.pop{display:none;position:fixed;top:30%;left:50%;transform:translate(-50%,-30%);border:1px solid #666;padding:20px;background:#fff}
+</style>
+</head>
+<body>
+<h2>MUGEN资源分享（仅外链）</h2>
+<div class="search">
+<input id="s" placeholder="搜名称/类型/版本">
+</div>
+<div id="list"></div>
+<div class="pop" id="pop">
+<p>资源链接：<span id="l"></span></p>
+<p>提取码：<span id="p"></span></p>
+<button onclick="pop.style.display='none'">关闭</button>
+</div>
+<script>
+let resList=[];
+//加载仓库json
+async function load(){
+    const r=await fetch("./data.json");
+    resList=await r.json();
+    render(resList);
+}
+//渲染卡片
+function render(arr){
+    const box=document.getElementById("list");
+    box.innerHTML="";
+    arr.forEach(item=>{
+        const d=document.createElement("div");
+        d.className="card";
+        d.innerHTML=`
+            <h3>${item.title}</h3>
+            <p>分类：${item.type}｜适配：${item.mugenVer}｜强度：${item.level}</p>
+            <p>${item.intro}</p>
+            <button class="copy" onclick="show(${item.id})">查看外链</button>
+        `;
+        box.appendChild(d);
+    })
+}
+//弹窗展示链接
+function show(id){
+    const t=resList.find(v=>v.id===id);
+    document.getElementById("l").innerText=t.link;
+    document.getElementById("p").innerText=t.pwd||"无";
+    document.getElementById("pop").style.display="block";
+}
+//搜索过滤
+document.getElementById("s").oninput=e=>{
+    const k=e.target.value.toLowerCase();
+    const f=resList.filter(i=>i.title.toLowerCase().includes(k)||i.type.includes(k)||i.mugenVer.includes(k));
+    render(f);
+}
+load();
+</script>
+</body>
+</html>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
