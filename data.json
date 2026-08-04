@@ -2,42 +2,15 @@
   "resources": [
     {
       "id": 0,
-      "n": "经典街机人物整合包",
-      "s": "256MB",
-      "d": "https://mugen.com/dl/classic-arcade-pack",
-      "de": "本整合包收录了经典街机格斗游戏的全部人物资源...",
-      "c": "https://example.com/cover.jpg",
-      "img1": "https://example.com/1.jpg",
-      "img2": "https://example.com/2.jpg",
-      "img3": "https://example.com/3.jpg"
-    },
-    {
-      "id": 1,
-      "n": "神人整合包",
-      "s": "91GB",
-      "d": "https://mugen.com",
-      "de": "掉！",
-      "c": "https://img0.baidu.com/it/u=419885072,2400454177&fm=253&fmt=auto&app=120&f=JPEG?w=667&h=500",
-      "img1": "https://example.com/1.jpg",
-      "img2": "https://example.com/2.jpg",
-      "img3": "https://example.com/3.jpg"
+      "name": "91",
+      "size": "78GB",
+      "dl": "掉k",
+      "desc": "91.com.",
+      "cover": "https://img0.baidu.com/it/u=2909166469,3539092078&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "img1": "https://s2.loli.net/2025/08/04/xxxxx.jpg",
+      "img2": "hhttps://img0.baidu.com/it/u=2909166469,3539092078&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
+      "img3": "https://s2.loli.net/2025/08/04/xxxxx.jpg"
     }
   ],
-  "updates": [
-    {
-      "v": "v2.4.0",
-      "d": "2025-01-10",
-      "t": "新增街机人物整合包、优化搜索响应"
-    },
-    {
-      "v": "v2.3.5",
-      "d": "2024-12-28",
-      "t": "修复收藏状态同步、新增模式切换"
-    },
-    {
-      "v": "v2.4.0",
-      "d": "2025-01-10",
-      "t": "一坨奥力"
-    }
-  ]
+  "updates": []
 }
