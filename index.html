@@ -16,14 +16,14 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
 .gs{background:rgba(12,12,18,.7);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-right:1px solid rgba(255,255,255,.05)}
 .i{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.25s}
 .i::placeholder{color:rgba(255,255,255,.3)}.i:focus{outline:none;background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.22)}
-.n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px}
+.n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px;padding:8px 12px}
 .n:hover,.n.on{color:#fff;background:rgba(255,255,255,.1)}.n.on{background:rgba(255,255,255,.13)}
 .c{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);border-radius:14px;transition:.25s}
 .c:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.13);transform:translateY(-2px)}
 .bd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.2s;cursor:pointer}.bd:hover{background:rgba(255,255,255,.2)}
 .ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s}.ht:hover{transform:scale(1.15)}.ht.on{color:#ef4444}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
-.ov.sh{opacity:1;pointer-events:auto}.md{transform:scale(.95)translateY(8px);transition:.25s}.ov.sh .md{transform:scale(1)translateY(0)}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.ov.sh{opacity:1;pointer-events:auto}.md{transform:scale(.95)translateY(8px);transition:transform .25s ease}.ov.sh .md{transform:scale(1)translateY(0)}
 .tc{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200}
 .ti{opacity:0;transform:translateY(-10px);transition:.3s;pointer-events:none}.ti.sh{opacity:1;transform:translateY(0)}
 .pg{display:none}.pg.on{display:block}
@@ -33,6 +33,20 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
 .sw.on{background:rgba(255,255,255,.25)}.sk{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.sw.on .sk{left:21px}
 .tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
 @media(max-width:768px){.sb{position:fixed;left:-280px;top:0;bottom:0;z-index:90;transition:left .3s;width:260px!important}.sb.op{left:0}.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:80;opacity:0;pointer-events:none;transition:.3s}.mo.sh{opacity:1;pointer-events:auto}}
+.mini-card{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);padding:0 6px;border-radius:8px;display:inline-block;font-size:14px;line-height:1.5}
+.mini-card-up{margin-top:-2px;display:inline-block}
+.login-box .ipt{width:100%;padding:12px 14px 12px 40px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-size:14px;transition:.25s}
+.login-box .ipt::placeholder{color:rgba(255,255,255,.4)}
+.login-box .ipt:focus{outline:none;background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.32);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+.login-box .btn{width:100%;padding:13px;border-radius:12px;border:none;background:#fff;color:#171717;font-weight:500;font-size:14px;cursor:pointer;transition:.3s}
+.login-box .btn:hover{background:rgba(255,255,255,.88);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.login-box .ico{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.65);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s}
+.login-box .ico:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.28);color:#fff;transform:translateY(-2px)}
+.login-box .line{flex:1;height:1px;background:rgba(255,255,255,.12)}
+.login-box .field{position:relative;margin-bottom:14px}
+.login-box .field .icn{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);pointer-events:none}
+.login-box .psw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);cursor:pointer;transition:.2s;background:none;border:none;padding:4px}
+.login-box .psw-toggle:hover{color:rgba(255,255,255,.7)}
 </style>
 </head>
 <body>
@@ -40,7 +54,7 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
 <div class="mo" id="moOv" onclick="tgSB()"></div>
 <div class="tc" id="tC"></div>
 
-<!-- Announce -->
+<!-- 公告 -->
 <div id="anM" class="ov" onclick="if(event.target===this)clM('anM')">
   <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
     <h3 class="text-white text-lg font-semibold mb-3">公告</h3>
@@ -49,7 +63,7 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
   </div>
 </div>
 
-<!-- Download -->
+<!-- 下载 -->
 <div id="dlM" class="ov" onclick="if(event.target===this)clM('dlM')">
   <div class="md g rounded-2xl w-full max-w-lg mx-4 p-6">
     <div class="flex justify-between items-center mb-5">
@@ -60,7 +74,7 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
   </div>
 </div>
 
-<!-- Sponsor -->
+<!-- 赞助 -->
 <div id="spM" class="ov" onclick="if(event.target===this)clM('spM')">
   <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
     <h3 class="text-white text-lg font-semibold mb-2">赞助作者</h3>
@@ -70,18 +84,52 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
   </div>
 </div>
 
-<!-- Layout -->
+<!-- 登录浮层 -->
+<div id="loginOverlay" class="ov" onclick="if(event.target===this)closeLogin()">
+  <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 login-box">
+    <div class="flex justify-end -mt-2 -mr-2">
+      <span class="text-white/40 cursor-pointer hover:text-white/80 transition" onclick="closeLogin()"><iconify-icon icon="lucide:x" width="22"></iconify-icon></span>
+    </div>
+    <div class="text-center mb-5">
+      <h3 class="text-white text-xl font-semibold">欢迎回来</h3>
+      <p class="text-white/40 text-sm mt-1">登录或注册你的账户</p>
+    </div>
+    <form onsubmit="event.preventDefault();lgToast('登录 / 注册请求已发送')">
+      <div class="field">
+        <iconify-icon icon="lucide:user" width="18" class="icn"></iconify-icon>
+        <input type="text" placeholder="账户 / 手机号" class="ipt" required>
+      </div>
+      <div class="field">
+        <iconify-icon icon="lucide:lock" width="18" class="icn"></iconify-icon>
+        <input id="lgPsw" type="password" placeholder="密码" class="ipt" required>
+        <button type="button" class="psw-toggle" onclick="togglePsw()"><iconify-icon id="lgEye" icon="lucide:eye-off" width="18"></iconify-icon></button>
+      </div>
+      <button type="submit" class="btn mt-1">登录 / 注册</button>
+    </form>
+    <div class="flex items-center gap-3 my-5">
+      <div class="line"></div><span class="text-white/30 text-xs font-light whitespace-nowrap">其他方式</span><div class="line"></div>
+    </div>
+    <div class="flex justify-center gap-4">
+      <div class="ico" title="微信登录"><iconify-icon icon="ri:wechat-fill" width="22"></iconify-icon></div>
+      <div class="ico" title="QQ登录"><iconify-icon icon="ri:qq-fill" width="22"></iconify-icon></div>
+      <div class="ico" title="邮箱登录"><iconify-icon icon="lucide:mail" width="20"></iconify-icon></div>
+    </div>
+    <p class="text-center text-white/25 text-xs mt-5 font-light">登录即表示同意 <a href="#" class="text-white/45 hover:text-white/70 transition">服务条款</a> 与 <a href="#" class="text-white/45 hover:text-white/70 transition">隐私政策</a></p>
+  </div>
+</div>
+
+<!-- 布局 -->
 <div class="relative z-10 flex h-screen">
   <aside id="sb" class="sb gs w-[260px] flex-shrink-0 flex flex-col p-5 h-full">
     <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享</h1>
     <nav class="flex flex-col gap-1 flex-1" id="nav">
-      <div class="n on flex items-center gap-3 px-3 py-2.5" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
-      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
-      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
-      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
-      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
-      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
-      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
+      <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
+      <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
+      <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
+      <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
+      <div class="n" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
+      <div class="n" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
+      <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
     </nav>
   </aside>
   <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
@@ -91,47 +139,50 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
         <iconify-icon icon="lucide:search" width="15" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
         <input id="sI" type="text" placeholder="输入关键词搜索名称" class="i w-full pl-9 pr-4 py-2 rounded-xl text-sm" oninput="doS()">
       </div>
-      <span id="cT" class="text-white/35 text-xs whitespace-nowrap hidden sm:inline ml-2">共 <span id="totalCount">0</span> 个资源</span>
+      <span id="cT" class="text-white/35 text-xs whitespace-nowrap hidden sm:inline ml-2 mini-card-up"><span class="mini-card">共 <span id="totalCount">0</span> 个资源</span></span>
       <div id="hAv" class="w-8 h-8 rounded-full bg-white/8 border border-white/8 flex items-center justify-center cursor-pointer hover:bg-white/15 transition flex-shrink-0 ml-auto overflow-hidden" onclick="go('profile')">
         <iconify-icon icon="lucide:user" width="14" class="text-white/50" id="hAvIc"></iconify-icon>
       </div>
     </header>
-    <div id="ct" class="flex-1 overflow-y-auto p-4 md:p-6" style="scroll-behavior:smooth">
+    <div id="ct" class="flex-1 overflow-y-auto p-3 md:p-4" style="scroll-behavior:smooth">
 
-      <!-- Home -->
+      <!-- 首页 -->
       <div id="p-home" class="pg on">
         <div id="hG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         <div id="hE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:search-x" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">没有找到匹配的资源</p></div>
       </div>
 
-      <!-- Detail -->
+      <!-- 详情 -->
       <div id="p-detail" class="pg">
-        <button onclick="go('home')" class="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm transition mb-5"><iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>返回首页</button>
+        <button onclick="go('home')" class="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs transition mb-5 -ml-1">
+          <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>
+          <span class="mini-card">返回首页</span>
+        </button>
         <div id="dtC"></div>
       </div>
 
-      <!-- Profile -->
+      <!-- 个人资料 -->
       <div id="p-profile" class="pg">
-        <h2 class="text-white text-xl font-semibold mb-6">个人资料</h2>
+        <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">个人资料</span></h2>
         <div class="g rounded-2xl p-6 max-w-lg mx-auto text-center mt-12">
           <iconify-icon icon="lucide:user" width="48" class="text-white/20 mx-auto mb-4"></iconify-icon>
           <p class="text-white/40 text-sm mb-6">登录后查看个人资料</p>
-          <button onclick="location.href='login.html'" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">登录 / 注册</button>
+          <button onclick="openLogin()" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">登录 / 注册</button>
         </div>
       </div>
 
-      <!-- Purchased -->
-      <div id="p-purchased" class="pg"><h2 class="text-white text-xl font-semibold mb-6">已购买</h2><div id="puG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="puE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:shopping-bag" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无已购买资源</p></div></div>
+      <!-- 已购买 -->
+      <div id="p-purchased" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">已购买</span></h2><div id="puG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="puE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:shopping-bag" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无已购买资源</p></div></div>
 
-      <!-- Favorites -->
-      <div id="p-fav" class="pg"><h2 class="text-white text-xl font-semibold mb-6">收藏</h2><div id="fvG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="fvE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:heart" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无收藏资源</p></div></div>
+      <!-- 收藏 -->
+      <div id="p-fav" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">收藏</span></h2><div id="fvG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="fvE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:heart" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无收藏资源</p></div></div>
 
-      <!-- Updates -->
-      <div id="p-updates" class="pg"><h2 class="text-white text-xl font-semibold mb-6">更新内容</h2><div class="space-y-4" id="upL"></div></div>
+      <!-- 更新内容 -->
+      <div id="p-updates" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">更新内容</span></h2><div class="space-y-4" id="upL"></div></div>
 
-      <!-- Contact -->
+      <!-- 联系作者 -->
       <div id="p-contact" class="pg">
-        <h2 class="text-white text-xl font-semibold mb-6">联系作者</h2>
+        <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">联系作者</span></h2>
         <div class="g rounded-2xl p-6 max-w-lg space-y-4">
           <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70"></iconify-icon><span class="text-white/70 text-sm">WeChat: MUGEN_Author</span></div><button onclick="cp('MUGEN_Author')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
           <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70"></iconify-icon><span class="text-white/70 text-sm">QQ: 123456789</span></div><button onclick="cp('123456789')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
@@ -140,9 +191,9 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
         </div>
       </div>
 
-      <!-- Settings -->
+      <!-- 设置 -->
       <div id="p-settings" class="pg">
-        <h2 class="text-white text-xl font-semibold mb-6">设置</h2>
+        <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">设置</span></h2>
         <div class="g rounded-2xl p-6 max-w-lg">
           <div class="flex items-center justify-between">
             <div><p class="text-white/80 text-sm font-medium">模式选择</p><p class="text-white/30 text-xs mt-0.5">日间模式和月间模式</p></div>
@@ -153,13 +204,14 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
     </div>
   </main>
 </div>
+
 <script>
 let R=[],updatesData=[],cP='home',sQ='',avSrc=null;
 
 function toast(m){const c=document.getElementById('tC'),d=document.createElement('div');d.className='ti g text-white text-sm px-5 py-2.5 rounded-xl mb-2 whitespace-nowrap';d.textContent=m;c.appendChild(d);requestAnimationFrame(()=>d.classList.add('sh'));setTimeout(()=>{d.classList.remove('sh');setTimeout(()=>d.remove(),300)},2000)}
 function opM(id){document.getElementById(id).classList.add('sh');document.body.style.overflow='hidden'}
 function clM(id){document.getElementById(id).classList.remove('sh');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
 function tgSB(){document.getElementById('sb').classList.toggle('op');document.getElementById('moOv').classList.toggle('sh')}
 
 function go(p){
@@ -183,7 +235,7 @@ function syncAv(){
 function cHTML(r,sp){
   const fc=r.fav?'on':'';
   let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费 '+r.price+'</span>';
-  return `<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`;
+  return `<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`;
 }
 
 function renderList(gId,eId,filter,isPurchased){
@@ -209,9 +261,9 @@ function goDt(id){
         <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div>
       </div>
       <div class="p-6 md:p-8">
-        <h2 class="text-white text-xl font-semibold mb-3">${r.name}</h2>
+        <h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2>
         <div class="flex flex-wrap gap-2 mb-5">
-          <span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size}</span>
+          <span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span>
           <span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span>
           <span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span>
         </div>
@@ -239,8 +291,8 @@ function opD(id){
   if(r.paid){
     document.getElementById('dlB').innerHTML=`
       <div class="flex items-center gap-3 p-4 rounded-xl bg-white/5">
-        <div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl}</p></div>
-        <button onclick="cp('${r.dl}')" class="text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 flex-shrink-0">复制</button>
+        <div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl||''}</p></div>
+        <button onclick="cp('${r.dl||''}')" class="text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 flex-shrink-0">复制</button>
       </div>`;
   }else{
     document.getElementById('dlB').innerHTML=`
@@ -267,7 +319,8 @@ function mkPd(id){const r=R.find(item=>item.id===id);if(r){r.paid=true;clM('dlM'
 function rU(){
   const list=document.getElementById('upL');
   if(updatesData.length){
-    list.innerHTML=updatesData.map(x=>
+    const sorted=[...updatesData].sort((a,b)=>b.d.localeCompare(a.d));
+    list.innerHTML=sorted.map(x=>
       `<div class="g rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`
     ).join('');
   }
@@ -279,7 +332,11 @@ function svP(){}
 function cp(t){navigator.clipboard.writeText(t).then(()=>toast('复制成功')).catch(()=>toast('复制失败'))}
 function tgSw(el){el.classList.toggle('on');toast('模式已切换')}
 
-// 加载 data.json
+function openLogin(){document.getElementById('loginOverlay').classList.add('sh');document.body.style.overflow='hidden'}
+function closeLogin(){document.getElementById('loginOverlay').classList.remove('sh');document.body.style.overflow=''}
+function lgToast(m){toast(m)}
+function togglePsw(){const p=document.getElementById('lgPsw'),e=document.getElementById('lgEye');if(p.type==='password'){p.type='text';e.setAttribute('icon','lucide:eye')}else{p.type='password';e.setAttribute('icon','lucide:eye-off')}}
+
 fetch('data.json')
   .then(res=>res.json())
   .then(data=>{
