@@ -79,8 +79,8 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
   <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
     <h3 class="text-white text-lg font-semibold mb-2">赞助作者</h3>
     <p class="text-white/40 text-sm mb-5">感谢支持，赞助将用于站点维护与资源更新</p>
-    <div class="db w-full h-36 mb-4">赞助二维码</div>
-    <button onclick="clM('spM');toast('感谢您的支持 ❤️')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">已赞助</button>
+    <img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto mx-auto rounded-lg mb-4" alt="赞助二维码" onerror="this.style.display='none'">
+    <button onclick="clM('spM');toast('感谢您的支持 (⸝⸝⸝>`﹏ˊ<⸝⸝⸝)')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">已赞助</button>
   </div>
 </div>
 
@@ -134,7 +134,7 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
   </aside>
   <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
     <header class="g flex items-center gap-3 px-4 md:px-6 py-3 flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,.05)">
-      <button class="md:hidden text-white/50 hover:text-white transition mr-1" onclick="tgSB()"><iconify-icon icon="lucide:menu" width="22"></iconify-icon></button>
+      <button class="md:hidden text-white/50 hover:text-white transition mr-1" onclick="event.stopPropagation();tgSB()"><iconify-icon icon="lucide:menu" width="22"></iconify-icon></button>
       <div class="relative flex-1 max-w-xl">
         <iconify-icon icon="lucide:search" width="15" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
         <input id="sI" type="text" placeholder="输入关键词搜索名称" class="i w-full pl-9 pr-4 py-2 rounded-xl text-sm" oninput="doS()">
@@ -212,7 +212,12 @@ function toast(m){const c=document.getElementById('tC'),d=document.createElement
 function opM(id){document.getElementById(id).classList.add('sh');document.body.style.overflow='hidden'}
 function clM(id){document.getElementById(id).classList.remove('sh');document.body.style.overflow=''}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
-function tgSB(){document.getElementById('sb').classList.toggle('op');document.getElementById('moOv').classList.toggle('sh')}
+function tgSB(){
+  const sb=document.getElementById('sb'),mo=document.getElementById('moOv');
+  sb.classList.toggle('op');
+  mo.classList.toggle('sh');
+  document.body.style.overflow = sb.classList.contains('op') ? 'hidden' : '';
+}
 
 function go(p){
   cP=p;
@@ -222,7 +227,11 @@ function go(p){
   document.getElementById('sI').value='';sQ='';
   if(p==='home')rH();if(p==='fav')rF();if(p==='purchased')rP();if(p==='updates')rU();
   document.getElementById('ct').scrollTop=0;
-  const s=document.getElementById('sb');if(s.classList.contains('op'))tgSB();
+  // 手机端点击导航后自动关闭侧边栏
+  if(window.innerWidth <= 768){
+    const sb=document.getElementById('sb');
+    if(sb.classList.contains('op')) tgSB();
+  }
 }
 function doS(){sQ=document.getElementById('sI').value.trim().toLowerCase();if(cP!=='home')go('home');rH()}
 
@@ -234,7 +243,7 @@ function syncAv(){
 
 function cHTML(r,sp){
   const fc=r.fav?'on':'';
-  let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费 '+r.price+'</span>';
+  let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';
   return `<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`;
 }
 
