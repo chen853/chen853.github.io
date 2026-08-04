@@ -2,910 +2,303 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>MUGEN整合分享</title>
-<!-- 阿里云图标库 Iconfont -->
-<link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4854010_2p8j2e0n7hi.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,"PingFang SC",sans-serif}
-:root{--bg:#fcfaf6;--text:#443e37;--card:#fff;--shadow:0 2px 10px rgba(168,204,184,.18);--border:#e9e3d6;--input-bg:#fff;--item-bg:#fcfaf6;--light-gray:#c9c6bf}
-[data-theme="dark"]{--bg:#1a1a1e;--text:#e8e6e3;--card:#2a2a2f;--shadow:0 2px 10px rgba(0,0,0,.4);--border:#3a3a40;--input-bg:#2a2a2f;--item-bg:#222226;--light-gray:#6a6a70}
-body{display:flex;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden}
-.menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:1001;width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--border);font-size:20px;color:var(--text);cursor:pointer;box-shadow:var(--shadow);align-items:center;justify-content:center;transition:.2s}
-.menu-toggle:hover{background:var(--border)}
-.sidebar{width:220px;background:var(--card);padding:30px 20px;box-shadow:var(--shadow);height:100vh;position:sticky;top:0;overflow-y:auto;transition:transform .3s ease,background .3s,box-shadow .3s;z-index:1000;flex-shrink:0}
-.sidebar-title{font-size:18px;font-weight:600;margin-bottom:36px;color:#548a6b;display:flex;align-items:center;gap:8px}
-.sidebar-title i{font-size:22px;color:#548a6b}
-.sidebar-menu li{list-style:none;margin-bottom:14px}
-.sidebar-menu a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);padding:10px 12px;border-radius:12px;transition:.2s;cursor:pointer}
-.sidebar-menu a:hover,.sidebar-menu a.active{background:var(--border)}
-.sidebar-menu .icon{width:20px;text-align:center;color:#68a882;font-size:18px}
-.sidebar-menu .badge{background:#a8ccb8;color:#fff;font-size:11px;border-radius:10px;padding:0 8px;margin-left:auto}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:999}
-.main{flex:1;padding:32px 40px;min-width:0;transition:padding .3s}
-.search-wrap{display:flex;align-items:center;gap:12px;margin-bottom:30px;flex-wrap:wrap}
-.search-input-wrap{flex:1;min-width:200px;display:flex;align-items:center;background:var(--input-bg);border:1px solid #a8ccb8;border-radius:12px;padding:0 14px;transition:background .3s,border-color .3s,box-shadow .3s}
-.search-input-wrap:focus-within{box-shadow:0 0 0 2px rgba(168,204,184,.3)}
-.search-input-wrap .search-icon{color:var(--light-gray);font-size:16px;margin-right:8px;flex-shrink:0}
-.search-input{flex:1;padding:10px 0;border:none;background:transparent;font-size:15px;outline:none;color:var(--text);min-width:60px}
-.search-input::placeholder{color:var(--light-gray)}
-.search-count{font-size:14px;color:var(--light-gray);white-space:nowrap;flex-shrink:0}
-.search-count span{color:var(--text);font-weight:600}
-.resource-list{display:flex;flex-direction:column;gap:16px;max-width:900px}
-.resource-card{background:var(--card);padding:16px 18px;border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px;transition:background .3s,box-shadow .3s}
-.resource-card.hidden{display:none}
-.card-left{flex:1}
-.card-left h3{font-size:16px;margin-bottom:6px;word-break:break-word}
-.card-thumb{width:100%;height:120px;border-radius:6px;overflow:hidden;flex-shrink:0;background:var(--border);border:1px dashed var(--light-gray);display:flex;align-items:center;justify-content:center;color:var(--light-gray);font-size:12px;transition:background .3s,border-color .3s}
-.card-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.card-info{font-size:13px;color:var(--light-gray);display:flex;gap:18px;flex-wrap:wrap}
-.card-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.fav-btn{background:0 0;border:none;font-size:20px;cursor:pointer;color:var(--light-gray);padding:4px 6px;transition:color .2s}
-.fav-btn:hover{color:#f5b342}
-.fav-btn.active{color:#f5b342}
-.download-btn{padding:9px 18px;background:#a8ccb8;border:none;border-radius:12px;color:#fff;cursor:pointer;font-size:14px;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:6px}
-.download-btn:hover{background:#8fb8a0}
-.download-btn i{font-size:14px}
-.empty-tip{text-align:center;padding:48px 0;color:var(--light-gray);font-size:15px;display:none}
-.empty-tip.visible{display:block}
-.page{display:none}
-.page.active{display:block}
-.page-title{font-size:20px;font-weight:600;margin-bottom:20px;color:var(--text);word-break:break-word;display:flex;align-items:center;gap:10px}
-.page-title i{font-size:22px;color:#68a882}
-.home-header{display:flex;align-items:center;gap:12px;margin-bottom:30px;flex-wrap:wrap}
-.home-header .search-wrap{flex:1;margin-bottom:0;min-width:0}
-.home-header .search-wrap .search-input-wrap{min-width:120px}
-.home-header .avatar-icon{margin-left:auto;flex-shrink:0}
-.avatar-icon{width:36px;height:36px;border-radius:50%;background:var(--border);border:2px solid #a8ccb8;overflow:hidden;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .3s,border-color .3s,transform .2s}
-.avatar-icon:hover{border-color:#8fb8a0;transform:scale(1.05)}
-.avatar-icon img{width:100%;height:100%;object-fit:cover;display:none}
-.avatar-icon .default-icon{font-size:20px;color:#555;line-height:1;display:block}
-.profile-card{background:var(--card);border-radius:12px;padding:20px 18px;box-shadow:var(--shadow);max-width:600px;transition:background .3s,box-shadow .3s}
-.profile-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.profile-avatar{width:64px;height:64px;border-radius:50%;background:var(--border);border:2px solid #a8ccb8;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--light-gray);font-size:12px;position:relative;cursor:pointer;transition:background .3s,border-color .3s}
-.profile-avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.profile-avatar .upload-hint{position:absolute;inset:0;background:rgba(0,0,0,.5);color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;border-radius:50%;text-align:center;padding:4px}
-.profile-avatar:hover .upload-hint{display:flex}
-.profile-name-area{flex:1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:120px}
-.profile-name{font-size:18px;font-weight:600;color:var(--text);word-break:break-word}
-.profile-edit-btn{padding:4px 12px;background:var(--border);border:none;border-radius:16px;color:var(--text);font-size:12px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap;display:flex;align-items:center;gap:4px}
-.profile-edit-btn:hover{background:var(--light-gray)}
-.profile-edit-btn i{font-size:12px}
-.profile-body{display:flex;flex-direction:column;gap:12px}
-.profile-item{display:flex;align-items:center;padding:10px 14px;background:var(--item-bg);border-radius:10px;border:1px solid var(--border);transition:background .3s,border-color .3s;flex-wrap:wrap;gap:6px}
-.profile-item .label{width:60px;font-size:14px;color:var(--light-gray);flex-shrink:0}
-.profile-item .value{font-size:14px;color:var(--text);flex:1;word-break:break-word;min-width:60px}
-.profile-item .edit-icon{color:#68a882;font-size:16px;cursor:pointer;padding:4px 8px;border-radius:4px;line-height:1;background:transparent;border:none}
-.profile-item .edit-icon:hover{background:var(--border)}
-.settings-card{background:var(--card);border-radius:12px;padding:20px 18px;box-shadow:var(--shadow);max-width:600px;transition:background .3s,box-shadow .3s}
-.settings-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);gap:12px}
-.settings-item:last-child{border-bottom:none}
-.settings-item .label{font-size:15px;color:var(--text);display:flex;align-items:center;gap:8px}
-.settings-item .label i{font-size:18px;color:#68a882}
-.settings-item .desc{font-size:13px;color:var(--light-gray);margin-top:2px}
-.switch{position:relative;width:48px;height:26px;background:var(--light-gray);border-radius:13px;cursor:pointer;transition:background .3s;flex-shrink:0}
-.switch.active{background:#a8ccb8}
-.switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .3s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
-.switch.active .knob{transform:translateX(22px)}
-.contact-card{background:var(--card);border-radius:12px;padding:20px 18px;box-shadow:var(--shadow);max-width:600px;transition:background .3s,box-shadow .3s}
-.contact-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.contact-item:last-child{border-bottom:none}
-.contact-item .label{font-size:14px;color:var(--light-gray);width:70px;flex-shrink:0;display:flex;align-items:center;gap:6px}
-.contact-item .label i{font-size:16px}
-.contact-item .value{font-size:14px;color:var(--text);flex:1;word-break:break-word;min-width:60px}
-.contact-item .copy-btn,.contact-item .sponsor-btn{padding:4px 14px;border:none;border-radius:12px;font-size:13px;cursor:pointer;transition:background .2s;white-space:nowrap;display:flex;align-items:center;gap:4px}
-.contact-item .copy-btn{background:var(--border);color:var(--text)}
-.contact-item .copy-btn:hover{background:var(--light-gray)}
-.contact-item .sponsor-btn{background:#d4a373;color:#fff}
-.contact-item .sponsor-btn:hover{background:#c28f5e}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(68,62,55,.7);color:#fff;padding:6px 18px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:2000;backdrop-filter:blur(4px)}
-.toast.show{opacity:1}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:999;padding:16px}
-.modal-overlay.active{display:flex}
-.modal-box{background:#fff;max-width:440px;width:100%;max-height:90vh;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.2);display:flex;flex-direction:column;animation:fadeIn .2s ease;overflow:hidden}
-.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid #e9e3d6;flex-shrink:0;background:#fff}
-.modal-title{font-size:17px;font-weight:600;color:#443e37;display:flex;align-items:center;gap:8px}
-.modal-title i{font-size:18px;color:#68a882}
-.modal-close{width:32px;height:32px;border-radius:50%;background:#f0eeea;border:none;font-size:18px;color:#443e37;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.modal-close:hover{background:#e0dbd2}
-.modal-body{padding:16px 20px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.modal-body::-webkit-scrollbar{width:4px}
-.modal-body::-webkit-scrollbar-thumb{background:#a8ccb8;border-radius:4px}
-.section{margin-bottom:16px}
-.section:last-child{margin-bottom:0}
-.pay-section{background:#fcfaf6;border-radius:12px;padding:14px 16px;border:1px solid #e9e3d6}
-.pay-label{font-weight:500;color:#443e37;margin-bottom:10px;font-size:14px;display:flex;align-items:center;gap:6px}
-.pay-label i{font-size:16px;color:#d4a373}
-.qr-box{width:130px;height:130px;margin:0 auto 10px;border-radius:8px;border:1px solid #e9e3d6;background:#e9e3d6;display:flex;align-items:center;justify-content:center;color:#b0a89b;font-size:13px;overflow:hidden}
-.qr-box img{width:100%;height:100%;object-fit:contain;display:block}
-.pay-price{text-align:center;font-size:18px;font-weight:600;color:#c77d4a;margin-bottom:8px}
-.pay-price small{font-weight:400;font-size:13px;color:#c9c6bf}
-.pay-btn{display:block;width:100%;padding:10px;background:#d4a373;border:none;border-radius:12px;color:#fff;font-weight:500;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-.pay-btn:hover{background:#c28f5e}
-.pay-success{margin-top:10px;padding:12px 14px;background:#e7f3e9;border-radius:12px;border-left:4px solid #a8ccb8;font-size:13px;word-break:break-all;display:none}
-.pay-success.visible{display:block}
-.pay-success .label{font-weight:600;color:#2d6a4f;display:block;margin-bottom:4px}
-.pay-success .down-link{color:#2a7f6e;font-weight:500;text-decoration:underline;cursor:pointer}
-.qq-section{background:#f6f9fc;border-radius:12px;padding:14px 16px;border:1px solid #dce6ef}
-.qq-label{font-weight:500;color:#443e37;margin-bottom:4px;font-size:14px;display:flex;align-items:center;gap:6px}
-.qq-label i{font-size:16px;color:#4f8bc9}
-.qq-desc{font-size:13px;color:#5a6b7a;margin-bottom:8px}
-.qq-btn{display:inline-block;padding:8px 18px;background:#4f8bc9;border:none;border-radius:12px;color:#fff;font-weight:500;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px}
-.qq-btn:hover{background:#3a71a8}
-.qq-note{font-size:12px;color:#c9c6bf;margin-top:6px}
-.sponsor-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:3000;padding:16px}
-.sponsor-overlay.active{display:flex}
-.sponsor-box{background:var(--card);max-width:400px;width:100%;border-radius:16px;padding:28px 24px 24px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;animation:fadeIn .25s ease;text-align:center;transition:background .3s}
-.sponsor-close{position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--border);border:none;font-size:18px;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
-.sponsor-close:hover{background:var(--light-gray)}
-.sponsor-box .sponsor-title{font-size:20px;font-weight:600;color:var(--text);margin-bottom:6px}
-.sponsor-box .sponsor-sub{font-size:14px;color:var(--light-gray);margin-bottom:20px;line-height:1.6}
-.sponsor-box .sponsor-qr{display:block;margin:0 auto;max-width:180px;width:100%;border-radius:8px;border:1px solid var(--border);overflow:hidden}
-.sponsor-box .sponsor-qr img{width:100%;height:auto;display:block}
-.sponsor-box .sponsor-hint{font-size:13px;color:var(--light-gray);margin-top:10px;display:block}
-@keyframes fadeIn{0%{opacity:0;transform:scale(.94) translateY(12px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-.slider-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;padding:16px}
-.slider-overlay.active{display:flex}
-.slider-box{background:#fff;max-width:380px;width:100%;border-radius:12px;padding:24px 22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:fadeIn .2s ease}
-.slider-box .slider-title{font-size:16px;font-weight:600;color:#443e37;margin-bottom:4px;display:flex;align-items:center;gap:8px;justify-content:center}
-.slider-box .slider-title i{font-size:18px;color:#68a882}
-.slider-box .slider-sub{font-size:13px;color:#c9c6bf;margin-bottom:16px;text-align:center}
-.slider-track{position:relative;width:100%;height:44px;background:#f0eeea;border-radius:22px;overflow:hidden;cursor:pointer;user-select:none;border:1px solid #e9e3d6;touch-action:none}
-.slider-track .slider-bg{position:absolute;left:0;top:0;height:100%;width:0;background:#a8ccb8;border-radius:22px;transition:width .05s}
-.slider-track .slider-thumb{position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:40px;background:#fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;font-size:18px;color:#68a882;pointer-events:none;will-change:left;transition:left .05s}
-.slider-track .slider-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;color:#b0a89b;pointer-events:none;white-space:nowrap}
-.slider-box .slider-status{text-align:center;margin-top:12px;font-size:13px;color:#c9c6bf}
-.slider-box .slider-status.success{color:#2d6a4f}
-.slider-box .slider-close{display:block;margin:14px auto 0;padding:6px 28px;background:#f0eeea;border:none;border-radius:20px;color:#443e37;font-size:13px;cursor:pointer}
-.slider-box .slider-close:hover{background:#e0dbd2}
-@media(max-width:768px){
-.menu-toggle{display:flex}
-.sidebar{position:fixed;top:0;left:0;transform:translateX(-100%);width:260px;height:100vh;border-radius:0;z-index:1000}
-.sidebar.open{transform:translateX(0)}
-.sidebar-overlay.active{display:block}
-.main{padding:16px;padding-top:60px}
-.home-header .search-wrap .search-input-wrap{min-width:80px}
-.search-count{font-size:12px}
-.resource-card{padding:14px 14px}
-.card-thumb{height:100px}
-.card-left h3{font-size:15px}
-.card-info{font-size:12px;gap:12px}
-.download-btn{padding:7px 14px;font-size:13px}
-.profile-card,.settings-card,.contact-card{padding:16px}
-.profile-avatar{width:56px;height:56px}
-.profile-name{font-size:17px}
-.profile-item{padding:8px 12px}
-.profile-item .label{width:50px;font-size:13px}
-.profile-item .value{font-size:13px}
-.modal-box{max-width:100%;margin:0 8px}
-.modal-body{padding:14px 16px 16px}
-.qr-box{width:110px;height:110px}
-.sponsor-box{padding:20px 16px}
-.sponsor-box .sponsor-title{font-size:18px}
-.slider-box{padding:20px 16px}
-}
-@media(max-width:480px){
-.main{padding:12px;padding-top:56px}
-.resource-card{padding:12px 12px}
-.card-thumb{height:80px}
-.card-left h3{font-size:14px}
-.card-info{font-size:11px;gap:8px;flex-direction:column}
-.card-actions{width:100%;justify-content:flex-end}
-.fav-btn{font-size:18px}
-.download-btn{padding:6px 12px;font-size:12px}
-.profile-header{gap:12px}
-.profile-avatar{width:48px;height:48px}
-.profile-name{font-size:15px}
-.profile-edit-btn{font-size:11px;padding:2px 10px}
-.profile-item .label{width:44px;font-size:12px}
-.profile-item .value{font-size:12px}
-.profile-item .edit-icon{font-size:14px;padding:2px 6px}
-.page-title{font-size:17px}
-.home-header{gap:8px}
-.avatar-icon{width:30px;height:30px}
-.avatar-icon .default-icon{font-size:16px}
-.search-input-wrap{padding:0 10px}
-.search-input{font-size:13px;padding:8px 0}
-.search-input-wrap .search-icon{font-size:14px}
-.search-count{font-size:11px}
-.contact-item .label{width:60px;font-size:13px}
-.contact-item .value{font-size:13px}
-.modal-box{padding:0}
-.modal-header{padding:12px 16px 10px}
-.modal-title{font-size:15px}
-.modal-body{padding:12px 14px 14px}
-.pay-section,.qq-section{padding:12px 12px}
-.qr-box{width:90px;height:90px}
-.pay-price{font-size:16px}
-.sponsor-box{padding:16px 12px}
-.sponsor-box .sponsor-title{font-size:16px}
-.sponsor-box .sponsor-sub{font-size:13px}
-.sponsor-box .sponsor-qr{max-width:140px}
-.slider-track{height:40px}
-.slider-track .slider-thumb{width:36px;height:36px;font-size:16px}
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0a0f}
+.bg{position:fixed;inset:0;background:url('固定图片/主页背景.jpg')center/cover no-repeat;z-index:0}
+.g{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07)}
+.gs{background:rgba(12,12,18,.7);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-right:1px solid rgba(255,255,255,.05)}
+.i{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.25s}
+.i::placeholder{color:rgba(243, 4, 4, 0.3)}.i:focus{outline:none;background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.22)}
+.n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px}
+.n:hover,.n.on{color:#fff;background:rgba(255,255,255,.1)}.n.on{background:rgba(255,255,255,.13)}
+.c{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);border-radius:14px;transition:.25s}
+.c:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.13);transform:translateY(-2px)}
+.bd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.2s;cursor:pointer}.bd:hover{background:rgba(255,255,255,.2)}
+.ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s}.ht:hover{transform:scale(1.15)}.ht.on{color:#ef4444}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.ov.sh{opacity:1;pointer-events:auto}.md{transform:scale(.95)translateY(8px);transition:.25s}.ov.sh .md{transform:scale(1)translateY(0)}
+.tc{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200}
+.ti{opacity:0;transform:translateY(-10px);transition:.3s;pointer-events:none}.ti.sh{opacity:1;transform:translateY(0)}
+.pg{display:none}.pg.on{display:block}
+.db{border:2px dashed rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:11px;flex-shrink:0}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px}
+.sw{width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);cursor:pointer;transition:.25s;position:relative;border:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.sw.on{background:rgba(255,255,255,.25)}.sk{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.sw.on .sk{left:21px}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+@media(max-width:768px){.sb{position:fixed;left:-280px;top:0;bottom:0;z-index:90;transition:left .3s;width:260px!important}.sb.op{left:0}.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:80;opacity:0;pointer-events:none;transition:.3s}.mo.sh{opacity:1;pointer-events:auto}}
 </style>
 </head>
 <body>
+<div class="bg"></div>
+<div class="mo" id="moOv" onclick="tgSB()"></div>
+<div class="tc" id="tC"></div>
 
-<button class="menu-toggle" id="menuToggle" aria-label="切换菜单">☰</button>
-<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<!-- Announce -->
+<div id="anM" class="ov" onclick="if(event.target===this)clM('anM')">
+  <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
+    <h3 class="text-white text-lg font-semibold mb-3">公告</h3>
+    <p class="text-white/50 text-sm leading-relaxed">内容</p>
+    <button onclick="clM('anM')" class="mt-5 w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">我知道了</button>
+  </div>
+</div>
 
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-title"><i class="iconfont icon-zhuye"></i> MUGEN整合分享</div>
-  <ul class="sidebar-menu">
-    <li><a data-page="home" class="active"><span class="icon iconfont icon-shouye"></span><span>首页</span></a></li>
-    <li><a data-page="profile"><span class="icon iconfont icon-gerenzhongxin"></span><span>个人中心</span></a></li>
-    <li><a data-page="purchased"><span class="icon iconfont icon-goumai"></span><span>已购买</span></a></li>
-    <li><a data-page="favorites" id="favMenu"><span class="icon iconfont icon-shoucang"></span><span>收藏</span><span class="badge" id="favBadge">0</span></a></li>
-    <li><a data-page="updates"><span class="icon iconfont icon-gengxin"></span><span>更新内容</span></a></li>
-    <li><a data-page="contact"><span class="icon iconfont icon-lianxi"></span><span>联系作者</span></a></li>
-    <li><a data-page="settings"><span class="icon iconfont icon-shezhi"></span><span>设置</span></a></li>
-  </ul>
-</aside>
+<!-- Download -->
+<div id="dlM" class="ov" onclick="if(event.target===this)clM('dlM')">
+  <div class="md g rounded-2xl w-full max-w-lg mx-4 p-6">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-white text-lg font-semibold">下载资源</h3>
+      <span class="text-white/40 cursor-pointer hover:text-white/80 transition" onclick="clM('dlM')"><iconify-icon icon="lucide:x" width="20"></iconify-icon></span>
+    </div>
+    <div id="dlB"></div>
+  </div>
+</div>
 
-<main class="main">
-<div class="page active" id="page-home">
-  <div class="home-header">
-    <div class="search-wrap">
-      <div class="search-input-wrap">
-        <span class="search-icon iconfont icon-sousuo"></span>
-        <input class="search-input" id="searchInput" placeholder="搜索整合包..." autofocus>
+<!-- Sponsor -->
+<div id="spM" class="ov" onclick="if(event.target===this)clM('spM')">
+  <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
+    <h3 class="text-white text-lg font-semibold mb-2">赞助作者</h3>
+    <p class="text-white/40 text-sm mb-5">感谢支持，赞助将用于站点维护与资源更新</p>
+    <div class="db w-full h-36 mb-4">赞助二维码</div>
+    <button onclick="clM('spM');toast('感谢您的支持 ❤️')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">已赞助</button>
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="relative z-10 flex h-screen">
+  <aside id="sb" class="sb gs w-[260px] flex-shrink-0 flex flex-col p-5 h-full">
+    <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享</h1>
+    <nav class="flex flex-col gap-1 flex-1" id="nav">
+      <div class="n on flex items-center gap-3 px-3 py-2.5" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
+      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人中心</span></div>
+      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
+      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
+      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
+      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
+      <div class="n flex items-center gap-3 px-3 py-2.5" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
+    </nav>
+  </aside>
+  <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <header class="g flex items-center gap-3 px-4 md:px-6 py-3 flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,.05)">
+      <button class="md:hidden text-white/50 hover:text-white transition mr-1" onclick="tgSB()"><iconify-icon icon="lucide:menu" width="22"></iconify-icon></button>
+      <div class="relative flex-1 max-w-xl">
+        <iconify-icon icon="lucide:search" width="15" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
+        <input id="sI" type="text" placeholder="输入关键词搜索名称" class="i w-full pl-9 pr-4 py-2 rounded-xl text-sm" oninput="doS()">
       </div>
-      <span class="search-count">共 <span id="totalCount">0</span> 个资源</span>
-    </div>
-    <div class="avatar-icon" id="headerAvatar" title="个人中心">
-      <span class="default-icon iconfont icon-yonghu"></span>
-      <img id="headerAvatarImg" alt="头像">
-    </div>
-  </div>
-  <div class="resource-list" id="resourceList"></div>
-  <div class="empty-tip" id="emptyTip">没有找到匹配的资源</div>
-</div>
-
-<div class="page" id="page-profile">
-<div class="page-title"><i class="iconfont icon-gerenzhongxin"></i> 个人中心</div>
-<div class="profile-card">
-<div class="profile-header">
-  <div class="profile-avatar" id="avatarUpload">
-    <span class="placeholder-text" id="avatarPlaceholder">头像</span>
-    <span class="upload-hint">点击上传</span>
-    <img id="avatarImg" style="display:none" alt="头像">
-    <input type="file" id="avatarInput" accept="image/*" style="display:none">
-  </div>
-  <div class="profile-name-area">
-    <span class="profile-name" id="displayName">MUGEN玩家</span>
-    <button class="profile-edit-btn" id="editNameBtn"><i class="iconfont icon-bianji"></i> 编辑名称</button>
-  </div>
-</div>
-<div class="profile-body">
-  <div class="profile-item">
-    <span class="label">账户</span>
-    <span class="value" id="displayAccount">mugen_user@example.com</span>
-    <button class="edit-icon iconfont icon-bianji" id="editAccountBtn"></button>
-  </div>
-  <div class="profile-item">
-    <span class="label">密码</span>
-    <span class="value" id="displayPassword">••••••••</span>
-    <button class="edit-icon iconfont icon-bianji" id="editPasswordBtn"></button>
-  </div>
-</div>
-</div></div>
-
-<div class="page" id="page-favorites"><div class="page-title"><i class="iconfont icon-shoucang"></i> 我的收藏</div><div class="resource-list" id="favList"><div class="empty-tip visible" style="display:block;">还没有收藏任何资源</div></div></div>
-<div class="page" id="page-purchased"><div class="page-title"><i class="iconfont icon-goumai"></i> 已购买</div><div class="empty-tip visible" style="display:block;">暂无购买记录</div></div>
-<div class="page" id="page-updates"><div class="page-title"><i class="iconfont icon-gengxin"></i> 更新内容</div><div class="empty-tip visible" style="display:block;">暂无更新</div></div>
-
-<div class="page" id="page-contact">
-<div class="page-title"><i class="iconfont icon-lianxi"></i> 联系作者</div>
-<div class="contact-card">
-  <div class="contact-item">
-    <span class="label"><i class="iconfont icon-qq"></i> 作者QQ</span>
-    <span class="value" id="authorQQ">2368529252</span>
-    <button class="copy-btn" id="copyQQBtn"><i class="iconfont icon-fuzhi"></i> 复制</button>
-  </div>
-  <div class="contact-item">
-    <span class="label"><i class="iconfont icon-zanzhu"></i> 赞助作者</span>
-    <span class="value" style="font-size:14px;color:var(--light-gray)">为了爱而发电，你的支持是我的动力</span>
-    <button class="sponsor-btn" id="sponsorBtn"><i class="iconfont icon-zanzhu"></i> 赞助</button>
-  </div>
-</div>
-</div>
-
-<div class="page" id="page-settings">
-<div class="page-title"><i class="iconfont icon-shezhi"></i> 设置</div>
-<div class="settings-card">
-  <div class="settings-item">
-    <div><div class="label"><i class="iconfont icon-yejian"></i> 夜间模式</div><div class="desc">切换深色/浅色主题</div></div>
-    <div class="switch" id="themeSwitch"><div class="knob"></div></div>
-  </div>
-</div>
-</div>
-</main>
-
-<div class="toast" id="toast"></div>
-
-<div class="sponsor-overlay" id="sponsorOverlay">
-  <div class="sponsor-box">
-    <button class="sponsor-close" id="sponsorClose">✕</button>
-    <div class="sponsor-title">❤️ 赞助作者</div>
-    <div class="sponsor-sub">为了爱而发电，你的支持是我的动力</div>
-    <div class="sponsor-qr" id="sponsorQr">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23e9e3d6'/%3E%3Ctext x='50%25' y='50%25' font-family='system-ui' font-size='16' fill='%23b0a89b' text-anchor='middle' dy='.3em'%3E二维码占位%3C/text%3E%3C/svg%3E" alt="赞助二维码">
-    </div>
-    <div class="sponsor-hint">感谢你的支持！😊</div>
-  </div>
-</div>
-
-<div class="slider-overlay" id="sliderOverlay">
-  <div class="slider-box">
-    <div class="slider-title"><i class="iconfont icon-anquan"></i> 安全验证</div>
-    <div class="slider-sub" id="sliderSub">请按住滑块拖动到最右侧完成验证</div>
-    <div class="slider-track" id="sliderTrack">
-      <div class="slider-bg" id="sliderBg"></div>
-      <div class="slider-hint" id="sliderHint">▶ 拖动验证</div>
-      <div class="slider-thumb" id="sliderThumb">▶</div>
-    </div>
-    <div class="slider-status" id="sliderStatus">请完成验证</div>
-    <button class="slider-close" id="sliderClose">取消</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal-box">
-    <div class="modal-header"><div class="modal-title"><i class="iconfont icon-xiazai"></i> 选择下载方式</div><button class="modal-close" id="modalClose">✕</button></div>
-    <div class="modal-body">
-      <div class="section pay-section">
-        <div class="pay-label"><i class="iconfont icon-zhifu"></i> 付费下载（微信扫码支付）</div>
-        <div class="qr-box" id="qrBox"><span class="placeholder-text">二维码</span></div>
-        <div class="pay-price">¥9.90 <small>/ 单个资源</small></div>
-        <button class="pay-btn" id="payBtn"><i class="iconfont icon-zhifu"></i> 我已支付，获取下载链接</button>
-        <div class="pay-success" id="paySuccess"><span class="label">✅ 支付成功</span>下载链接：<span class="down-link" id="downloadLink">https://mugen-files.example.com/resource.zip</span></div>
+      <span id="cT" class="text-white/35 text-xs whitespace-nowrap hidden sm:inline ml-2">共 1 个资源</span>
+      <div id="hAv" class="w-8 h-8 rounded-full bg-white/8 border border-white/8 flex items-center justify-center cursor-pointer hover:bg-white/15 transition flex-shrink-0 ml-auto overflow-hidden" onclick="go('profile')">
+        <iconify-icon icon="lucide:user" width="14" class="text-white/50" id="hAvIc"></iconify-icon>
       </div>
-      <div class="section qq-section">
-        <div class="qq-label"><i class="iconfont icon-qq"></i> 加入QQ群 · 免费下载</div>
-        <div class="qq-desc">群内提供全部整合包资源，无限制下载。</div>
-        <button class="qq-btn" id="qqBtn"><i class="iconfont icon-qq"></i> 复制群号并加入</button>
-        <div class="qq-note">群号：978-123-456（复制后打开QQ搜索）</div>
+    </header>
+    <div id="ct" class="flex-1 overflow-y-auto p-4 md:p-6" style="scroll-behavior:smooth">
+
+      <!-- Home -->
+      <div id="p-home" class="pg on">
+        <div id="hG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <div id="hE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:search-x" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">没有找到匹配的资源</p></div>
+      </div>
+
+      <!-- Detail -->
+      <div id="p-detail" class="pg">
+        <button onclick="go('home')" class="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-sm transition mb-5"><iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>返回首页</button>
+        <div id="dtC"></div>
+      </div>
+
+      <!-- Profile -->
+      <div id="p-profile" class="pg">
+        <h2 class="text-white text-xl font-semibold mb-6">个人资料</h2>
+        <div class="g rounded-2xl p-6 max-w-lg">
+          <div class="flex items-center gap-5 mb-6">
+            <div class="relative group">
+              <div id="aB" class="w-20 h-20 rounded-full bg-white/8 border-2 border-white/8 flex items-center justify-center overflow-hidden"><iconify-icon icon="lucide:user" width="30" class="text-white/25" id="aI"></iconify-icon></div>
+              <div class="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition cursor-pointer" onclick="document.getElementById('aI2').click()"><iconify-icon icon="lucide:camera" width="16" class="text-white/70"></iconify-icon></div>
+              <input type="file" id="aI2" accept="image/*" class="hidden" onchange="upA(event)">
+            </div>
+            <div><p class="text-white font-medium" id="dN">MUGEN用户</p><p class="text-white/30 text-xs mt-0.5">点击头像更换</p></div>
+          </div>
+          <div class="space-y-4">
+            <div><label class="text-white/40 text-xs block mb-1.5">昵称</label><input id="eN" class="i w-full px-3 py-2 rounded-lg text-sm" value="MUGEN用户"></div>
+            <div><label class="text-white/40 text-xs block mb-1.5">账号</label><input id="eA" class="i w-full px-3 py-2 rounded-lg text-sm" value="mugen_user"></div>
+            <div><label class="text-white/40 text-xs block mb-1.5">密码</label><input id="eP" type="password" class="i w-full px-3 py-2 rounded-lg text-sm" value="123456"></div>
+            <button onclick="svP()" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition mt-2">保存修改</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Purchased -->
+      <div id="p-purchased" class="pg"><h2 class="text-white text-xl font-semibold mb-6">已购买</h2><div id="puG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="puE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:shopping-bag" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无已购买资源</p></div></div>
+
+      <!-- Favorites -->
+      <div id="p-fav" class="pg"><h2 class="text-white text-xl font-semibold mb-6">收藏</h2><div id="fvG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="fvE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:heart" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无收藏资源</p></div></div>
+
+      <!-- Updates -->
+      <div id="p-updates" class="pg"><h2 class="text-white text-xl font-semibold mb-6">更新内容</h2><div class="space-y-4" id="upL"></div></div>
+
+      <!-- Contact -->
+      <div id="p-contact" class="pg">
+        <h2 class="text-white text-xl font-semibold mb-6">联系作者</h2>
+        <div class="g rounded-2xl p-6 max-w-lg space-y-4">
+          <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70"></iconify-icon><span class="text-white/70 text-sm">WeChat: MUGEN_Author</span></div><button onclick="cp('MUGEN_Author')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
+          <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70"></iconify-icon><span class="text-white/70 text-sm">QQ: 123456789</span></div><button onclick="cp('123456789')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
+          <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="lucide:mail" width="18" class="text-red-400/70"></iconify-icon><span class="text-white/70 text-sm">Email: author@mugen.com</span></div><button onclick="cp('author@mugen.com')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
+          <button onclick="opM('spM')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition mt-2 flex items-center justify-center gap-2"><iconify-icon icon="lucide:heart" width="16" class="text-pink-400/70"></iconify-icon>赞助作者</button>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div id="p-settings" class="pg">
+        <h2 class="text-white text-xl font-semibold mb-6">设置</h2>
+        <div class="g rounded-2xl p-6 max-w-lg">
+          <div class="flex items-center justify-between">
+            <div><p class="text-white/80 text-sm font-medium">模式选择</p><p class="text-white/30 text-xs mt-0.5">日间模式和月间模式</p></div>
+            <div class="sw on" onclick="tgSw(this)"><div class="sk"></div></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>
-
 <script>
-(function(){
-const $=id=>document.getElementById(id),$$=s=>document.querySelectorAll(s);
+const R=[{id:0,name:'经典街机人物整合包',size:'256MB',time:'2小时前',price:'¥12',fav:false,paid:false,dl:'https://mugen.com/dl/classic-arcade-pack',desc:'本整合包收录了经典街机格斗游戏的全部人物资源，涵盖KOF系列、街霸系列、侍魂系列等经典角色。所有人物均经过严格测试，确保在MUGEN引擎下稳定运行，适配WinMUGEN与MUGEN 1.1版本。',compat:'WinMUGEN / MUGEN 1.1',imgs:['detail_1.jpg','detail_2.jpg','detail_3.jpg']}];
+let cP='home',sQ='',avSrc=null;
+const DL_URL='https://mugen.com/dl/classic-arcade-pack';
 
-// ===== 移动端侧边栏 =====
-const sidebar=document.getElementById('sidebar');
-const overlay=document.getElementById('sidebarOverlay');
-const menuToggle=document.getElementById('menuToggle');
+function toast(m){const c=document.getElementById('tC'),d=document.createElement('div');d.className='ti g text-white text-sm px-5 py-2.5 rounded-xl mb-2 whitespace-nowrap';d.textContent=m;c.appendChild(d);requestAnimationFrame(()=>d.classList.add('sh'));setTimeout(()=>{d.classList.remove('sh');setTimeout(()=>d.remove(),300)},2000)}
+function opM(id){document.getElementById(id).classList.add('sh');document.body.style.overflow='hidden'}
+function clM(id){document.getElementById(id).classList.remove('sh');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM')}});
+function tgSB(){document.getElementById('sb').classList.toggle('op');document.getElementById('moOv').classList.toggle('sh')}
 
-function toggleSidebar(){
-  sidebar.classList.toggle('open');
-  overlay.classList.toggle('active');
-  document.body.style.overflow=sidebar.classList.contains('open')?'hidden':'';
+function go(p){
+  cP=p;
+  document.querySelectorAll('.n').forEach(n=>n.classList.toggle('on',n.dataset.p===p));
+  document.querySelectorAll('.pg').forEach(e=>e.classList.remove('on'));
+  document.getElementById('p-'+p).classList.add('on');
+  document.getElementById('sI').value='';sQ='';
+  if(p==='home')rH();if(p==='fav')rF();if(p==='purchased')rP();if(p==='updates')rU();
+  document.getElementById('ct').scrollTop=0;
+  const s=document.getElementById('sb');if(s.classList.contains('op'))tgSB();
 }
-function closeSidebar(){
-  sidebar.classList.remove('open');
-  overlay.classList.remove('active');
-  document.body.style.overflow='';
-}
-menuToggle.addEventListener('click',toggleSidebar);
-overlay.addEventListener('click',closeSidebar);
-document.querySelectorAll('.sidebar-menu a').forEach(a=>{
-  a.addEventListener('click',function(){
-    if(window.innerWidth<=768) closeSidebar();
-  });
-});
+function doS(){sQ=document.getElementById('sI').value.trim().toLowerCase();if(cP!=='home')go('home');rH()}
 
-// ===== 数据加载 =====
-let appResources=[];
-let profileData={};
-
-function loadData(){
-  fetch('data.json?'+Date.now())
-    .then(res=>{if(!res.ok)throw new Error('data.json加载失败');return res.json()})
-    .then(data=>{
-      appResources=data.resources||[];
-      profileData=data.profile||{};
-      renderAll();
-    })
-    .catch(()=>{
-      const local=localStorage.getItem('mugen_admin_data');
-      if(local){
-        try{const d=JSON.parse(local);appResources=d.resources||[];profileData=d.profile||{};renderAll();return;}catch(_){}
-      }
-      appResources=[{id:1,title:'经典街机人物整合包',size:'2.3GB',date:'2026-08-01',image:'',downloadLink:'#'}];
-      profileData={name:'MUGEN玩家',account:'mugen_user@example.com',password:'123456',avatar:''};
-      renderAll();
-    });
+/* Avatar sync */
+function syncAv(){
+  const h=document.getElementById('hAv'),ic=document.getElementById('hAvIc');
+  if(avSrc){if(ic)ic.remove();let img=h.querySelector('img');if(!img){img=document.createElement('img');img.className='w-full h-full object-cover';h.appendChild(img)}img.src=avSrc}
+  else{let img=h.querySelector('img');if(img)img.remove();if(!document.getElementById('hAvIc')){const ni=document.createElement('iconify-icon');ni.setAttribute('icon','lucide:user');ni.setAttribute('width','14');ni.className='text-white/50';ni.id='hAvIc';h.appendChild(ni)}}
 }
 
-function renderAll(){
-  renderResources(appResources);
-  renderProfile(profileData);
-  updateTotalCount(appResources.length);
+/* Card HTML */
+function cHTML(r,sp){
+  const fc=r.fav?'on':'';
+  let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费 '+r.price+'</span>';
+  return `<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0">图片</div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size} · ${r.time}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`;
 }
 
-function renderResources(resources){
-  const container=document.getElementById('resourceList');
-  if(!resources||resources.length===0){
-    container.innerHTML='<div class="empty-tip visible" style="display:block;">暂无资源</div>';
-    return;
-  }
-  container.innerHTML=resources.map((r,idx)=>`
-    <div class="resource-card" data-title="${r.title||''}" data-id="${r.id||idx+1}">
-      <div class="card-left">
-        <h3>${r.title||'未命名'}</h3>
-        <div class="card-thumb" id="thumb${idx+1}">
-          ${r.image?`<img src="${r.image}" alt="图片">`:'<span class="placeholder-text">图片</span>'}
+/* Home */
+function rH(){const f=sQ?R.filter(r=>r.name.toLowerCase().includes(sQ)):R;const g=document.getElementById('hG'),e=document.getElementById('hE');if(f.length){g.innerHTML=f.map(r=>cHTML(r,false)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}}
+
+/* Detail Page */
+function goDt(id){
+  const r=R[id];
+  document.getElementById('dtC').innerHTML=`
+    <div class="g rounded-2xl overflow-hidden max-w-4xl">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-0">
+        <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.imgs[0]}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div>
+        <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.imgs[1]}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div>
+        <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.imgs[2]}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div>
+      </div>
+      <div class="p-6 md:p-8">
+        <h2 class="text-white text-xl font-semibold mb-3">${r.name}</h2>
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size}</span>
+          <span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time}</span>
+          <span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat}</span>
         </div>
-        <div class="card-info">
-          <span>文件大小：${r.size||'未知'}</span>
-          <span>${r.date||'未知日期'}</span>
+        <div class="mb-6">
+          <h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3>
+          <p class="text-white/40 text-sm leading-relaxed">${r.desc}</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id});goDt(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span>
+          <button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button>
         </div>
       </div>
-      <div class="card-actions">
-        <button class="fav-btn" data-id="${r.id||idx+1}"><i class="iconfont icon-shoucang"></i></button>
-        <button class="download-btn" data-resource="${r.title||'资源'}"><i class="iconfont icon-xiazai"></i> 下载</button>
-      </div>
-    </div>
-  `).join('');
-  container.querySelectorAll('.download-btn').forEach(b=>{
-    b.addEventListener('click',function(e){e.stopPropagation();openModal(this.dataset.resource||'资源');});
-  });
-  container.querySelectorAll('.fav-btn').forEach(b=>{
-    b.addEventListener('click',function(e){e.stopPropagation();toggleFav(parseInt(this.dataset.id));});
-  });
-  updateFavButtons();
+    </div>`;
+  cP='detail';
+  document.querySelectorAll('.pg').forEach(e=>e.classList.remove('on'));
+  document.getElementById('p-detail').classList.add('on');
+  document.getElementById('ct').scrollTop=0;
 }
 
-function renderProfile(profile){
-  if(!profile)return;
-  document.getElementById('displayName').textContent=profile.name||'MUGEN玩家';
-  document.getElementById('displayAccount').textContent=profile.account||'mugen_user@example.com';
-  document.getElementById('displayPassword').textContent='••••••••';
-  const avatarImg=document.getElementById('avatarImg');
-  const avatarPlaceholder=document.getElementById('avatarPlaceholder');
-  if(profile.avatar&&profile.avatar!=''){
-    avatarImg.src=profile.avatar;
-    avatarImg.style.display='block';
-    avatarPlaceholder.style.display='none';
+/* Favorite */
+function tgF(id){R[id].fav=!R[id].fav;toast(R[id].fav?'已收藏':'已取消收藏');rH();rF()}
+function rF(){const l=R.filter(r=>r.fav);const g=document.getElementById('fvG'),e=document.getElementById('fvE');if(l.length){g.innerHTML=l.map(r=>cHTML(r,false)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}}
+
+/* Download Modal */
+function opD(id){
+  const r=R[id];
+  if(r.paid){
+    document.getElementById('dlB').innerHTML=`
+      <div class="flex items-center gap-3 p-4 rounded-xl bg-white/5">
+        <div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl}</p></div>
+        <button onclick="cp('${r.dl}')" class="text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 flex-shrink-0">复制</button>
+      </div>`;
   }else{
-    avatarImg.style.display='none';
-    avatarPlaceholder.style.display='block';
+    document.getElementById('dlB').innerHTML=`
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-white/5 flex flex-col items-center">
+          <p class="text-white/60 text-xs font-medium mb-3">付费下载</p>
+          <img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'">
+          <p class="text-white text-lg font-semibold mb-3">${r.price}</p>
+          <button onclick="mkPd(${r.id})" class="w-full py-2 rounded-xl text-sm font-medium bg-white/15 text-white hover:bg-white/25 transition">我已付费</button>
+        </div>
+        <div class="p-4 rounded-xl bg-white/5 flex flex-col items-center">
+          <p class="text-white/60 text-xs font-medium mb-3">免费下载</p>
+          <img src="/固定图片/群二维码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'">
+          <p class="text-white/40 text-xs mt-1">加入QQ群：1044609733</p>
+          <button onclick="cp('1044609733')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 mt-2">复制</button>
+        </div>
+      </div>`;
   }
-  const headerImg=document.getElementById('headerAvatarImg');
-  const headerDefault=document.getElementById('headerDefaultIcon');
-  if(profile.avatar&&profile.avatar!=''){
-    headerImg.src=profile.avatar;
-    headerImg.style.display='block';
-    headerDefault.style.display='none';
-  }else{
-    headerImg.style.display='none';
-    headerDefault.style.display='block';
-  }
+  opM('dlM');
 }
 
-function updateTotalCount(count){
-  document.getElementById('totalCount').textContent=count||0;
+function mkPd(id){R[id].paid=true;clM('dlM');toast('付费成功');rP();opD(id)}
+
+/* Purchased */
+function rP(){const l=R.filter(r=>r.paid);const g=document.getElementById('puG'),e=document.getElementById('puE');if(l.length){g.innerHTML=l.map(r=>cHTML(r,true)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}}
+
+/* Updates */
+function rU(){document.getElementById('upL').innerHTML=[{v:'v2.4.0',d:'2025-01-10',t:'新增街机人物整合包、优化搜索响应'},{v:'v2.3.5',d:'2024-12-28',t:'修复收藏状态同步、新增模式切换'},{v:'v2.3.0',d:'2024-12-15',t:'重构下载弹窗交互、新增赞助入口'},{v:'v2.0.0',d:'2024-09-01',t:'全新毛玻璃UI上线、双栏布局改版'}].map(x=>`<div class="g rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`).join('')}
+
+/* Profile */
+function upA(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    avSrc=ev.target.result;
+    const b=document.getElementById('aB'),ic=document.getElementById('aI');
+    if(ic)ic.remove();let img=b.querySelector('img');if(!img){img=document.createElement('img');img.className='w-full h-full object-cover';b.appendChild(img)}img.src=avSrc;
+    syncAv();toast('头像已更新');
+  };r.readAsDataURL(f);
 }
+function svP(){const n=document.getElementById('eN').value.trim();if(n){document.getElementById('dN').textContent=n;toast('资料已保存')}else toast('昵称不能为空')}
 
-// ===== 搜索 =====
-const si=document.getElementById('searchInput');
-const emptyTip=document.getElementById('emptyTip');
-si.addEventListener('input',function(){
-  const kw=this.value.trim().toLowerCase();
-  const cards=document.querySelectorAll('.resource-card');
-  let visible=0;
-  cards.forEach(c=>{
-    const title=c.dataset.title||c.querySelector('h3')?.textContent||'';
-    const match=!kw||title.toLowerCase().includes(kw);
-    c.classList.toggle('hidden',!match);
-    if(match)visible++;
-  });
-  emptyTip.classList.toggle('visible',visible===0&&kw!=='');
-});
+/* Copy */
+function cp(t){navigator.clipboard.writeText(t).then(()=>toast('复制成功')).catch(()=>toast('复制失败'))}
 
-// ===== 收藏 =====
-let favorites=JSON.parse(localStorage.getItem('mf')||'[]');
-function toggleFav(id){
-  const idx=favorites.indexOf(id);
-  idx>-1?favorites.splice(idx,1):favorites.push(id);
-  localStorage.setItem('mf',JSON.stringify(favorites));
-  updateFavButtons();
-  updateFavBadge();
-}
-function isFav(id){return favorites.indexOf(id)>-1}
-function updateFavButtons(){
-  document.querySelectorAll('.fav-btn').forEach(b=>{
-    const id=parseInt(b.dataset.id);
-    if(isFav(id)){b.innerHTML='<i class="iconfont icon-shoucang" style="color:#f5b342;"></i>';b.classList.add('active');}
-    else{b.innerHTML='<i class="iconfont icon-shoucang"></i>';b.classList.remove('active');}
-  });
-}
-function updateFavBadge(){
-  document.getElementById('favBadge').textContent=favorites.length;
-}
-updateFavBadge();
+/* Switch */
+function tgSw(el){el.classList.toggle('on');toast('模式已切换')}
 
-// ===== 弹窗 =====
-const mo=document.getElementById('modalOverlay'),mc=document.getElementById('modalClose');
-function openModal(n){
-  document.getElementById('paySuccess').classList.remove('visible');
-  document.getElementById('downloadLink').textContent='https://mugen-files.example.com/'+encodeURIComponent(n||'资源')+'.zip';
-  mo.classList.add('active');
-  document.body.style.overflow='hidden';
-}
-function closeModal(){mo.classList.remove('active');document.body.style.overflow='';}
-mc.addEventListener('click',closeModal);
-mo.addEventListener('click',e=>{if(e.target===mo)closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-
-// ===== 支付 =====
-document.getElementById('payBtn').addEventListener('click',function(){
-  const box=document.getElementById('paySuccess');
-  box.classList.add('visible');
-  setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'center'}),100);
-});
-
-// ===== QQ群复制 =====
-document.getElementById('qqBtn').addEventListener('click',function(){
-  const q='978-123-456';
-  if(navigator.clipboard?.writeText){
-    navigator.clipboard.writeText(q).then(()=>alert('群号已复制: '+q+'\n请打开QQ搜索加入。')).catch(()=>fallbackCopy(q));
-  }else{fallbackCopy(q);}
-});
-function fallbackCopy(t){
-  const ta=document.createElement('textarea');
-  ta.value=t;
-  ta.style.cssText='position:fixed;left:-999px;top:-999px';
-  document.body.appendChild(ta);
-  ta.select();
-  try{document.execCommand('copy');alert('群号已复制: '+t+'\n请打开QQ搜索加入。');}
-  catch(_){alert('复制失败，请手动复制群号: '+t);}
-  document.body.removeChild(ta);
-}
-
-// ===== 个人中心 =====
-const avatarUpload=document.getElementById('avatarUpload');
-const avatarInput=document.getElementById('avatarInput');
-
-avatarUpload.addEventListener('click',function(e){
-  e.stopPropagation();
-  avatarInput.click();
-});
-
-avatarInput.addEventListener('change',function(e){
-  const file=e.target.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
-    profile.av=ev.target.result;
-    localStorage.setItem('mp',JSON.stringify(profile));
-    profileData.avatar=ev.target.result;
-    renderProfile(profileData);
-    showToast('头像已更新');
-  };
-  reader.readAsDataURL(file);
-  avatarInput.value='';
-});
-
-document.getElementById('editNameBtn').addEventListener('click',function(){
-  const currentName=document.getElementById('displayName').textContent;
-  const v=prompt('请输入新名称：',currentName);
-  if(v!==null&&v.trim()){
-    const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
-    profile.n=v.trim();
-    localStorage.setItem('mp',JSON.stringify(profile));
-    profileData.name=v.trim();
-    renderProfile(profileData);
-    showToast('名称已更新');
-  }
-});
-
-// ===== 滑块验证 - 修复手机端 =====
-const so=document.getElementById('sliderOverlay');
-const st=document.getElementById('sliderTrack');
-const sth=document.getElementById('sliderThumb');
-const sb=document.getElementById('sliderBg');
-const sh=document.getElementById('sliderHint');
-const ss=document.getElementById('sliderStatus');
-const sc=document.getElementById('sliderClose');
-const ssub=document.getElementById('sliderSub');
-
-let sliderCb=null;
-let isDragging=false;
-let startX=0;
-let curX=0;
-let trackWidth=0;
-
-function openSlider(callback, fieldName){
-  sliderCb=callback;
-  ssub.textContent='请按住滑块拖动到最右侧以验证'+(fieldName?' '+fieldName:'');
-  ss.textContent='请完成验证';
-  ss.className='slider-status';
-  sth.style.left='0px';
-  sb.style.width='0%';
-  sh.style.display='block';
-  so.classList.add('active');
-  document.body.style.overflow='hidden';
-  // 延迟获取宽度确保渲染完成
-  requestAnimationFrame(()=>{
-    trackWidth=st.offsetWidth-40;
-  });
-  curX=0;
-  isDragging=false;
-}
-
-function closeSlider(){
-  so.classList.remove('active');
-  document.body.style.overflow='';
-  sliderCb=null;
-  isDragging=false;
-}
-
-sc.addEventListener('click',closeSlider);
-so.addEventListener('click',function(e){if(e.target===so)closeSlider()});
-
-// ----- 鼠标事件 -----
-st.addEventListener('mousedown',function(e){
-  const rect=st.getBoundingClientRect();
-  if(e.clientX<rect.left+20)return;
-  isDragging=true;
-  startX=e.clientX;
-  ss.textContent='拖动中...';
-  ss.className='slider-status';
-});
-
-document.addEventListener('mousemove',function(e){
-  if(!isDragging)return;
-  const rect=st.getBoundingClientRect();
-  const dx=e.clientX-startX;
-  curX=Math.min(Math.max(0,curX+dx),trackWidth);
-  startX=e.clientX;
-  sth.style.left=curX+'px';
-  sb.style.width=(curX/trackWidth*100)+'%';
-  if(curX/trackWidth>0.9) sh.style.display='none';
-});
-
-document.addEventListener('mouseup',function(){
-  if(!isDragging)return;
-  isDragging=false;
-  if(curX/trackWidth>0.9){
-    ss.textContent='✓ 验证通过！';
-    ss.className='slider-status success';
-    sh.style.display='none';
-    const cb=sliderCb;
-    sliderCb=null;
-    setTimeout(()=>{if(cb)cb();closeSlider();},300);
-  }else{
-    ss.textContent='验证失败，请重试';
-    ss.className='slider-status';
-    setTimeout(()=>{
-      sth.style.left='0px';
-      sb.style.width='0%';
-      sh.style.display='block';
-      ss.textContent='请完成验证';
-      ss.className='slider-status';
-      curX=0;
-    },500);
-  }
-});
-
-// ----- 触摸事件（手机端修复）-----
-st.addEventListener('touchstart',function(e){
-  const touch=e.touches[0];
-  const rect=st.getBoundingClientRect();
-  if(touch.clientX<rect.left+20)return;
-  isDragging=true;
-  startX=touch.clientX;
-  ss.textContent='拖动中...';
-  ss.className='slider-status';
-  e.preventDefault();
-},{passive:false});
-
-document.addEventListener('touchmove',function(e){
-  if(!isDragging)return;
-  const touch=e.touches[0];
-  const rect=st.getBoundingClientRect();
-  const dx=touch.clientX-startX;
-  curX=Math.min(Math.max(0,curX+dx),trackWidth);
-  startX=touch.clientX;
-  sth.style.left=curX+'px';
-  sb.style.width=(curX/trackWidth*100)+'%';
-  if(curX/trackWidth>0.9) sh.style.display='none';
-  e.preventDefault();
-},{passive:false});
-
-document.addEventListener('touchend',function(){
-  if(!isDragging)return;
-  isDragging=false;
-  if(curX/trackWidth>0.9){
-    ss.textContent='✓ 验证通过！';
-    ss.className='slider-status success';
-    sh.style.display='none';
-    const cb=sliderCb;
-    sliderCb=null;
-    setTimeout(()=>{if(cb)cb();closeSlider();},300);
-  }else{
-    ss.textContent='验证失败，请重试';
-    ss.className='slider-status';
-    setTimeout(()=>{
-      sth.style.left='0px';
-      sb.style.width='0%';
-      sh.style.display='block';
-      ss.textContent='请完成验证';
-      ss.className='slider-status';
-      curX=0;
-    },500);
-  }
-},{passive:false});
-
-// ===== 账户编辑（带滑块） =====
-document.getElementById('editAccountBtn').addEventListener('click',function(e){
-  e.stopPropagation();
-  openSlider(function(){
-    const currentAccount=document.getElementById('displayAccount').textContent;
-    const v=prompt('请输入新账户（邮箱或手机号）：',currentAccount);
-    if(v!==null&&v.trim()){
-      const val=v.trim();
-      const isEmail=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-      const isPhone=/^1[3-9]\d{9}$/.test(val);
-      if(!isEmail&&!isPhone){
-        showToast('请输入正确的邮箱或手机号');
-        return;
-      }
-      const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
-      profile.a=val;
-      localStorage.setItem('mp',JSON.stringify(profile));
-      profileData.account=val;
-      renderProfile(profileData);
-      showToast('账户已更新');
-    }
-  },'账户');
-});
-
-// ===== 密码编辑（带滑块） =====
-document.getElementById('editPasswordBtn').addEventListener('click',function(e){
-  e.stopPropagation();
-  openSlider(function(){
-    const v=prompt('请输入新密码（8-16位数字或字母）：');
-    if(v!==null&&v.trim()){
-      const val=v.trim();
-      if(!/^[A-Za-z0-9]{8,16}$/.test(val)){
-        showToast('密码需为8-16位数字或字母');
-        return;
-      }
-      const profile=JSON.parse(localStorage.getItem('mp')||'{"n":"MUGEN玩家","a":"mugen_user@example.com","p":"123456","av":""}');
-      profile.p=val;
-      localStorage.setItem('mp',JSON.stringify(profile));
-      profileData.password=val;
-      renderProfile(profileData);
-      showToast('密码已更新');
-    }
-  },'密码');
-});
-
-// ===== Toast =====
-function showToast(msg){
-  const toast=document.getElementById('toast');
-  toast.textContent=msg;
-  toast.classList.add('show');
-  clearTimeout(window._toastTimer);
-  window._toastTimer=setTimeout(()=>toast.classList.remove('show'),2000);
-}
-
-// ===== 主题 =====
-let theme=localStorage.getItem('mugen_theme')||'light';
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');
-  localStorage.setItem('mugen_theme',t);
-  const sw=document.getElementById('themeSwitch');
-  if(sw)sw.classList.toggle('active',t==='dark');
-}
-applyTheme(theme);
-document.getElementById('themeSwitch').addEventListener('click',function(){
-  const cur=localStorage.getItem('mugen_theme')||'light';
-  const next=cur==='light'?'dark':'light';
-  applyTheme(next);
-  showToast(next==='dark'?'已切换至夜间模式':'已切换至日间模式');
-});
-
-// ===== 联系作者 =====
-document.getElementById('copyQQBtn').addEventListener('click',function(){
-  const qq=document.getElementById('authorQQ').textContent;
-  if(navigator.clipboard?.writeText){
-    navigator.clipboard.writeText(qq).then(()=>showToast('QQ号已复制：'+qq)).catch(()=>fallbackCopyQQ(qq));
-  }else{fallbackCopyQQ(qq);}
-});
-function fallbackCopyQQ(t){
-  const ta=document.createElement('textarea');
-  ta.value=t;
-  ta.style.cssText='position:fixed;left:-999px;top:-999px';
-  document.body.appendChild(ta);
-  ta.select();
-  try{document.execCommand('copy');showToast('QQ号已复制：'+t);}
-  catch(_){alert('复制失败，请手动复制');}
-  document.body.removeChild(ta);
-}
-
-// ===== 赞助 =====
-document.getElementById('sponsorBtn').addEventListener('click',function(e){
-  e.preventDefault();
-  document.getElementById('sponsorOverlay').classList.add('active');
-  document.body.style.overflow='hidden';
-});
-document.getElementById('sponsorClose').addEventListener('click',function(){
-  document.getElementById('sponsorOverlay').classList.remove('active');
-  document.body.style.overflow='';
-});
-document.getElementById('sponsorOverlay').addEventListener('click',function(e){
-  if(e.target===this){
-    this.classList.remove('active');
-    document.body.style.overflow='';
-  }
-});
-
-// ===== 侧边栏切换 =====
-function spage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  const t=document.getElementById('page-'+id);
-  if(t)t.classList.add('active');
-  document.querySelectorAll('.sidebar-menu a[data-page]').forEach(a=>{
-    a.classList.toggle('active',a.dataset.page===id);
-  });
-  if(id==='favorites')renderFavList();
-}
-document.querySelectorAll('.sidebar-menu a[data-page]').forEach(a=>{
-  a.addEventListener('click',function(e){e.preventDefault();spage(this.dataset.page);});
-});
-document.getElementById('headerAvatar').addEventListener('click',()=>spage('profile'));
-
-// ===== 收藏页 =====
-const favList=document.getElementById('favList');
-function renderFavList(){
-  if(favorites.length===0){
-    favList.innerHTML='<div class="empty-tip visible" style="display:block;">还没有收藏任何资源</div>';
-    return;
-  }
-  let html='';
-  document.querySelectorAll('.resource-card').forEach(c=>{
-    const id=parseInt(c.dataset.id);
-    if(isFav(id)){
-      const title=c.querySelector('h3').textContent;
-      const info=c.querySelector('.card-info').innerHTML;
-      const thumb=c.querySelector('.card-thumb').innerHTML;
-      html+=`<div class="resource-card"><div class="card-left"><h3>${title}</h3><div class="card-thumb">${thumb}</div><div class="card-info">${info}</div></div><div class="card-actions"><button class="fav-btn active" data-id="${id}"><i class="iconfont icon-shoucang" style="color:#f5b342;"></i></button><button class="download-btn" data-resource="${title}"><i class="iconfont icon-xiazai"></i> 下载</button></div></div>`;
-    }
-  });
-  favList.innerHTML=html;
-  favList.querySelectorAll('.fav-btn').forEach(b=>{
-    b.addEventListener('click',function(e){e.stopPropagation();toggleFav(parseInt(this.dataset.id));});
-  });
-  favList.querySelectorAll('.download-btn').forEach(b=>{
-    b.addEventListener('click',function(e){e.stopPropagation();openModal(this.dataset.resource||'资源');});
-  });
-}
-
-// ===== 启动 =====
-loadData();
-
-window.setCardImage=(id,url)=>{
-  const c=document.getElementById(id);
-  if(!c)return;
-  c.innerHTML=`<img src="${url}" alt="资源图片">`;
-};
-window.setQRCode=(url)=>{
-  const c=document.getElementById('qrBox');
-  if(!c)return;
-  c.innerHTML=`<img src="${url}" alt="收款二维码">`;
-};
-window.batchUpdateImages=(m)=>{for(const id in m)if(m.hasOwnProperty(id))window.setCardImage(id,m[id]);};
-window.updateQR=(url)=>window.setQRCode(url);
-})();
+/* Init */
+rH();syncAv();opM('anM');
 </script>
 </body>
 </html>
