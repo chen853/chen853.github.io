@@ -30,7 +30,8 @@ function add(){
  let n=document.getElementById('n').value.trim(),s=document.getElementById('s').value.trim(),d=document.getElementById('d').value.trim(),de=document.getElementById('de').value.trim(),c=document.getElementById('c').value.trim(),i1=document.getElementById('i1').value.trim(),i2=document.getElementById('i2').value.trim(),i3=document.getElementById('i3').value.trim();
  if(!n||!s||!d||!de||!c||!i1||!i2||!i3)return alert('请完整填写');
  let id=R.length?R[R.length-1].id+1:0;
- R.push({id,n,s,d,de,c,img1:i1,img2:i2,img3:i3});
+ // 修复字段名：name, size, dl, desc, cover
+ R.push({id,name:n,size:s,dl:d,desc:de,cover:c,img1:i1,img2:i2,img3:i3});
  render();
 }
 function addU(){
@@ -39,9 +40,25 @@ function addU(){
  U.push({v,d:dt,t:tx});
  render();
 }
-function copy(){navigator.clipboard.writeText(document.getElementById('j').textContent).then(()=>alert('已复制 JSON'))}
-// 初始示例
-R=[{id:0,n:'经典街机人物整合包',s:'256MB',d:'https://mugen.com/dl/classic-arcade-pack',de:'本整合包收录了经典街机格斗游戏的全部人物资源...',c:'https://example.com/cover.jpg',img1:'https://example.com/1.jpg',img2:'https://example.com/2.jpg',img3:'https://example.com/3.jpg'}];
+function copy(){
+ const text=document.getElementById('j').textContent;
+ if(navigator.clipboard){
+   navigator.clipboard.writeText(text).then(()=>alert('已复制 JSON')).catch(()=>fallbackCopy(text));
+ }else{
+   fallbackCopy(text);
+ }
+}
+function fallbackCopy(text){
+ const ta=document.createElement('textarea');
+ ta.value=text;
+ ta.style.position='fixed';ta.style.left='-9999px';
+ document.body.appendChild(ta);
+ ta.select();
+ try{document.execCommand('copy');alert('已复制 JSON')}catch(e){alert('复制失败，请手动复制')}
+ document.body.removeChild(ta);
+}
+// 初始示例 - 字段名修正
+R=[{id:0,name:'经典街机人物整合包',size:'256MB',dl:'https://mugen.com/dl/classic-arcade-pack',desc:'本整合包收录了经典街机格斗游戏的全部人物资源...',cover:'https://example.com/cover.jpg',img1:'https://example.com/1.jpg',img2:'https://example.com/2.jpg',img3:'https://example.com/3.jpg'}];
 U=[{v:'v2.4.0',d:'2025-01-10',t:'新增街机人物整合包、优化搜索响应'},{v:'v2.3.5',d:'2024-12-28',t:'修复收藏状态同步、新增模式切换'}];
 render();
 </script>
