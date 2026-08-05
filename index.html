@@ -1,53 +1,119 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MUGEN整合分享</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']}}}}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0a0f}
-.bg{position:fixed;inset:0;background:url('固定图片/主页背景.jpg')center/cover no-repeat;z-index:0}
-.g{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07)}
-.gs{background:rgba(12,12,18,.7);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-right:1px solid rgba(255,255,255,.05)}
-.i{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.25s}
-.i::placeholder{color:rgba(255,255,255,.3)}.i:focus{outline:none;background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.22)}
-.n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px;padding:8px 12px}
-.n:hover,.n.on{color:#fff;background:rgba(255,255,255,.1)}.n.on{background:rgba(255,255,255,.13)}
-.c{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);border-radius:14px;transition:.25s}
-.c:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.13);transform:translateY(-2px)}
-.bd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.2s;cursor:pointer}.bd:hover{background:rgba(255,255,255,.2)}
-.ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s}.ht:hover{transform:scale(1.15)}.ht.on{color:#ef4444}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
-.ov.sh{opacity:1;pointer-events:auto}.md{transform:scale(.95)translateY(8px);transition:transform .25s ease}.ov.sh .md{transform:scale(1)translateY(0)}
-.tc{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200}
-.ti{opacity:0;transform:translateY(-10px);transition:.3s;pointer-events:none}.ti.sh{opacity:1;transform:translateY(0)}
-.pg{display:none}.pg.on{display:block}
-.db{border:2px dashed rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:11px;flex-shrink:0}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px}
-.sw{width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);cursor:pointer;transition:.25s;position:relative;border:1px solid rgba(255,255,255,.08);flex-shrink:0}
-.sw.on{background:rgba(255,255,255,.25)}.sk{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.sw.on .sk{left:21px}
-.tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
-@media(max-width:768px){.sb{position:fixed;left:-280px;top:0;bottom:0;z-index:90;transition:left .3s;width:260px!important}.sb.op{left:0}.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:80;opacity:0;pointer-events:none;transition:.3s}.mo.sh{opacity:1;pointer-events:auto}}
-.mini-card{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);padding:0 6px;border-radius:8px;display:inline-block;font-size:14px;line-height:1.5}
-.mini-card-up{margin-top:-2px;display:inline-block}
-.login-box .ipt{width:100%;padding:12px 14px 12px 40px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-size:14px;transition:.25s}
-.login-box .ipt::placeholder{color:rgba(255,255,255,.4)}
-.login-box .ipt:focus{outline:none;background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.32);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
-.login-box .btn{width:100%;padding:13px;border-radius:12px;border:none;background:#fff;color:#171717;font-weight:500;font-size:14px;cursor:pointer;transition:.3s}
-.login-box .btn:hover{background:rgba(255,255,255,.88);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
-.login-box .ico{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);color:rgba(255,255,255,.65);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s}
-.login-box .ico:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.28);color:#fff;transform:translateY(-2px)}
-.login-box .line{flex:1;height:1px;background:rgba(255,255,255,.12)}
-.login-box .field{position:relative;margin-bottom:14px}
-.login-box .field .icn{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);pointer-events:none}
-.login-box .psw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);cursor:pointer;transition:.2s;background:none;border:none;padding:4px}
-.login-box .psw-toggle:hover{color:rgba(255,255,255,.7)}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>MUGEN整合分享</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Inter,sans-serif;overflow:hidden;height:100vh;background:#0a0a0f}
+    .bg{position:fixed;inset:0;background:url('固定图片/主页背景.jpg')center/cover no-repeat;z-index:0}
+    .glass{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.05)}
+    .glass-side{background:rgba(12,12,18,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border-right:1px solid rgba(255,255,255,.05)}
+    .i{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.25s}
+    .i::placeholder{color:rgba(255,255,255,.3)}
+    .i:focus{outline:none;background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.22)}
+    .n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px;padding:8px 12px}
+    .n:hover,.n.on{color:#fff;background:rgba(255,255,255,.1)}
+    .n.on{background:rgba(255,255,255,.13)}
+    .c{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.05);border-radius:14px;transition:.25s}
+    .c:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.13);transform:translateY(-2px)}
+    .bd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.2s;cursor:pointer}
+    .bd:hover{background:rgba(255,255,255,.2)}
+    .ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s}
+    .ht:hover{transform:scale(1.15)}
+    .ht.on{color:#ef4444}
+    .ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
+    .ov.sh{opacity:1;pointer-events:auto}
+    .md{transform:scale(.95)translateY(8px);transition:transform .25s ease}
+    .ov.sh .md{transform:scale(1)translateY(0)}
+    .tc{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;align-items:center}
+    .ti{opacity:0;transform:translateY(-10px);transition:opacity .3s,transform .3s;pointer-events:none;background:rgba(18,18,24,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 24px;color:#fff;font-size:14px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.3);white-space:nowrap;display:inline-block;margin-bottom:8px}
+    .ti.sh{opacity:1;transform:translateY(0)}
+    .pg{display:none}
+    .pg.on{display:block}
+    .db{border:2px dashed rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:11px;flex-shrink:0}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:0 0}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px}
+    .sw{width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);cursor:pointer;transition:.25s;position:relative;border:1px solid rgba(255,255,255,.08);flex-shrink:0}
+    .sw.on{background:rgba(255,255,255,.25)}
+    .sk{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+    .sw.on .sk{left:21px}
+    .tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+    .mini-card{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);padding:0 6px;border-radius:8px;display:inline-block;font-size:14px;line-height:1.5}
+    .mini-card-up{margin-top:-2px;display:inline-block}
+    .login-box .ipt{width:100%;padding:12px 14px 12px 40px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-size:14px;transition:.25s}
+    .login-box .ipt::placeholder{color:rgba(255,255,255,.4)}
+    .login-box .ipt:focus{outline:none;background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.32);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+    .login-box .btn{width:100%;padding:13px;border-radius:12px;border:none;background:#fff;color:#171717;font-weight:500;font-size:14px;cursor:pointer;transition:.3s}
+    .login-box .btn:hover{background:rgba(255,255,255,.88);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+    .login-box .ico{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:.3s}
+    .login-box .ico:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.28);color:#fff;transform:translateY(-2px)}
+    .login-box .line{flex:1;height:1px;background:rgba(255,255,255,.12)}
+    .login-box .field{position:relative;margin-bottom:14px}
+    .login-box .field .icn{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);pointer-events:none}
+    .login-box .psw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);cursor:pointer;transition:.2s;background:0 0;border:none;padding:4px}
+    .login-box .psw-toggle:hover{color:rgba(255,255,255,.7)}
+    .light-theme .glass,.light-theme .glass-side,.light-theme .c,.light-theme .mini-card,.light-theme .sidebar-mobile{background:rgba(255,255,255,.4)!important;border-color:rgba(0,0,0,.07)!important}
+    .light-theme .glass-side{border-right-color:rgba(0,0,0,.06)!important}
+    .light-theme .ti{background:rgba(255,255,255,.9)!important;color:#1a1a1a!important;border-color:rgba(0,0,0,.08)!important;box-shadow:0 8px 32px rgba(0,0,0,.1)!important}
+    .light-theme .n{color:#1a1a1a!important;background:0 0!important}
+    .light-theme .n:hover{color:#000!important;background:rgba(0,0,0,.1)!important}
+    .light-theme .n.on{color:#000!important;background:rgba(0,0,0,.15)!important}
+    .light-theme .text-white,.light-theme .text-white\/10,.light-theme .text-white\/20,.light-theme .text-white\/25,.light-theme .text-white\/30,.light-theme .text-white\/35,.light-theme .text-white\/40,.light-theme .text-white\/45,.light-theme .text-white\/50,.light-theme .text-white\/60,.light-theme .text-white\/70,.light-theme .text-white\/80,.light-theme h1,.light-theme h2,.light-theme h3,.light-theme p,.light-theme span,.light-theme a{color:#1a1a1a!important}
+    .light-theme .i,.light-theme .login-box .ipt{color:#1a1a1a!important;background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12)}
+    .light-theme .i::placeholder,.light-theme .login-box .ipt::placeholder{color:rgba(0,0,0,.35)}
+    .light-theme .i:focus,.light-theme .login-box .ipt:focus{box-shadow:0 0 0 3px rgba(0,0,0,.08);border-color:rgba(0,0,0,.22)}
+    .light-theme .login-box .field .icn{color:rgba(0,0,0,.45)}
+    .light-theme .login-box .line{background:rgba(0,0,0,.18)}
+    .light-theme .bd,.light-theme .ht,.light-theme .menu-btn,.light-theme .modal-close,.light-theme .copy-btn,.light-theme .login-box .ico,.light-theme .psw-toggle{color:#1a1a1a!important;background:0 0!important;border-color:rgba(0,0,0,.12)}
+    .light-theme .bd:hover,.light-theme .ht:hover,.light-theme .menu-btn:hover,.light-theme .modal-close:hover,.light-theme .copy-btn:hover,.light-theme .login-box .ico:hover,.light-theme .psw-toggle:hover{color:#000!important;background:rgba(0,0,0,.1)!important}
+    .light-theme .ht.on{color:#000!important;background:rgba(0,0,0,.15)!important}
+    .light-theme .sw{background:rgba(0,0,0,.1);border-color:rgba(0,0,0,.08)}
+    .light-theme .sw .sk{background:#222}
+    .light-theme .ov{background:rgba(255,255,255,.6)}
+    .light-theme .login-box .btn{background:#111;color:#fff!important}
+    .light-theme .login-box .btn:hover{background:rgba(0,0,0,.85)}
+    .light-theme .db{border-color:rgba(0,0,0,.16);color:rgba(0,0,0,.25)}
+    .light-theme ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2)}
+    @media(min-width:769px){
+      .app-wrap{display:flex;height:100vh;width:100vw;position:relative;z-index:1;overflow:hidden}
+      .sidebar-desktop{display:flex!important;width:260px;flex-shrink:0;height:100%;flex-direction:column;padding:20px}
+      .sidebar-mobile,.mo,.menu-btn{display:none!important}
+      .main-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}
+      .content-scroll{flex:1;overflow-y:auto;padding:16px 20px}
+      .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    }
+    @media(max-width:768px){
+      .app-wrap{display:block;height:100vh;width:100vw;overflow:hidden}
+      .sidebar-desktop{display:none!important}
+      .sidebar-mobile{display:flex!important;position:fixed;top:0;left:0;bottom:0;width:260px;z-index:50;transform:translateX(-100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:20px;flex-direction:column;height:100%;background:rgba(12,12,18,.4);backdrop-filter:blur(26px);border-right:1px solid rgba(255,255,255,.05)}
+      .sidebar-mobile.op{transform:translateX(0)!important}
+      .mo{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s ease}
+      .mo.sh{opacity:1;pointer-events:auto}
+      .main-area{position:relative;z-index:10;display:flex;flex-direction:column;height:100%;width:100%;overflow:hidden}
+      .content-scroll{flex:1;overflow-y:auto;padding:12px 16px}
+      .menu-btn{display:flex!important}
+      .card-grid{display:grid;grid-template-columns:1fr;gap:12px}
+      .md{max-width:calc(100vw - 32px)!important}
+      .c{padding:12px!important;gap:10px!important}
+      .c .db{width:60px!important;height:60px!important}
+      .c h3{font-size:13px!important}
+      .c .bd{padding:4px 10px!important;font-size:11px!important}
+      .ti{font-size:13px;padding:10px 18px;white-space:normal;max-width:90vw}
+      .contact-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);flex-wrap:nowrap}
+      .contact-item .info{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+      .contact-item .info span{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .contact-item .copy-btn{flex-shrink:0;padding:4px 12px;font-size:12px;background:rgba(255,255,255,.08);border-radius:8px;border:none;color:rgba(255,255,255,.6);transition:.2s}
+      .light-theme .contact-item .copy-btn{color:rgba(0,0,0,.5);background:rgba(0,0,0,.05)}
+    }
+    .sidebar-desktop,.sidebar-mobile{flex-shrink:0}
+    .sidebar-desktop *,.sidebar-mobile *{pointer-events:auto!important}
+  </style>
 </head>
 <body>
 <div class="bg"></div>
@@ -56,73 +122,51 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
 
 <!-- 公告 -->
 <div id="anM" class="ov" onclick="if(event.target===this)clM('anM')">
-  <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
+  <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
     <h3 class="text-white text-lg font-semibold mb-3">公告</h3>
-    <p class="text-white/50 text-sm leading-relaxed">内容</p>
+    <p class="text-white/50 text-sm leading-relaxed">欢迎来到MUGEN整合分享站</p>
     <button onclick="clM('anM')" class="mt-5 w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">我知道了</button>
   </div>
 </div>
 
 <!-- 下载 -->
 <div id="dlM" class="ov" onclick="if(event.target===this)clM('dlM')">
-  <div class="md g rounded-2xl w-full max-w-lg mx-4 p-6">
-    <div class="flex justify-between items-center mb-5">
-      <h3 class="text-white text-lg font-semibold">下载资源</h3>
-      <span class="text-white/40 cursor-pointer hover:text-white/80 transition" onclick="clM('dlM')"><iconify-icon icon="lucide:x" width="20"></iconify-icon></span>
-    </div>
+  <div class="md glass rounded-2xl w-full max-w-lg mx-4 p-6">
+    <div class="flex justify-between items-center mb-5"><h3 class="text-white text-lg font-semibold">下载资源</h3><span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('dlM')"><iconify-icon icon="lucide:x" width="20"></iconify-icon></span></div>
     <div id="dlB"></div>
   </div>
 </div>
 
 <!-- 赞助 -->
 <div id="spM" class="ov" onclick="if(event.target===this)clM('spM')">
-  <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
-    <h3 class="text-white text-lg font-semibold mb-2">赞助作者</h3>
-    <p class="text-white/40 text-sm mb-5">感谢支持，赞助将用于站点维护与资源更新</p>
-    <img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto mx-auto rounded-lg mb-4" alt="赞助二维码" onerror="this.style.display='none'">
+  <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6">
+    <div class="flex justify-between items-start mb-6"><div><h3 class="text-white text-lg font-semibold mb-2">赞助作者</h3><p class="text-white/40 text-sm">感谢支持，赞助将用于站点维护与资源更新</p></div><span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('spM')"><iconify-icon icon="lucide:x" width="20"></iconify-icon></span></div>
+    <div class="mb-6"><img src="固定图片/收款码.jpg" class="w-full max-w-[200px] h-auto mx-auto rounded-lg" alt="赞助二维码"></div>
     <button onclick="clM('spM');toast('感谢您的支持 (⸝⸝⸝>`﹏ˊ<⸝⸝⸝)')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">已赞助</button>
   </div>
 </div>
 
-<!-- 登录浮层 -->
+<!-- 登录 -->
 <div id="loginOverlay" class="ov" onclick="if(event.target===this)closeLogin()">
-  <div class="md g rounded-2xl w-full max-w-sm mx-4 p-6 login-box">
-    <div class="flex justify-end -mt-2 -mr-2">
-      <span class="text-white/40 cursor-pointer hover:text-white/80 transition" onclick="closeLogin()"><iconify-icon icon="lucide:x" width="22"></iconify-icon></span>
-    </div>
-    <div class="text-center mb-5">
-      <h3 class="text-white text-xl font-semibold">欢迎回来</h3>
-      <p class="text-white/40 text-sm mt-1">登录或注册你的账户</p>
-    </div>
-    <form onsubmit="event.preventDefault();lgToast('登录 / 注册请求已发送')">
-      <div class="field">
-        <iconify-icon icon="lucide:user" width="18" class="icn"></iconify-icon>
-        <input type="text" placeholder="账户 / 手机号" class="ipt" required>
-      </div>
-      <div class="field">
-        <iconify-icon icon="lucide:lock" width="18" class="icn"></iconify-icon>
-        <input id="lgPsw" type="password" placeholder="密码" class="ipt" required>
-        <button type="button" class="psw-toggle" onclick="togglePsw()"><iconify-icon id="lgEye" icon="lucide:eye-off" width="18"></iconify-icon></button>
-      </div>
+  <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6 login-box">
+    <div class="flex justify-end -mt-2 -mr-2"><span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="closeLogin()"><iconify-icon icon="lucide:x" width="22"></iconify-icon></span></div>
+    <div class="text-center mb-5"><h3 class="text-white text-xl font-semibold">欢迎回来</h3><p class="text-white/40 text-sm mt-1">登录或注册你的账户</p></div>
+    <form onsubmit="event.preventDefault();toast('登录 / 注册请求已发送')">
+      <div class="field"><iconify-icon icon="lucide:user" width="18" class="icn"></iconify-icon><input type="text" placeholder="账户 / 手机号" class="ipt" required></div>
+      <div class="field"><iconify-icon icon="lucide:lock" width="18" class="icn"></iconify-icon><input id="lgPsw" type="password" placeholder="密码" class="ipt" required><button type="button" class="psw-toggle" onclick="togglePsw()"><iconify-icon id="lgEye" icon="lucide:eye-off" width="18"></iconify-icon></button></div>
       <button type="submit" class="btn mt-1">登录 / 注册</button>
     </form>
-    <div class="flex items-center gap-3 my-5">
-      <div class="line"></div><span class="text-white/30 text-xs font-light whitespace-nowrap">其他方式</span><div class="line"></div>
-    </div>
-    <div class="flex justify-center gap-4">
-      <div class="ico" title="微信登录"><iconify-icon icon="ri:wechat-fill" width="22"></iconify-icon></div>
-      <div class="ico" title="QQ登录"><iconify-icon icon="ri:qq-fill" width="22"></iconify-icon></div>
-      <div class="ico" title="邮箱登录"><iconify-icon icon="lucide:mail" width="20"></iconify-icon></div>
-    </div>
+    <div class="flex items-center gap-3 my-5"><div class="line"></div><span class="text-white/30 text-xs font-light whitespace-nowrap">其他方式</span><div class="line"></div></div>
+    <div class="flex justify-center gap-4"><div class="ico" title="微信登录"><iconify-icon icon="ri:wechat-fill" width="22"></iconify-icon></div><div class="ico" title="QQ登录"><iconify-icon icon="ri:qq-fill" width="22"></iconify-icon></div><div class="ico" title="邮箱"><iconify-icon icon="lucide:mail" width="20"></iconify-icon></div></div>
     <p class="text-center text-white/25 text-xs mt-5 font-light">登录即表示同意 <a href="#" class="text-white/45 hover:text-white/70 transition">服务条款</a> 与 <a href="#" class="text-white/45 hover:text-white/70 transition">隐私政策</a></p>
   </div>
 </div>
 
-<!-- 布局 -->
-<div class="relative z-10 flex h-screen">
-  <aside id="sb" class="sb gs w-[260px] flex-shrink-0 flex flex-col p-5 h-full">
+<!-- 主布局 -->
+<div class="app-wrap">
+  <aside class="sidebar-desktop glass-side">
     <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享</h1>
-    <nav class="flex flex-col gap-1 flex-1" id="nav">
+    <nav class="flex flex-col gap-1 flex-1">
       <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
       <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
       <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
@@ -132,231 +176,79 @@ body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0
       <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
     </nav>
   </aside>
-  <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
-    <header class="g flex items-center gap-3 px-4 md:px-6 py-3 flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,.05)">
-      <button class="md:hidden text-white/50 hover:text-white transition mr-1" onclick="event.stopPropagation();tgSB()"><iconify-icon icon="lucide:menu" width="22"></iconify-icon></button>
-      <div class="relative flex-1 max-w-xl">
-        <iconify-icon icon="lucide:search" width="15" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
-        <input id="sI" type="text" placeholder="输入关键词搜索名称" class="i w-full pl-9 pr-4 py-2 rounded-xl text-sm" oninput="doS()">
-      </div>
+
+  <main class="main-area">
+    <header class="glass flex items-center gap-3 px-4 md:px-6 py-3 flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,.05)">
+      <button class="menu-btn text-white/50 hover:text-white transition" onclick="event.stopPropagation();tgSB()"><iconify-icon icon="lucide:menu" width="22"></iconify-icon></button>
+      <div class="relative flex-1 max-w-xl"><iconify-icon icon="lucide:search" width="15" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon><input id="sI" type="text" placeholder="输入关键词搜索名称" class="i w-full pl-9 pr-4 py-2 rounded-xl text-sm" oninput="doS()"></div>
       <span id="cT" class="text-white/35 text-xs whitespace-nowrap hidden sm:inline ml-2 mini-card-up"><span class="mini-card">共 <span id="totalCount">0</span> 个资源</span></span>
-      <div id="hAv" class="w-8 h-8 rounded-full bg-white/8 border border-white/8 flex items-center justify-center cursor-pointer hover:bg-white/15 transition flex-shrink-0 ml-auto overflow-hidden" onclick="go('profile')">
-        <iconify-icon icon="lucide:user" width="14" class="text-white/50" id="hAvIc"></iconify-icon>
-      </div>
+      <div id="hAv" class="w-8 h-8 rounded-full bg-white/8 border border-white/8 flex items-center justify-center cursor-pointer hover:bg-white/15 transition flex-shrink-0 ml-auto overflow-hidden" onclick="go('profile')"><iconify-icon icon="lucide:user" width="14" class="text-white/50"></iconify-icon></div>
     </header>
-    <div id="ct" class="flex-1 overflow-y-auto p-3 md:p-4" style="scroll-behavior:smooth">
 
-      <!-- 首页 -->
-      <div id="p-home" class="pg on">
-        <div id="hG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        <div id="hE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:search-x" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">没有找到匹配的资源</p></div>
-      </div>
-
-      <!-- 详情 -->
-      <div id="p-detail" class="pg">
-        <button onclick="go('home')" class="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs transition mb-5 -ml-1">
-          <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon>
-          <span class="mini-card">返回首页</span>
-        </button>
-        <div id="dtC"></div>
-      </div>
-
-      <!-- 个人资料 -->
-      <div id="p-profile" class="pg">
-        <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">个人资料</span></h2>
-        <div class="g rounded-2xl p-6 max-w-lg mx-auto text-center mt-12">
-          <iconify-icon icon="lucide:user" width="48" class="text-white/20 mx-auto mb-4"></iconify-icon>
-          <p class="text-white/40 text-sm mb-6">登录后查看个人资料</p>
-          <button onclick="openLogin()" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">登录 / 注册</button>
-        </div>
-      </div>
-
-      <!-- 已购买 -->
-      <div id="p-purchased" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">已购买</span></h2><div id="puG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="puE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:shopping-bag" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无已购买资源</p></div></div>
-
-      <!-- 收藏 -->
-      <div id="p-fav" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">收藏</span></h2><div id="fvG" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div><div id="fvE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:heart" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无收藏资源</p></div></div>
-
-      <!-- 更新内容 -->
+    <div id="ct" class="content-scroll">
+      <div id="p-home" class="pg on"><div id="hG" class="card-grid"></div><div id="hE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:search-x" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">没有找到匹配的资源</p></div></div>
+      <div id="p-detail" class="pg"><button onclick="go('home')" class="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs transition modal-close mb-5 -ml-1"><iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon><span class="mini-card">返回首页</span></button><div id="dtC"></div></div>
+      <div id="p-profile" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">个人资料</span></h2><div class="glass rounded-2xl p-6 max-w-lg mx-auto text-center mt-12"><iconify-icon icon="lucide:user" width="48" class="text-white/20 mx-auto mb-4"></iconify-icon><p class="text-white/40 text-sm mb-6">登录后查看个人资料</p><button onclick="openLogin()" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">登录 / 注册</button></div></div>
+      <div id="p-purchased" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">已购买</span></h2><div id="puG" class="card-grid"></div><div id="puE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:shopping-bag" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无已购买资源</p></div></div>
+      <div id="p-fav" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">收藏</span></h2><div id="fvG" class="card-grid"></div><div id="fvE" class="hidden flex-col items-center justify-center py-20 text-center"><iconify-icon icon="lucide:heart" width="44" class="text-white/10 mb-3"></iconify-icon><p class="text-white/25 text-sm">暂无收藏资源</p></div></div>
       <div id="p-updates" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">更新内容</span></h2><div class="space-y-4" id="upL"></div></div>
-
-      <!-- 联系作者 -->
       <div id="p-contact" class="pg">
         <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">联系作者</span></h2>
-        <div class="g rounded-2xl p-6 max-w-lg space-y-4">
-          <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70"></iconify-icon><span class="text-white/70 text-sm">WeChat: MUGEN_Author</span></div><button onclick="cp('MUGEN_Author')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
-          <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70"></iconify-icon><span class="text-white/70 text-sm">QQ: 123456789</span></div><button onclick="cp('123456789')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
-          <div class="flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5"><div class="flex items-center gap-3"><iconify-icon icon="lucide:mail" width="18" class="text-red-400/70"></iconify-icon><span class="text-white/70 text-sm">Email: author@mugen.com</span></div><button onclick="cp('author@mugen.com')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div>
+        <div class="glass rounded-2xl p-4 md:p-6 max-w-lg space-y-3">
+          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">WeChat: MUGEN_Author</span></div><button onclick="cp('MUGEN_Author')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
+          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">QQ: 123456789</span></div><button onclick="cp('123456789')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
+          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="lucide:mail" width="18" class="text-red-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">Email: author@mugen.com</span></div><button onclick="cp('author@mugen.com')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
           <button onclick="opM('spM')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition mt-2 flex items-center justify-center gap-2"><iconify-icon icon="lucide:heart" width="16" class="text-pink-400/70"></iconify-icon>赞助作者</button>
         </div>
       </div>
-
-      <!-- 设置 -->
-      <div id="p-settings" class="pg">
-        <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">设置</span></h2>
-        <div class="g rounded-2xl p-6 max-w-lg">
-          <div class="flex items-center justify-between">
-            <div><p class="text-white/80 text-sm font-medium">模式选择</p><p class="text-white/30 text-xs mt-0.5">日间模式和月间模式</p></div>
-            <div class="sw on" onclick="tgSw(this)"><div class="sk"></div></div>
-          </div>
-        </div>
-      </div>
+      <div id="p-settings" class="pg"><h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">设置</span></h2><div class="glass rounded-2xl p-6 max-w-lg"><div class="flex items-center justify-between"><div><p class="text-white/80 text-sm font-medium">模式选择</p><p class="text-white/30 text-xs mt-0.5">日间模式和夜间模式</p></div><div class="sw on" id="themeToggle" onclick="tgSw(this)"><div class="sk"></div></div></div></div></div>
     </div>
   </main>
 </div>
 
-<script>
-let R=[],updatesData=[],cP='home',sQ='',avSrc=null;
+<aside id="sbMobile" class="sidebar-mobile">
+  <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享</h1>
+  <nav class="flex flex-col gap-1 flex-1">
+    <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
+    <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
+    <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
+    <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
+    <div class="n" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
+    <div class="n" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
+    <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
+  </nav>
+</aside>
 
-function toast(m){const c=document.getElementById('tC'),d=document.createElement('div');d.className='ti g text-white text-sm px-5 py-2.5 rounded-xl mb-2 whitespace-nowrap';d.textContent=m;c.appendChild(d);requestAnimationFrame(()=>d.classList.add('sh'));setTimeout(()=>{d.classList.remove('sh');setTimeout(()=>d.remove(),300)},2000)}
+<script>
+function saveToCache(k,v){try{localStorage.setItem('mugen_'+k,JSON.stringify(v))}catch(e){}}
+function loadFromCache(k,d){try{const v=localStorage.getItem('mugen_'+k);if(v!==null)return JSON.parse(v)}catch(e){}return d}
+let R=[],updatesData=[],cP='home',sQ='';
+function toast(m){const c=document.getElementById('tC'),d=document.createElement('div');d.className='ti';d.textContent=m;c.appendChild(d);requestAnimationFrame(()=>d.classList.add('sh'));setTimeout(()=>{d.classList.remove('sh');setTimeout(()=>d.remove(),300)},2500)}
 function opM(id){document.getElementById(id).classList.add('sh');document.body.style.overflow='hidden'}
 function clM(id){document.getElementById(id).classList.remove('sh');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
-function tgSB(){
-  const sb=document.getElementById('sb'),mo=document.getElementById('moOv');
-  sb.classList.toggle('op');
-  mo.classList.toggle('sh');
-  document.body.style.overflow = sb.classList.contains('op') ? 'hidden' : '';
-}
-
-function go(p){
-  cP=p;
-  document.querySelectorAll('.n').forEach(n=>n.classList.toggle('on',n.dataset.p===p));
-  document.querySelectorAll('.pg').forEach(e=>e.classList.remove('on'));
-  document.getElementById('p-'+p).classList.add('on');
-  document.getElementById('sI').value='';sQ='';
-  if(p==='home')rH();if(p==='fav')rF();if(p==='purchased')rP();if(p==='updates')rU();
-  document.getElementById('ct').scrollTop=0;
-  // 手机端点击导航后自动关闭侧边栏
-  if(window.innerWidth <= 768){
-    const sb=document.getElementById('sb');
-    if(sb.classList.contains('op')) tgSB();
-  }
-}
-function doS(){sQ=document.getElementById('sI').value.trim().toLowerCase();if(cP!=='home')go('home');rH()}
-
-function syncAv(){
-  const h=document.getElementById('hAv'),ic=document.getElementById('hAvIc');
-  if(avSrc){if(ic)ic.remove();let img=h.querySelector('img');if(!img){img=document.createElement('img');img.className='w-full h-full object-cover';h.appendChild(img)}img.src=avSrc}
-  else{let img=h.querySelector('img');if(img)img.remove();if(!document.getElementById('hAvIc')){const ni=document.createElement('iconify-icon');ni.setAttribute('icon','lucide:user');ni.setAttribute('width','14');ni.className='text-white/50';ni.id='hAvIc';h.appendChild(ni)}}
-}
-
-function cHTML(r,sp){
-  const fc=r.fav?'on':'';
-  let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';
-  return `<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`;
-}
-
-function renderList(gId,eId,filter,isPurchased){
-  const items=R.filter(filter);
-  const g=document.getElementById(gId),e=document.getElementById(eId);
-  if(items.length){g.innerHTML=items.map(r=>cHTML(r,isPurchased)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}
-  else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}
-  document.getElementById('totalCount').textContent=R.length;
-}
-
-function rH(){renderList('hG','hE',r=>sQ?r.name.toLowerCase().includes(sQ):true,false)}
-function rF(){renderList('fvG','fvE',r=>r.fav,false)}
-function rP(){renderList('puG','puE',r=>r.paid,true)}
-
-function goDt(id){
-  const r=R.find(item=>item.id===id);
-  if(!r)return;
-  document.getElementById('dtC').innerHTML=`
-    <div class="g rounded-2xl overflow-hidden max-w-4xl">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-0">
-        <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div>
-        <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div>
-        <div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div>
-      </div>
-      <div class="p-6 md:p-8">
-        <h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2>
-        <div class="flex flex-wrap gap-2 mb-5">
-          <span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span>
-          <span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span>
-          <span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span>
-        </div>
-        <div class="mb-6">
-          <h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3>
-          <p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id});goDt(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span>
-          <button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button>
-        </div>
-      </div>
-    </div>`;
-  cP='detail';
-  document.querySelectorAll('.pg').forEach(e=>e.classList.remove('on'));
-  document.getElementById('p-detail').classList.add('on');
-  document.getElementById('ct').scrollTop=0;
-}
-
-function tgF(id){const r=R.find(item=>item.id===id);if(r){r.fav=!r.fav;toast(r.fav?'已收藏':'已取消收藏');rH();rF();rP()}}
-
-function opD(id){
-  const r=R.find(item=>item.id===id);
-  if(!r)return;
-  if(r.paid){
-    document.getElementById('dlB').innerHTML=`
-      <div class="flex items-center gap-3 p-4 rounded-xl bg-white/5">
-        <div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl||''}</p></div>
-        <button onclick="cp('${r.dl||''}')" class="text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15 flex-shrink-0">复制</button>
-      </div>`;
-  }else{
-    document.getElementById('dlB').innerHTML=`
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="p-4 rounded-xl bg-white/5 flex flex-col items-center">
-          <p class="text-white/60 text-xs font-medium mb-3">付费下载</p>
-          <img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'">
-          <p class="text-white text-lg font-semibold mb-3">${r.price||'¥0'}</p>
-          <button onclick="mkPd(${r.id})" class="w-full py-2 rounded-xl text-sm font-medium bg-white/15 text-white hover:bg-white/25 transition">我已付费</button>
-        </div>
-        <div class="p-4 rounded-xl bg-white/5 flex flex-col items-center">
-          <p class="text-white/60 text-xs font-medium mb-3">免费下载</p>
-          <img src="/固定图片/群二维码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'">
-          <p class="text-white/40 text-xs mt-1">加入QQ群：1044609733</p>
-          <button onclick="cp('1044609733')" class="text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 mt-2">复制</button>
-        </div>
-      </div>`;
-  }
-  opM('dlM');
-}
-
-function mkPd(id){const r=R.find(item=>item.id===id);if(r){r.paid=true;clM('dlM');toast('付费成功');rP();opD(id)}}
-
-function rU(){
-  const list=document.getElementById('upL');
-  if(updatesData.length){
-    const sorted=[...updatesData].sort((a,b)=>b.d.localeCompare(a.d));
-    list.innerHTML=sorted.map(x=>
-      `<div class="g rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`
-    ).join('');
-  }
-}
-
-function upA(e){}
-function svP(){}
-
-function cp(t){navigator.clipboard.writeText(t).then(()=>toast('复制成功')).catch(()=>toast('复制失败'))}
-function tgSw(el){el.classList.toggle('on');toast('模式已切换')}
-
+function cp(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>toast('复制成功')).catch(()=>fallbackCopy(t))}else fallbackCopy(t)}
+function fallbackCopy(t){try{const i=document.createElement('input');i.value=t;i.style.cssText='position:fixed;left:-9999px;top:-9999px;opacity:0';document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);toast('复制成功')}catch(e){toast('复制失败，请手动复制')}}
+function tgSw(el){el.classList.toggle('on');const isLight=el.classList.contains('on');if(isLight){document.body.classList.remove('light-theme');saveToCache('theme','dark')}else{document.body.classList.add('light-theme');saveToCache('theme','light')}toast(isLight?'夜间模式':'日间模式')}
+function tgSB(){const sb=document.getElementById('sbMobile'),mo=document.getElementById('moOv');const isOpen=sb.classList.toggle('op');mo.classList.toggle('sh',isOpen);document.body.style.overflow=isOpen?'hidden':''}
 function openLogin(){document.getElementById('loginOverlay').classList.add('sh');document.body.style.overflow='hidden'}
 function closeLogin(){document.getElementById('loginOverlay').classList.remove('sh');document.body.style.overflow=''}
-function lgToast(m){toast(m)}
 function togglePsw(){const p=document.getElementById('lgPsw'),e=document.getElementById('lgEye');if(p.type==='password'){p.type='text';e.setAttribute('icon','lucide:eye')}else{p.type='password';e.setAttribute('icon','lucide:eye-off')}}
-
-fetch('data.json')
-  .then(res=>res.json())
-  .then(data=>{
-    R=data.resources||[];
-    updatesData=data.updates||[];
-    rH();rF();rP();rU();syncAv();
-  })
-  .catch(()=>{
-    toast('加载数据失败');
-    rH();rF();rP();rU();syncAv();
-  });
+function go(p){cP=p;document.querySelectorAll('.n').forEach(n=>n.classList.toggle('on',n.dataset.p===p));document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));const target=document.getElementById('p-'+p);if(target)target.classList.add('on');document.getElementById('sI').value='';sQ='';if(p==='home')rH();if(p==='fav')rF();if(p==='purchased')rP();if(p==='updates')rU();document.getElementById('ct').scrollTop=0;if(window.innerWidth<=768){const sb=document.getElementById('sbMobile');if(sb.classList.contains('op'))tgSB()}}
+function doS(){sQ=document.getElementById('sI').value.trim().toLowerCase();if(cP!=='home')go('home');rH()}
+function cHTML(r,sp){const fc=r.fav?'on':'';let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';return`<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`}
+function renderList(gId,eId,filter){const items=R.filter(filter);const g=document.getElementById(gId),e=document.getElementById(eId);if(!g||!e)return;if(items.length){g.innerHTML=items.map(r=>cHTML(r,false)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}const tc=document.getElementById('totalCount');if(tc)tc.textContent=R.length}
+function rH(){renderList('hG','hE',r=>sQ?r.name.toLowerCase().includes(sQ):true)}
+function rF(){renderList('fvG','fvE',r=>r.fav)}
+function rP(){renderList('puG','puE',r=>r.paid)}
+function rU(){const list=document.getElementById('upL');if(!list)return;if(updatesData.length){const sorted=[...updatesData].sort((a,b)=>b.d.localeCompare(a.d));list.innerHTML=sorted.map(x=>`<div class="glass rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`).join('')}}
+function goDt(id){const r=R.find(item=>item.id===id);if(!r)return;document.getElementById('dtC').innerHTML=`<div class="glass rounded-2xl overflow-hidden max-w-4xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-0"><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div></div><div class="p-6 md:p-8"><h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2><div class="flex flex-wrap gap-2 mb-5"><span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span><span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span><span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span></div><div class="mb-6"><h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3><p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p></div><div class="flex items-center gap-3"><span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id});goDt(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span><button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button></div></div></div>`;cP='detail';document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));document.getElementById('p-detail').classList.add('on');document.getElementById('ct').scrollTop=0}
+function tgF(id){const r=R.find(item=>item.id===id);if(r){r.fav=!r.fav;toast(r.fav?'已收藏':'已取消收藏');saveToCache('favs',R.filter(item=>item.fav).map(item=>item.id));rH();rF();rP()}}
+function opD(id){const r=R.find(item=>item.id===id);if(!r)return;if(r.paid){document.getElementById('dlB').innerHTML=`<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5"><div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl||''}</p></div><button onclick="cp('${r.dl||''}')" class="copy-btn text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>`}else{document.getElementById('dlB').innerHTML=`<div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">付费下载</p><img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white text-lg font-semibold mb-3">${r.price||'¥0'}</p><button onclick="mkPd(${r.id})" class="w-full py-2 rounded-xl text-sm font-medium bg-white/15 text-white hover:bg-white/25 transition">我已付费</button></div><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">免费下载</p><img src="/固定图片/群二维码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white/40 text-xs mt-1">加入QQ群：1044609733</p><button onclick="cp('1044609733')" class="copy-btn text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div></div>`}opM('dlM')}
+function mkPd(id){const r=R.find(item=>item.id===id);if(r){r.paid=true;clM('dlM');toast('付费成功');saveToCache('paid',R.filter(item=>item.paid).map(item=>item.id));rP();opD(id)}}
+function restoreCache(){const theme=loadFromCache('theme','dark');const toggle=document.getElementById('themeToggle');if(theme==='light'){toggle.classList.remove('on');document.body.classList.add('light-theme')}else{toggle.classList.add('on');document.body.classList.remove('light-theme')}return{favIds:loadFromCache('favs',[]),paidIds:loadFromCache('paid',[])}}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
+const cache=restoreCache();
+fetch('data.json').then(res=>res.json()).then(data=>{R=data.resources||[];updatesData=data.updates||[];R.forEach(item=>{if(cache.favIds.includes(item.id))item.fav=true;if(cache.paidIds.includes(item.id))item.paid=true});rH();rF();rP();rU()}).catch(()=>{toast('加载数据失败');rH();rF();rP();rU()});
 opM('anM');
 </script>
 </body>
