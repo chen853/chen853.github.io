@@ -1,66 +1,613 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>管理</title>
-<style>body{background:#0a0a0f;color:#fff;font-family:system-ui;padding:20px;max-width:600px;margin:0 auto}.g{background:rgba(18,18,24,.58);backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;margin-bottom:16px}h2{margin:0 0 12px;font-size:18px;font-weight:400}input,textarea{width:100%;margin:4px 0 8px;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font-size:14px;box-sizing:border-box}textarea{resize:vertical;min-height:50px}button{padding:6px 14px;border-radius:6px;border:none;background:rgba(255,255,255,.1);color:#fff;cursor:pointer;font-size:14px}button:hover{background:rgba(255,255,255,.2)}pre{background:rgba(0,0,0,.3);padding:10px;border-radius:8px;overflow:auto;font-size:12px;white-space:pre-wrap;word-break:break-all}.r{display:flex;gap:8px;flex-wrap:wrap}</style></head>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>MUGEN整合分享 - 管理后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Inter,sans-serif;overflow:hidden;height:100vh;background:#0a0a0f}
+        .glass{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.05)}
+        .glass-side{background:rgba(12,12,18,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border-right:1px solid rgba(255,255,255,.05)}
+        .i{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.25s}
+        .i::placeholder{color:rgba(255,255,255,.3)}
+        .i:focus{outline:none;background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.22)}
+        .n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px;padding:8px 12px}
+        .n:hover,.n.on{color:#fff;background:rgba(255,255,255,.1)}
+        .n.on{background:rgba(255,255,255,.13)}
+        .c{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.05);border-radius:14px;transition:.25s}
+        .c:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.13);transform:translateY(-2px)}
+        .bd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.2s;cursor:pointer}
+        .bd:hover{background:rgba(255,255,255,.2)}
+        .ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s}
+        .ht:hover{transform:scale(1.15)}
+        .ht.on{color:#ef4444}
+        .ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
+        .ov.sh{opacity:1;pointer-events:auto}
+        .md{transform:scale(.95)translateY(8px);transition:transform .25s ease}
+        .ov.sh .md{transform:scale(1)translateY(0)}
+        .tc{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;align-items:center}
+        .ti{opacity:0;transform:translateY(-10px);transition:opacity .3s,transform .3s;pointer-events:none;background:rgba(18,18,24,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 24px;color:#fff;font-size:14px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,.3);white-space:nowrap;display:inline-block;margin-bottom:8px}
+        .ti.sh{opacity:1;transform:translateY(0)}
+        .pg{display:none}
+        .pg.on{display:block}
+        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar-track{background:0 0}
+        ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px}
+        .sw{width:44px;height:24px;border-radius:12px;background:rgba(255,255,255,.1);cursor:pointer;transition:.25s;position:relative;border:1px solid rgba(255,255,255,.08);flex-shrink:0}
+        .sw.on{background:rgba(255,255,255,.25)}
+        .sk{width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;left:3px;transition:.25s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+        .sw.on .sk{left:21px}
+        .tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+        .mini-card{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.07);padding:0 6px;border-radius:8px;display:inline-block;font-size:14px;line-height:1.5}
+        .mini-card-up{margin-top:-2px;display:inline-block}
+        .form-input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;font-size:14px;transition:.25s}
+        .form-input::placeholder{color:rgba(255,255,255,.4)}
+        .form-input:focus{outline:none;background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.32);box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+        .form-btn{width:100%;padding:13px;border-radius:12px;border:none;background:#fff;color:#171717;font-weight:500;font-size:14px;cursor:pointer;transition:.3s}
+        .form-btn:hover{background:rgba(255,255,255,.88);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.15)}
+        .copy-btn{background:rgba(255,255,255,.08);border-radius:8px;border:none;color:rgba(255,255,255,.6);transition:.2s;cursor:pointer;padding:4px 12px;font-size:12px}
+        .copy-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+        .delete-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#ef4444;border-radius:8px;padding:4px 12px;font-size:12px;cursor:pointer;transition:.2s}
+        .delete-btn:hover{background:rgba(239,68,68,.2)}
+    </style>
+</head>
 <body>
-<div class="g"><h2>+ 资源上传</h2>
-<input id="n" placeholder="名称" value="经典街机人物整合包">
-<input id="s" placeholder="大小" value="256MB">
-<input id="d" placeholder="下载链接" value="https://mugen.com/dl/classic-arcade-pack">
-<textarea id="de" placeholder="介绍">本整合包收录了经典街机格斗游戏的全部人物资源...</textarea>
-<input id="c" placeholder="封面图片链接" value="https://example.com/cover.jpg">
-<input id="i1" placeholder="图片1链接" value="https://example.com/1.jpg">
-<input id="i2" placeholder="图片2链接" value="https://example.com/2.jpg">
-<input id="i3" placeholder="图片3链接" value="https://example.com/3.jpg">
-<button onclick="add()">添加</button></div>
+<div class="bg"></div>
+<div class="tc" id="tC"></div>
 
-<div class="g"><h2>+ 更新内容</h2>
-<input id="v" placeholder="版本" value="v2.4.0">
-<input id="dt" placeholder="日期" value="2025-01-10">
-<input id="tx" placeholder="描述" value="新增街机人物整合包、优化搜索响应">
-<button onclick="addU()">添加</button></div>
+<!-- 公告编辑 -->
+<div id="anM" class="ov" onclick="if(event.target===this)clM('anM')">
+    <div class="md glass rounded-2xl w-full max-w-lg mx-4 p-6">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-white text-lg font-semibold">编辑公告</h3>
+            <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('anM')">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </span>
+        </div>
+        <textarea id="anText" class="form-input h-32 mb-4" placeholder="输入公告内容..."></textarea>
+        <button onclick="saveAnnouncement()" class="form-btn">保存公告</button>
+    </div>
+</div>
 
-<div class="g"><h2>📄 data.json <button onclick="copy()" style="float:right">复制</button></h2>
-<pre id="j">加载中...</pre></div>
+<!-- 资源编辑 -->
+<div id="resM" class="ov" onclick="if(event.target===this)clM('resM')">
+    <div class="md glass rounded-2xl w-full max-w-lg mx-4 p-6">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-white text-lg font-semibold">编辑资源</h3>
+            <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('resM')">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </span>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">资源名称</label>
+                <input type="text" id="resName" class="form-input" placeholder="输入资源名称">
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">资源描述</label>
+                <textarea id="resDesc" class="form-input h-24" placeholder="输入资源描述"></textarea>
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">资源大小</label>
+                <input type="text" id="resSize" class="form-input" placeholder="例如：1.2GB">
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">兼容性</label>
+                <input type="text" id="resCompat" class="form-input" placeholder="例如：通用">
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">下载链接</label>
+                <input type="text" id="resDl" class="form-input" placeholder="输入下载链接">
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">价格</label>
+                <input type="number" id="resPrice" class="form-input" placeholder="0">
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="text-white/60 text-sm mb-1 block">封面图片</label>
+                    <input type="text" id="resCover" class="form-input" placeholder="图片链接">
+                </div>
+                <div>
+                    <label class="text-white/60 text-sm mb-1 block">预览图1</label>
+                    <input type="text" id="resImg1" class="form-input" placeholder="图片链接">
+                </div>
+                <div>
+                    <label class="text-white/60 text-sm mb-1 block">预览图2</label>
+                    <input type="text" id="resImg2" class="form-input" placeholder="图片链接">
+                </div>
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">预览图3</label>
+                <input type="text" id="resImg3" class="form-input" placeholder="图片链接">
+            </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button onclick="saveResource()" class="form-btn flex-1">保存资源</button>
+            <button onclick="deleteResource()" class="delete-btn flex-1">删除资源</button>
+        </div>
+    </div>
+</div>
+
+<!-- 更新日志编辑 -->
+<div id="upM" class="ov" onclick="if(event.target===this)clM('upM')">
+    <div class="md glass rounded-2xl w-full max-w-lg mx-4 p-6">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-white text-lg font-semibold">编辑更新日志</h3>
+            <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('upM')">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </span>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">版本号</label>
+                <input type="text" id="upVer" class="form-input" placeholder="例如：v1.0.0">
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">更新日期</label>
+                <input type="date" id="upDate" class="form-input">
+            </div>
+            <div>
+                <label class="text-white/60 text-sm mb-1 block">更新内容</label>
+                <textarea id="upText" class="form-input h-24" placeholder="输入更新内容"></textarea>
+            </div>
+        </div>
+        <div class="flex gap-3 mt-6">
+            <button onclick="saveUpdate()" class="form-btn flex-1">保存更新</button>
+            <button onclick="deleteUpdate()" class="delete-btn flex-1">删除更新</button>
+        </div>
+    </div>
+</div>
+
+<!-- JSON生成器 -->
+<div id="jsonM" class="ov" onclick="if(event.target===this)clM('jsonM')">
+    <div class="md glass rounded-2xl w-full max-w-2xl mx-4 p-6">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-white text-lg font-semibold">生成data.json</h3>
+            <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('jsonM')">
+                <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+            </span>
+        </div>
+        <textarea id="jsonOutput" class="form-input h-64 mb-4" readonly></textarea>
+        <div class="flex gap-3">
+            <button onclick="generateJSON()" class="form-btn flex-1">生成JSON</button>
+            <button onclick="copyJSON()" class="copy-btn flex-1">复制JSON</button>
+        </div>
+    </div>
+</div>
+
+<!-- 主布局 -->
+<div class="app-wrap">
+    <aside class="sidebar-desktop glass-side">
+        <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享 - 管理后台</h1>
+        <nav class="flex flex-col gap-1 flex-1">
+            <div class="n on" data-p="resources" onclick="go('resources')">
+                <iconify-icon icon="lucide:package" width="18"></iconify-icon>
+                <span class="text-sm">资源管理</span>
+            </div>
+            <div class="n" data-p="announcement" onclick="go('announcement')">
+                <iconify-icon icon="lucide:bell" width="18"></iconify-icon>
+                <span class="text-sm">公告管理</span>
+            </div>
+            <div class="n" data-p="updates" onclick="go('updates')">
+                <iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon>
+                <span class="text-sm">更新日志</span>
+            </div>
+            <div class="n" data-p="json" onclick="go('json')">
+                <iconify-icon icon="lucide:code" width="18"></iconify-icon>
+                <span class="text-sm">JSON生成器</span>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-area">
+        <header class="glass flex items-center gap-3 px-4 md:px-6 py-3 flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,.05)">
+            <h2 class="text-white text-base font-semibold">管理后台</h2>
+            <div class="ml-auto flex gap-3">
+                <button onclick="saveAll()" class="bd px-4 py-1.5 rounded-lg text-sm">保存所有更改</button>
+                <button onclick="go('json')" class="bd px-4 py-1.5 rounded-lg text-sm">生成JSON</button>
+            </div>
+        </header>
+
+        <div id="ct" class="content-scroll">
+            <!-- 资源管理 -->
+            <div id="p-resources" class="pg on">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-white text-base font-semibold">资源管理</h2>
+                    <button onclick="newResource()" class="bd px-4 py-1.5 rounded-lg text-sm">新建资源</button>
+                </div>
+                <div id="resList" class="space-y-3"></div>
+            </div>
+
+            <!-- 公告管理 -->
+            <div id="p-announcement" class="pg">
+                <h2 class="text-white text-base font-semibold mb-6">公告管理</h2>
+                <div class="glass rounded-2xl p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-white text-lg font-semibold mb-2">当前公告</h3>
+                            <p id="currentAnnouncement" class="text-white/40 text-sm">暂无公告</p>
+                        </div>
+                        <button onclick="editAnnouncement()" class="bd px-4 py-1.5 rounded-lg text-sm">编辑公告</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 更新日志 -->
+            <div id="p-updates" class="pg">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-white text-base font-semibold">更新日志</h2>
+                    <button onclick="newUpdate()" class="bd px-4 py-1.5 rounded-lg text-sm">新建更新</button>
+                </div>
+                <div id="updatesList" class="space-y-3"></div>
+            </div>
+
+            <!-- JSON生成器 -->
+            <div id="p-json" class="pg">
+                <h2 class="text-white text-base font-semibold mb-6">JSON生成器</h2>
+                <div class="glass rounded-2xl p-6">
+                    <p class="text-white/40 text-sm mb-4">点击"生成JSON"按钮生成完整的data.json内容</p>
+                    <button onclick="opM('jsonM')" class="form-btn">生成JSON</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
 
 <script>
-let R=[],U=[];
-function render(){document.getElementById('j').textContent=JSON.stringify({resources:R,updates:U},null,2)}
-function add(){
- let n=document.getElementById('n').value.trim(),s=document.getElementById('s').value.trim(),d=document.getElementById('d').value.trim(),de=document.getElementById('de').value.trim(),c=document.getElementById('c').value.trim(),i1=document.getElementById('i1').value.trim(),i2=document.getElementById('i2').value.trim(),i3=document.getElementById('i3').value.trim();
- if(!n||!s||!d||!de||!c||!i1||!i2||!i3)return alert('请完整填写');
- let id=R.length?R[R.length-1].id+1:0;
- // 修复字段名：name, size, dl, desc, cover
- R.push({id,name:n,size:s,dl:d,desc:de,cover:c,img1:i1,img2:i2,img3:i3});
- render();
+let resources = [];
+let announcements = [];
+let updates = [];
+let currentEdit = null;
+
+function toast(m) {
+    const c = document.getElementById('tC');
+    const d = document.createElement('div');
+    d.className = 'ti';
+    d.textContent = m;
+    c.appendChild(d);
+    requestAnimationFrame(() => d.classList.add('sh'));
+    setTimeout(() => {
+        d.classList.remove('sh');
+        setTimeout(() => d.remove(), 300);
+    }, 2500);
 }
-function addU(){
- let v=document.getElementById('v').value.trim(),dt=document.getElementById('dt').value.trim(),tx=document.getElementById('tx').value.trim();
- if(!v||!dt||!tx)return alert('请完整填写');
- U.push({v,d:dt,t:tx});
- render();
+
+function opM(id) {
+    document.getElementById(id).classList.add('sh');
+    document.body.style.overflow = 'hidden';
 }
-function copy(){
- const text=document.getElementById('j').textContent;
- if(navigator.clipboard){
-   navigator.clipboard.writeText(text).then(()=>alert('已复制 JSON')).catch(()=>fallbackCopy(text));
- }else{
-   fallbackCopy(text);
- }
+
+function clM(id) {
+    document.getElementById(id).classList.remove('sh');
+    document.body.style.overflow = '';
 }
-function fallbackCopy(text){
- const ta=document.createElement('textarea');
- ta.value=text;
- ta.style.position='fixed';ta.style.left='-9999px';
- document.body.appendChild(ta);
- ta.select();
- try{document.execCommand('copy');alert('已复制 JSON')}catch(e){alert('复制失败，请手动复制')}
- document.body.removeChild(ta);
+
+function go(p) {
+    currentEdit = null;
+    document.querySelectorAll('.n').forEach(n => n.classList.toggle('on', n.dataset.p === p));
+    document.querySelectorAll('.pg').forEach(el => el.classList.remove('on'));
+    const target = document.getElementById('p-' + p);
+    if (target) target.classList.add('on');
+    
+    if (p === 'resources') renderResources();
+    if (p === 'announcement') renderAnnouncement();
+    if (p === 'updates') renderUpdates();
 }
-// 初始示例 - 字段名修正
-R=[{id:0,name:'经典街机人物整合包',size:'256MB',dl:'https://mugen.com/dl/classic-arcade-pack',desc:'本整合包收录了经典街机格斗游戏的全部人物资源...',cover:'https://example.com/cover.jpg',img1:'https://example.com/1.jpg',img2:'https://example.com/2.jpg',img3:'https://example.com/3.jpg'}];
-U=[{v:'v2.4.0',d:'2025-01-10',t:'新增街机人物整合包、优化搜索响应'},{v:'v2.3.5',d:'2024-12-28',t:'修复收藏状态同步、新增模式切换'}];
-render();
+
+function saveToLocalStorage() {
+    localStorage.setItem('mugen_admin', JSON.stringify({
+        resources,
+        announcements,
+        updates
+    }));
+}
+
+function loadFromLocalStorage() {
+    try {
+        const data = localStorage.getItem('mugen_admin');
+        if (data) {
+            const parsed = JSON.parse(data);
+            resources = parsed.resources || [];
+            announcements = parsed.announcements || [];
+            updates = parsed.updates || [];
+        }
+    } catch (e) {
+        console.error('Failed to load data from localStorage:', e);
+    }
+}
+
+function renderResources() {
+    const list = document.getElementById('resList');
+    if (!list) return;
+    
+    if (resources.length === 0) {
+        list.innerHTML = '<p class="text-white/40 text-center py-8">暂无资源</p>';
+        return;
+    }
+    
+    list.innerHTML = resources.map(r => `
+        <div class="c p-4">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h3 class="text-white text-sm font-medium">${r.name || '未命名'}</h3>
+                    <p class="text-white/30 text-xs mt-1">${r.desc || '暂无描述'}</p>
+                    <div class="flex gap-2 mt-2">
+                        <span class="tag">${r.size || '未知大小'}</span>
+                        <span class="tag">${r.compat || '通用'}</span>
+                        ${r.price ? `<span class="tag">¥${r.price}</span>` : ''}
+                    </div>
+                </div>
+                <div class="flex gap-2 ml-4">
+                    <button onclick="editResource('${r.id}')" class="bd px-3 py-1.5 rounded-lg text-xs">编辑</button>
+                    <button onclick="deleteResource('${r.id}')" class="delete-btn px-3 py-1.5 rounded-lg text-xs">删除</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderAnnouncement() {
+    const current = document.getElementById('currentAnnouncement');
+    if (!current) return;
+    
+    const latest = announcements[announcements.length - 1];
+    current.textContent = latest ? latest.content : '暂无公告';
+}
+
+function renderUpdates() {
+    const list = document.getElementById('updatesList');
+    if (!list) return;
+    
+    if (updates.length === 0) {
+        list.innerHTML = '<p class="text-white/40 text-center py-8">暂无更新日志</p>';
+        return;
+    }
+    
+    list.innerHTML = updates.map(u => `
+        <div class="c p-4">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                        <span class="tag">${u.version}</span>
+                        <span class="text-white/40 text-xs">${u.date}</span>
+                    </div>
+                    <p class="text-white/30 text-xs mt-2">${u.content}</p>
+                </div>
+                <div class="flex gap-2 ml-4">
+                    <button onclick="editUpdate('${u.id}')" class="bd px-3 py-1.5 rounded-lg text-xs">编辑</button>
+                    <button onclick="deleteUpdate('${u.id}')" class="delete-btn px-3 py-1.5 rounded-lg text-xs">删除</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function newResource() {
+    currentEdit = null;
+    document.getElementById('resName').value = '';
+    document.getElementById('resDesc').value = '';
+    document.getElementById('resSize').value = '';
+    document.getElementById('resCompat').value = '';
+    document.getElementById('resDl').value = '';
+    document.getElementById('resPrice').value = '';
+    document.getElementById('resCover').value = '';
+    document.getElementById('resImg1').value = '';
+    document.getElementById('resImg2').value = '';
+    document.getElementById('resImg3').value = '';
+    opM('resM');
+}
+
+function editResource(id) {
+    const resource = resources.find(r => r.id === id);
+    if (!resource) return;
+    
+    currentEdit = id;
+    document.getElementById('resName').value = resource.name || '';
+    document.getElementById('resDesc').value = resource.desc || '';
+    document.getElementById('resSize').value = resource.size || '';
+    document.getElementById('resCompat').value = resource.compat || '';
+    document.getElementById('resDl').value = resource.dl || '';
+    document.getElementById('resPrice').value = resource.price || '';
+    document.getElementById('resCover').value = resource.cover || '';
+    document.getElementById('resImg1').value = resource.img1 || '';
+    document.getElementById('resImg2').value = resource.img2 || '';
+    document.getElementById('resImg3').value = resource.img3 || '';
+    opM('resM');
+}
+
+function saveResource() {
+    const data = {
+        name: document.getElementById('resName').value,
+        desc: document.getElementById('resDesc').value,
+        size: document.getElementById('resSize').value,
+        compat: document.getElementById('resCompat').value,
+        dl: document.getElementById('resDl').value,
+        price: parseFloat(document.getElementById('resPrice').value) || 0,
+        cover: document.getElementById('resCover').value,
+        img1: document.getElementById('resImg1').value,
+        img2: document.getElementById('resImg2').value,
+        img3: document.getElementById('resImg3').value,
+        time: new Date().toISOString()
+    };
+    
+    if (currentEdit) {
+        const index = resources.findIndex(r => r.id === currentEdit);
+        if (index !== -1) {
+            resources[index] = { ...resources[index], ...data };
+            toast('资源已更新');
+        }
+    } else {
+        resources.push({
+            id: Date.now().toString(),
+            ...data
+        });
+        toast('资源已创建');
+    }
+    
+    saveToLocalStorage();
+    clM('resM');
+    renderResources();
+}
+
+function deleteResource() {
+    if (!currentEdit) return;
+    
+    if (confirm('确定要删除这个资源吗？')) {
+        resources = resources.filter(r => r.id !== currentEdit);
+        saveToLocalStorage();
+        clM('resM');
+        renderResources();
+        toast('资源已删除');
+    }
+}
+
+function editAnnouncement() {
+    const latest = announcements[announcements.length - 1];
+    document.getElementById('anText').value = latest ? latest.content : '';
+    opM('anM');
+}
+
+function saveAnnouncement() {
+    const content = document.getElementById('anText').value;
+    if (!content) {
+        toast('公告内容不能为空');
+        return;
+    }
+    
+    announcements.push({
+        id: Date.now().toString(),
+        content,
+        time: new Date().toISOString()
+    });
+    
+    saveToLocalStorage();
+    clM('anM');
+    renderAnnouncement();
+    toast('公告已保存');
+}
+
+function newUpdate() {
+    currentEdit = null;
+    document.getElementById('upVer').value = '';
+    document.getElementById('upDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('upText').value = '';
+    opM('upM');
+}
+
+function editUpdate(id) {
+    const update = updates.find(u => u.id === id);
+    if (!update) return;
+    
+    currentEdit = id;
+    document.getElementById('upVer').value = update.version;
+    document.getElementById('upDate').value = update.date;
+    document.getElementById('upText').value = update.content;
+    opM('upM');
+}
+
+function saveUpdate() {
+    const data = {
+        version: document.getElementById('upVer').value,
+        date: document.getElementById('upDate').value,
+        content: document.getElementById('upText').value
+    };
+    
+    if (!data.version || !data.date || !data.content) {
+        toast('请填写完整的更新信息');
+        return;
+    }
+    
+    if (currentEdit) {
+        const index = updates.findIndex(u => u.id === currentEdit);
+        if (index !== -1) {
+            updates[index] = { ...updates[index], ...data };
+            toast('更新已修改');
+        }
+    } else {
+        updates.push({
+            id: Date.now().toString(),
+            ...data
+        });
+        toast('更新已创建');
+    }
+    
+    saveToLocalStorage();
+    clM('upM');
+    renderUpdates();
+}
+
+function deleteUpdate() {
+    if (!currentEdit) return;
+    
+    if (confirm('确定要删除这个更新吗？')) {
+        updates = updates.filter(u => u.id !== currentEdit);
+        saveToLocalStorage();
+        clM('upM');
+        renderUpdates();
+        toast('更新已删除');
+    }
+}
+
+function generateJSON() {
+    const data = {
+        resources: resources.map(r => ({
+            id: r.id,
+            name: r.name,
+            desc: r.desc,
+            size: r.size,
+            compat: r.compat,
+            dl: r.dl,
+            price: r.price,
+            cover: r.cover,
+            img1: r.img1,
+            img2: r.img2,
+            img3: r.img3,
+            time: r.time,
+            paid: false,
+            fav: false
+        })),
+        updates: updates.map(u => ({
+            v: u.version,
+            d: u.date,
+            t: u.content
+        })),
+        announcement: announcements.length > 0 ? announcements[announcements.length - 1].content : ''
+    };
+    
+    document.getElementById('jsonOutput').value = JSON.stringify(data, null, 2);
+    toast('JSON已生成');
+}
+
+function copyJSON() {
+    const json = document.getElementById('jsonOutput');
+    if (!json.value) {
+        toast('请先生成JSON');
+        return;
+    }
+    
+    navigator.clipboard.writeText(json.value).then(() => {
+        toast('JSON已复制到剪贴板');
+    }).catch(() => {
+        // Fallback
+        json.select();
+        document.execCommand('copy');
+        toast('JSON已复制到剪贴板');
+    });
+}
+
+function saveAll() {
+    saveToLocalStorage();
+    toast('所有更改已保存');
+}
+
+// Initialize
+loadFromLocalStorage();
+go('resources');
 </script>
 </body>
 </html>
