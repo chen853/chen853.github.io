@@ -1,28 +1,21 @@
 {
   "resources": [
     {
-      "id": "1",
-      "name": "MUGEN整合包 v1.0",
-      "desc": "包含精选角色、场景和音效的完整MUGEN整合包",
-      "size": "2.5GB",
+      "id": 1,
+      "name": "KOFXIIISTEAM",
+      "desc": "高仿拳皇13的MUGEN整合包",
+      "size": "1.62GB",
       "compat": "通用",
       "dl": "https://example.com/download/mugen-v1.0.zip",
-      "price": 0,
-      "cover": "https://example.com/images/mugen-cover.jpg",
-      "img1": "https://example.com/images/mugen-preview1.jpg",
-      "img2": "https://example.com/images/mugen-preview2.jpg",
-      "img3": "https://example.com/images/mugen-preview3.jpg",
-      "time": "2024-01-20T00:00:00.000Z",
+      "price": "¥0",
+      "cover": "https://s41.ax1x.com/2026/08/05/pmT1smT.jpg",
+      "img1": "https://s41.ax1x.com/2026/08/05/pmT1DXV.jpg",
+      "img2": "https://s41.ax1x.com/2026/08/05/pmT1smT.jpg",
+      "img3": "https://s41.ax1x.com/2026/08/05/pmT1y0U.jpg",
+      "time": "2026-08-05",
       "paid": false,
       "fav": false
     }
   ],
-  "updates": [
-    {
-      "v": "v1.0.1",
-      "d": "2026-08-05",
-      "t": "修复已知问题，优化性能"
-    }
-  ],
-  "announcement": "欢迎来到MUGEN整合分享站"
+  "updates": []
 }
