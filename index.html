@@ -229,10 +229,8 @@ function saveToCache(k,v){try{localStorage.setItem('mugen_'+k,JSON.stringify(v))
 function loadFromCache(k,d){try{const v=localStorage.getItem('mugen_'+k);if(v!==null)return JSON.parse(v)}catch(e){}return d}
 let R=[],updatesData=[],cP='home',sQ='';
 
-// 默认实验资源（data.json 加载失败时使用）
-const defaultResources = [
-  {id:1,name:'实验资源 - MUGEN整合包',size:'2.3GB',time:'2026-08-05',compat:'Windows',desc:'这是一个实验性的MUGEN整合包，包含多个经典角色和场景。',cover:'',img1:'',img2:'',img3:'',fav:false,paid:false,price:'¥0',dl:'https://example.com/download'}
-];
+// 默认实验资源已清空，不再显示任何实验资源
+const defaultResources = [];
 
 function toast(m){const c=document.getElementById('tC'),d=document.createElement('div');d.className='ti';d.textContent=m;c.appendChild(d);requestAnimationFrame(()=>d.classList.add('sh'));setTimeout(()=>{d.classList.remove('sh');setTimeout(()=>d.remove(),300)},2500)}
 function opM(id){document.getElementById(id).classList.add('sh');document.body.style.overflow='hidden'}
@@ -259,7 +257,7 @@ function mkPd(id){const r=R.find(item=>item.id===id);if(r){r.paid=true;clM('dlM'
 function restoreCache(){const theme=loadFromCache('theme','dark');const toggle=document.getElementById('themeToggle');if(theme==='light'){toggle.classList.remove('on');document.body.classList.add('light-theme')}else{toggle.classList.add('on');document.body.classList.remove('light-theme')}return{favIds:loadFromCache('favs',[]),paidIds:loadFromCache('paid',[])}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
 const cache=restoreCache();
-fetch('data.json').then(res=>res.json()).then(data=>{R=data.resources||[];updatesData=data.updates||[];R.forEach(item=>{if(cache.favIds.includes(item.id))item.fav=true;if(cache.paidIds.includes(item.id))item.paid=true});if(R.length===0){R=defaultResources;toast('已加载实验资源')}rH();rF();rP();rU()}).catch(()=>{R=defaultResources;toast('已加载实验资源');rH();rF();rP();rU()});
+fetch('data.json').then(res=>res.json()).then(data=>{R=data.resources||[];updatesData=data.updates||[];R.forEach(item=>{if(cache.favIds.includes(item.id))item.fav=true;if(cache.paidIds.includes(item.id))item.paid=true});if(R.length===0){toast('暂无资源')}rH();rF();rP();rU()}).catch(()=>{toast('加载 data.json 失败，请检查文件是否存在');rH();rF();rP();rU()});
 opM('anM');
 </script>
 </body>
