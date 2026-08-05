@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>MUGEN整合分享</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js">
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -19,11 +21,11 @@
     .n{color:rgba(255,255,255,.45);transition:.2s;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px;padding:8px 12px}
     .n:hover,.n.on{color:#fff;background:rgba(255,255,255,.1)}
     .n.on{background:rgba(255,255,255,.13)}
-    .c{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.05);border-radius:14px;transition:.25s}
+    .c{background:rgba(18,18,24,.4);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.05);border-radius:14px;transition:.25s;cursor:pointer}
     .c:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.13);transform:translateY(-2px)}
     .bd{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);color:#fff;transition:.2s;cursor:pointer}
     .bd:hover{background:rgba(255,255,255,.2)}
-    .ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s}
+    .ht{color:rgba(255,255,255,.3);cursor:pointer;transition:.15s;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     .ht:hover{transform:scale(1.15)}
     .ht.on{color:#ef4444}
     .ov{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease}
@@ -35,7 +37,8 @@
     .ti.sh{opacity:1;transform:translateY(0)}
     .pg{display:none}
     .pg.on{display:block}
-    .db{border:2px dashed rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:11px;flex-shrink:0}
+    .db{border:2px dashed rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:11px;flex-shrink:0;overflow:hidden}
+    .db img{width:100%;height:100%;object-fit:cover}
     ::-webkit-scrollbar{width:5px}
     ::-webkit-scrollbar-track{background:0 0}
     ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px}
@@ -56,7 +59,7 @@
     .login-box .line{flex:1;height:1px;background:rgba(255,255,255,.12)}
     .login-box .field{position:relative;margin-bottom:14px}
     .login-box .field .icn{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);pointer-events:none}
-    .login-box .psw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);cursor:pointer;transition:.2s;background:0 0;border:none;padding:4px}
+    .login-box .psw-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.35);cursor:pointer;transition:.2s;background:0 0;border:none;padding:4px;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     .login-box .psw-toggle:hover{color:rgba(255,255,255,.7)}
     .light-theme .glass,.light-theme .glass-side,.light-theme .c,.light-theme .mini-card,.light-theme .sidebar-mobile{background:rgba(255,255,255,.4)!important;border-color:rgba(0,0,0,.07)!important}
     .light-theme .glass-side{border-right-color:rgba(0,0,0,.06)!important}
@@ -72,7 +75,7 @@
     .light-theme .login-box .line{background:rgba(0,0,0,.18)}
     .light-theme .bd,.light-theme .ht,.light-theme .menu-btn,.light-theme .modal-close,.light-theme .copy-btn,.light-theme .login-box .ico,.light-theme .psw-toggle{color:#1a1a1a!important;background:0 0!important;border-color:rgba(0,0,0,.12)}
     .light-theme .bd:hover,.light-theme .ht:hover,.light-theme .menu-btn:hover,.light-theme .modal-close:hover,.light-theme .copy-btn:hover,.light-theme .login-box .ico:hover,.light-theme .psw-toggle:hover{color:#000!important;background:rgba(0,0,0,.1)!important}
-    .light-theme .ht.on{color:#000!important;background:rgba(0,0,0,.15)!important}
+    .light-theme .ht.on{color:#ef4444!important}
     .light-theme .sw{background:rgba(0,0,0,.1);border-color:rgba(0,0,0,.08)}
     .light-theme .sw .sk{background:#222}
     .light-theme .ov{background:rgba(255,255,255,.6)}
@@ -80,6 +83,8 @@
     .light-theme .login-box .btn:hover{background:rgba(0,0,0,.85)}
     .light-theme .db{border-color:rgba(0,0,0,.16);color:rgba(0,0,0,.25)}
     .light-theme ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2)}
+    /* 禁用所有 iconify-icon 的点击高亮 */
+    iconify-icon{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     @media(min-width:769px){
       .app-wrap{display:flex;height:100vh;width:100vw;position:relative;z-index:1;overflow:hidden}
       .sidebar-desktop{display:flex!important;width:260px;flex-shrink:0;height:100%;flex-direction:column;padding:20px}
@@ -124,7 +129,7 @@
 <div id="anM" class="ov" onclick="if(event.target===this)clM('anM')">
   <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
     <h3 class="text-white text-lg font-semibold mb-3">公告</h3>
-    <p class="text-white/50 text-sm leading-relaxed">欢迎来到MUGEN整合分享站</p>
+    <p class="text-white/50 text-sm leading-relaxed">欢迎来到MUGEN分享站，目前免费提供下载链接，该站提供直接图片形式帮助用户快速识别整合信息，由于服务器尚未对接，所以暂时无法登录注册，强烈建议电脑模式最佳，010100：致MUGEN玩家</p>
     <button onclick="clM('anM')" class="mt-5 w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">我知道了</button>
   </div>
 </div>
@@ -170,7 +175,7 @@
       <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
       <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
       <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
-      <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
+      <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">已收藏</span></div>
       <div class="n" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
       <div class="n" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
       <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
@@ -195,9 +200,9 @@
       <div id="p-contact" class="pg">
         <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">联系作者</span></h2>
         <div class="glass rounded-2xl p-4 md:p-6 max-w-lg space-y-3">
-          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">WeChat: MUGEN_Author</span></div><button onclick="cp('MUGEN_Author')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
-          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">QQ: 123456789</span></div><button onclick="cp('123456789')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
-          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="lucide:mail" width="18" class="text-red-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">Email: author@mugen.com</span></div><button onclick="cp('author@mugen.com')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
+          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">WeChat: 无</span></div><button onclick="cp('MUGEN_Author')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
+          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">【作者010100】QQ: 2368529252</span></div><button onclick="cp('123456789')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
+          <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5"><div class="info flex items-center gap-3 min-w-0 flex-1"><iconify-icon icon="lucide:mail" width="18" class="text-red-400/70 flex-shrink-0"></iconify-icon><span class="text-white/70 text-sm truncate">Email: chenjunhen81@gmail.com</span></div><button onclick="cp('author@mugen.com')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>
           <button onclick="opM('spM')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition mt-2 flex items-center justify-center gap-2"><iconify-icon icon="lucide:heart" width="16" class="text-pink-400/70"></iconify-icon>赞助作者</button>
         </div>
       </div>
@@ -223,32 +228,38 @@
 function saveToCache(k,v){try{localStorage.setItem('mugen_'+k,JSON.stringify(v))}catch(e){}}
 function loadFromCache(k,d){try{const v=localStorage.getItem('mugen_'+k);if(v!==null)return JSON.parse(v)}catch(e){}return d}
 let R=[],updatesData=[],cP='home',sQ='';
+
+// 默认实验资源（data.json 加载失败时使用）
+const defaultResources = [
+  {id:1,name:'实验资源 - MUGEN整合包',size:'2.3GB',time:'2026-08-05',compat:'Windows',desc:'这是一个实验性的MUGEN整合包，包含多个经典角色和场景。',cover:'',img1:'',img2:'',img3:'',fav:false,paid:false,price:'¥0',dl:'https://example.com/download'}
+];
+
 function toast(m){const c=document.getElementById('tC'),d=document.createElement('div');d.className='ti';d.textContent=m;c.appendChild(d);requestAnimationFrame(()=>d.classList.add('sh'));setTimeout(()=>{d.classList.remove('sh');setTimeout(()=>d.remove(),300)},2500)}
 function opM(id){document.getElementById(id).classList.add('sh');document.body.style.overflow='hidden'}
 function clM(id){document.getElementById(id).classList.remove('sh');document.body.style.overflow=''}
 function cp(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>toast('复制成功')).catch(()=>fallbackCopy(t))}else fallbackCopy(t)}
 function fallbackCopy(t){try{const i=document.createElement('input');i.value=t;i.style.cssText='position:fixed;left:-9999px;top:-9999px;opacity:0';document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);toast('复制成功')}catch(e){toast('复制失败，请手动复制')}}
 function tgSw(el){el.classList.toggle('on');const isLight=el.classList.contains('on');if(isLight){document.body.classList.remove('light-theme');saveToCache('theme','dark')}else{document.body.classList.add('light-theme');saveToCache('theme','light')}toast(isLight?'夜间模式':'日间模式')}
-function tgSB(){const sb=document.getElementById('sbMobile'),mo=document.getElementById('moOv');const isOpen=sb.classList.toggle('op');mo.classList.toggle('sh',isOpen);document.body.style.overflow=isOpen?'hidden':''}
+function tgSB(){const sb=document.getElementById('sbMobile'),mo=document.getElementById('moOv');const isOpen=sb.classList.toggle('op');mo.classList.toggle('sh',isOpen);document.body.style.overflow=isOpen?'':''}
 function openLogin(){document.getElementById('loginOverlay').classList.add('sh');document.body.style.overflow='hidden'}
 function closeLogin(){document.getElementById('loginOverlay').classList.remove('sh');document.body.style.overflow=''}
 function togglePsw(){const p=document.getElementById('lgPsw'),e=document.getElementById('lgEye');if(p.type==='password'){p.type='text';e.setAttribute('icon','lucide:eye')}else{p.type='password';e.setAttribute('icon','lucide:eye-off')}}
 function go(p){cP=p;document.querySelectorAll('.n').forEach(n=>n.classList.toggle('on',n.dataset.p===p));document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));const target=document.getElementById('p-'+p);if(target)target.classList.add('on');document.getElementById('sI').value='';sQ='';if(p==='home')rH();if(p==='fav')rF();if(p==='purchased')rP();if(p==='updates')rU();document.getElementById('ct').scrollTop=0;if(window.innerWidth<=768){const sb=document.getElementById('sbMobile');if(sb.classList.contains('op'))tgSB()}}
 function doS(){sQ=document.getElementById('sI').value.trim().toLowerCase();if(cP!=='home')go('home');rH()}
-function cHTML(r,sp){const fc=r.fav?'on':'';let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';return`<div class="c p-4 flex gap-4 items-start cursor-pointer" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`}
+function cHTML(r,sp){const fc=r.fav?'on':'';let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';return`<div class="c p-4 flex gap-4 items-start" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`}
 function renderList(gId,eId,filter){const items=R.filter(filter);const g=document.getElementById(gId),e=document.getElementById(eId);if(!g||!e)return;if(items.length){g.innerHTML=items.map(r=>cHTML(r,false)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}const tc=document.getElementById('totalCount');if(tc)tc.textContent=R.length}
 function rH(){renderList('hG','hE',r=>sQ?r.name.toLowerCase().includes(sQ):true)}
 function rF(){renderList('fvG','fvE',r=>r.fav)}
 function rP(){renderList('puG','puE',r=>r.paid)}
 function rU(){const list=document.getElementById('upL');if(!list)return;if(updatesData.length){const sorted=[...updatesData].sort((a,b)=>b.d.localeCompare(a.d));list.innerHTML=sorted.map(x=>`<div class="glass rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`).join('')}}
-function goDt(id){const r=R.find(item=>item.id===id);if(!r)return;document.getElementById('dtC').innerHTML=`<div class="glass rounded-2xl overflow-hidden max-w-4xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-0"><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div></div><div class="p-6 md:p-8"><h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2><div class="flex flex-wrap gap-2 mb-5"><span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span><span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span><span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span></div><div class="mb-6"><h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3><p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p></div><div class="flex items-center gap-3"><span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id});goDt(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span><button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button></div></div></div>`;cP='detail';document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));document.getElementById('p-detail').classList.add('on');document.getElementById('ct').scrollTop=0}
-function tgF(id){const r=R.find(item=>item.id===id);if(r){r.fav=!r.fav;toast(r.fav?'已收藏':'已取消收藏');saveToCache('favs',R.filter(item=>item.fav).map(item=>item.id));rH();rF();rP()}}
+function tgF(id){const r=R.find(item=>item.id===id);if(r){r.fav=!r.fav;toast(r.fav?'已收藏':'已取消收藏');saveToCache('favs',R.filter(item=>item.fav).map(item=>item.id));rH();rF();rP();if(cP==='detail'){const heartIcon=document.querySelector('#dtC .ht');if(heartIcon){heartIcon.classList.toggle('on',r.fav)}}}}
+function goDt(id){const r=R.find(item=>item.id===id);if(!r){toast('资源不存在');return}document.getElementById('dtC').innerHTML=`<div class="glass rounded-2xl overflow-hidden max-w-4xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-0"><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div></div><div class="p-6 md:p-8"><h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2><div class="flex flex-wrap gap-2 mb-5"><span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span><span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span><span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span></div><div class="mb-6"><h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3><p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p></div><div class="flex items-center gap-3"><span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span><button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button></div></div></div>`;cP='detail';document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));document.getElementById('p-detail').classList.add('on');document.getElementById('ct').scrollTop=0}
 function opD(id){const r=R.find(item=>item.id===id);if(!r)return;if(r.paid){document.getElementById('dlB').innerHTML=`<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5"><div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl||''}</p></div><button onclick="cp('${r.dl||''}')" class="copy-btn text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>`}else{document.getElementById('dlB').innerHTML=`<div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">付费下载</p><img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white text-lg font-semibold mb-3">${r.price||'¥0'}</p><button onclick="mkPd(${r.id})" class="w-full py-2 rounded-xl text-sm font-medium bg-white/15 text-white hover:bg-white/25 transition">我已付费</button></div><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">免费下载</p><img src="/固定图片/群二维码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white/40 text-xs mt-1">加入QQ群：1044609733</p><button onclick="cp('1044609733')" class="copy-btn text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div></div>`}opM('dlM')}
 function mkPd(id){const r=R.find(item=>item.id===id);if(r){r.paid=true;clM('dlM');toast('付费成功');saveToCache('paid',R.filter(item=>item.paid).map(item=>item.id));rP();opD(id)}}
 function restoreCache(){const theme=loadFromCache('theme','dark');const toggle=document.getElementById('themeToggle');if(theme==='light'){toggle.classList.remove('on');document.body.classList.add('light-theme')}else{toggle.classList.add('on');document.body.classList.remove('light-theme')}return{favIds:loadFromCache('favs',[]),paidIds:loadFromCache('paid',[])}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
 const cache=restoreCache();
-fetch('data.json').then(res=>res.json()).then(data=>{R=data.resources||[];updatesData=data.updates||[];R.forEach(item=>{if(cache.favIds.includes(item.id))item.fav=true;if(cache.paidIds.includes(item.id))item.paid=true});rH();rF();rP();rU()}).catch(()=>{toast('加载数据失败');rH();rF();rP();rU()});
+fetch('data.json').then(res=>res.json()).then(data=>{R=data.resources||[];updatesData=data.updates||[];R.forEach(item=>{if(cache.favIds.includes(item.id))item.fav=true;if(cache.paidIds.includes(item.id))item.paid=true});if(R.length===0){R=defaultResources;toast('已加载实验资源')}rH();rF();rP();rU()}).catch(()=>{R=defaultResources;toast('已加载实验资源');rH();rF();rP();rU()});
 opM('anM');
 </script>
 </body>
