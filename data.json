@@ -1,16 +1,28 @@
 {
   "resources": [
     {
-      "id": 0,
-      "name": "91",
-      "size": "78GB",
-      "dl": "掉k",
-      "desc": "91.com.",
-      "cover": "https://img0.baidu.com/it/u=2909166469,3539092078&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
-      "img1": "https://img2.baidu.com/it/u=624045251,3155844544&fm=253&fmt=auto&app=120&f=JPEG?w=667&h=500",
-      "img2": "https://img0.baidu.com/it/u=2909166469,3539092078&fm=253&fmt=auto&app=120&f=JPEG?w=889&h=500",
-      "img3": "https://img1.baidu.com/it/u=1518949175,1712418543&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"
+      "id": "1",
+      "name": "MUGEN整合包 v1.0",
+      "desc": "包含精选角色、场景和音效的完整MUGEN整合包",
+      "size": "2.5GB",
+      "compat": "通用",
+      "dl": "https://example.com/download/mugen-v1.0.zip",
+      "price": 0,
+      "cover": "https://example.com/images/mugen-cover.jpg",
+      "img1": "https://example.com/images/mugen-preview1.jpg",
+      "img2": "https://example.com/images/mugen-preview2.jpg",
+      "img3": "https://example.com/images/mugen-preview3.jpg",
+      "time": "2024-01-20T00:00:00.000Z",
+      "paid": false,
+      "fav": false
     }
   ],
-  "updates": []
+  "updates": [
+    {
+      "v": "v1.0.1",
+      "d": "2024-01-21",
+      "t": "修复已知问题，优化性能"
+    }
+  ],
+  "announcement": "欢迎来到MUGEN整合分享站"
 }
