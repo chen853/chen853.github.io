@@ -92,6 +92,7 @@
       .main-area{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;overflow:hidden}
       .content-scroll{flex:1;overflow-y:auto;padding:16px 20px}
       .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+      .del-btn{font-size:12px!important;padding:4px 10px!important}
     }
     @media(max-width:768px){
       .app-wrap{display:block;height:100vh;width:100vw;overflow:hidden}
@@ -115,9 +116,14 @@
       .contact-item .info span{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
       .contact-item .copy-btn{flex-shrink:0;padding:4px 12px;font-size:12px;background:rgba(255,255,255,.08);border-radius:8px;border:none;color:rgba(255,255,255,.6);transition:.2s}
       .light-theme .contact-item .copy-btn{color:rgba(0,0,0,.5);background:rgba(0,0,0,.05)}
+      .del-btn{font-size:10px!important;padding:3px 8px!important}
     }
     .sidebar-desktop,.sidebar-mobile{flex-shrink:0}
     .sidebar-desktop *,.sidebar-mobile *{pointer-events:auto!important}
+    .del-btn{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.2);color:#ef4444;transition:.2s;cursor:pointer;border-radius:6px;font-size:11px;padding:3px 10px}
+    .del-btn:hover{background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.35)}
+    .light-theme .del-btn{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#dc2626}
+    .light-theme .del-btn:hover{background:rgba(239,68,68,.2)}
   </style>
 </head>
 <body>
@@ -246,20 +252,55 @@ function closeLogin(){document.getElementById('loginOverlay').classList.remove('
 function togglePsw(){const p=document.getElementById('lgPsw'),e=document.getElementById('lgEye');if(p.type==='password'){p.type='text';e.setAttribute('icon','lucide:eye')}else{p.type='password';e.setAttribute('icon','lucide:eye-off')}}
 function go(p){cP=p;document.querySelectorAll('.n').forEach(n=>n.classList.toggle('on',n.dataset.p===p));document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));const target=document.getElementById('p-'+p);if(target)target.classList.add('on');document.getElementById('sI').value='';sQ='';if(p==='home')rH();if(p==='fav')rF();if(p==='purchased')rP();if(p==='updates')rU();document.getElementById('ct').scrollTop=0;if(window.innerWidth<=768){const sb=document.getElementById('sbMobile');if(sb.classList.contains('op'))tgSB()}}
 function doS(){sQ=document.getElementById('sI').value.trim().toLowerCase();if(cP!=='home')go('home');rH()}
-function cHTML(r,sp){const fc=r.fav?'on':'';let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';return`<div class="c p-4 flex gap-4 items-start" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`}
+function cHTML(r,sp){const fc=r.fav?'on':'';let pt='';if(sp&&r.paid)pt='<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';return`<div class="c p-4 flex gap-4 items-start" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button><button class="del-btn" onclick="delRes(${r.id})">删除</button></div></div>`}
 function renderList(gId,eId,filter){const items=R.filter(filter);const g=document.getElementById(gId),e=document.getElementById(eId);if(!g||!e)return;if(items.length){g.innerHTML=items.map(r=>cHTML(r,false)).join('');g.classList.remove('hidden');e.classList.add('hidden');e.classList.remove('flex')}else{g.classList.add('hidden');e.classList.remove('hidden');e.classList.add('flex')}const tc=document.getElementById('totalCount');if(tc)tc.textContent=R.length}
 function rH(){renderList('hG','hE',r=>sQ?r.name.toLowerCase().includes(sQ):true)}
 function rF(){renderList('fvG','fvE',r=>r.fav)}
 function rP(){renderList('puG','puE',r=>r.paid)}
 function rU(){const list=document.getElementById('upL');if(!list)return;if(updatesData.length){const sorted=[...updatesData].sort((a,b)=>b.d.localeCompare(a.d));list.innerHTML=sorted.map(x=>`<div class="glass rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`).join('')}}
 function tgF(id){const r=R.find(item=>item.id===id);if(r){r.fav=!r.fav;toast(r.fav?'已收藏':'已取消收藏');saveToCache('favs',R.filter(item=>item.fav).map(item=>item.id));rH();rF();rP();if(cP==='detail'){const heartIcon=document.querySelector('#dtC .ht');if(heartIcon){heartIcon.classList.toggle('on',r.fav)}}}}
-function goDt(id){const r=R.find(item=>item.id===id);if(!r){toast('资源不存在');return}document.getElementById('dtC').innerHTML=`<div class="glass rounded-2xl overflow-hidden max-w-4xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-0"><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div></div><div class="p-6 md:p-8"><h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2><div class="flex flex-wrap gap-2 mb-5"><span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span><span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span><span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span></div><div class="mb-6"><h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3><p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p></div><div class="flex items-center gap-3"><span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span><button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button></div></div></div>`;cP='detail';document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));document.getElementById('p-detail').classList.add('on');document.getElementById('ct').scrollTop=0}
+function goDt(id){const r=R.find(item=>item.id===id);if(!r){toast('资源不存在');return}document.getElementById('dtC').innerHTML=`<div class="glass rounded-2xl overflow-hidden max-w-4xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-0"><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div></div><div class="p-6 md:p-8"><div class="flex justify-between items-start"><h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2><button class="del-btn" onclick="delRes(${r.id})">删除资源</button></div><div class="flex flex-wrap gap-2 mb-5"><span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span><span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span><span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span></div><div class="mb-6"><h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3><p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p></div><div class="flex items-center gap-3"><span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span><button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button></div></div></div>`;cP='detail';document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));document.getElementById('p-detail').classList.add('on');document.getElementById('ct').scrollTop=0}
 function opD(id){const r=R.find(item=>item.id===id);if(!r)return;if(r.paid){document.getElementById('dlB').innerHTML=`<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5"><div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl||''}</p></div><button onclick="cp('${r.dl||''}')" class="copy-btn text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>`}else{document.getElementById('dlB').innerHTML=`<div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">付费下载</p><img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white text-lg font-semibold mb-3">${r.price||'¥0'}</p><button onclick="mkPd(${r.id})" class="w-full py-2 rounded-xl text-sm font-medium bg-white/15 text-white hover:bg-white/25 transition">我已付费</button></div><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">免费下载</p><img src="/固定图片/群二维码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white/40 text-xs mt-1">加入QQ群：1044609733</p><button onclick="cp('1044609733')" class="copy-btn text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div></div>`}opM('dlM')}
 function mkPd(id){const r=R.find(item=>item.id===id);if(r){r.paid=true;clM('dlM');toast('付费成功');saveToCache('paid',R.filter(item=>item.paid).map(item=>item.id));rP();opD(id)}}
-function restoreCache(){const theme=loadFromCache('theme','dark');const toggle=document.getElementById('themeToggle');if(theme==='light'){toggle.classList.remove('on');document.body.classList.add('light-theme')}else{toggle.classList.add('on');document.body.classList.remove('light-theme')}return{favIds:loadFromCache('favs',[]),paidIds:loadFromCache('paid',[])}}
+function restoreCache(){const theme=loadFromCache('theme','dark');const toggle=document.getElementById('themeToggle');if(theme==='light'){toggle.classList.remove('on');document.body.classList.add('light-theme')}else{toggle.classList.add('on');document.body.classList.remove('light-theme')}const deletedIds=loadFromCache('deleted',[]);return{favIds:loadFromCache('favs',[]),paidIds:loadFromCache('paid',[]),deletedIds:deletedIds}}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){clM('dlM');clM('spM');clM('anM');closeLogin()}});
+
+// 删除资源
+function delRes(id){
+  const idx=R.findIndex(item=>item.id===id);
+  if(idx===-1){toast('资源不存在');return}
+  const name=R[idx].name||'未命名';
+  if(!confirm(`确定要删除「${name}」吗？`))return;
+  R.splice(idx,1);
+  saveToCache('deleted',R.map(item=>item.id));
+  toast(`已删除「${name}」`);
+  if(cP==='detail'){
+    go('home');
+  }else{
+    rH();rF();rP();
+  }
+}
+
 const cache=restoreCache();
-fetch('data.json').then(res=>res.json()).then(data=>{R=data.resources||[];updatesData=data.updates||[];R.forEach(item=>{if(cache.favIds.includes(item.id))item.fav=true;if(cache.paidIds.includes(item.id))item.paid=true});if(R.length===0){R=defaultResources;toast('已加载实验资源')}rH();rF();rP();rU()}).catch(()=>{R=defaultResources;toast('已加载实验资源');rH();rF();rP();rU()});
+fetch('data.json').then(res=>res.json()).then(data=>{
+  let resources=data.resources||[];
+  // 过滤掉已删除的资源（通过 ID 匹配）
+  resources=resources.filter(item=>!cache.deletedIds.includes(item.id));
+  R=resources;
+  updatesData=data.updates||[];
+  R.forEach(item=>{
+    if(cache.favIds.includes(item.id))item.fav=true;
+    if(cache.paidIds.includes(item.id))item.paid=true;
+  });
+  if(R.length===0){R=defaultResources;toast('已加载实验资源')}
+  rH();rF();rP();rU();
+}).catch(()=>{
+  // 过滤默认资源中已删除的
+  let defaults=defaultResources.filter(item=>!cache.deletedIds.includes(item.id));
+  R=defaults.length?defaults:defaultResources;
+  toast('已加载实验资源');
+  rH();rF();rP();rU();
+});
 opM('anM');
 </script>
 </body>
