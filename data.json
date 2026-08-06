@@ -15,28 +15,7 @@
       "time": "2026-08-05",
       "paid": false,
       "fav": false
-    },
-    {
-      "id": 2,
-      "name": "0",
-      "cover": "资源图片/KOFXIIISTEAM选.jpg",
-      "img1": "资源图片/KOFXIIISTEAM首.jpg",
-      "img2": "资源图片/KOFXIIISTEAM选.jpg",
-      "img3": "资源图片/KOFXIIISTEAM战.jpg",
-      "size": "1",
-      "time": "2026-08-06",
-      "compat": "Android",
-      "desc": "0",
-      "dl": "KOFXIIISTEAM",
-      "paid": true,
-      "price": "8"
     }
   ],
-  "updates": [
-    {
-      "v": "1.0",
-      "d": "2026-08-06",
-      "t": "0"
-    }
-  ]
+  "updates": []
 }
