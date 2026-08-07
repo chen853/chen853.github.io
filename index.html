@@ -153,6 +153,23 @@
             #p-purchased .c{background:rgba(18,18,24,.2)!important}
             .light-theme header.glass{background:rgba(255,255,255,.5)!important;border-color:rgba(0,0,0,.06)!important}
             .light-theme .sidebar-mobile{background:rgba(255,255,255,.5)!important;border-color:rgba(0,0,0,.06)!important;box-shadow:0 4px 24px rgba(0,0,0,.08)!important}
+            /* 修复手机端 light-theme 下部分元素颜色 */
+            .light-theme .glass{background:rgba(255,255,255,.4)!important}
+            .light-theme .glass-side{background:rgba(255,255,255,.4)!important}
+            .light-theme .mini-card{background:rgba(255,255,255,.6)!important}
+            .light-theme #p-detail .glass{background:rgba(255,255,255,.4)!important}
+            .light-theme #dtC .glass{background:rgba(255,255,255,.4)!important}
+            .light-theme .mini-card-up .mini-card{background:rgba(255,255,255,.6)!important}
+            .light-theme #p-fav .c{background:rgba(255,255,255,.4)!important}
+            .light-theme #p-purchased .c{background:rgba(255,255,255,.4)!important}
+            .light-theme .ov .md.glass{background:rgba(255,255,255,.6)!important}
+            .light-theme .login-box .ipt{background:rgba(255,255,255,.6)!important}
+            .light-theme .login-box .ico{background:rgba(255,255,255,.4)!important}
+            .light-theme .bd{background:rgba(0,0,0,.06)!important}
+            .light-theme .contact-item{background:rgba(0,0,0,.04)!important}
+            .light-theme .sw{background:rgba(0,0,0,.1)!important}
+            .light-theme .tag{background:rgba(0,0,0,.06)!important}
+            .light-theme .i{background:rgba(0,0,0,.04)!important}
         }
         .sidebar-desktop,.sidebar-mobile{flex-shrink:0}
         .sidebar-desktop *,.sidebar-mobile *{pointer-events:auto!important}
@@ -210,7 +227,7 @@
             <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
             <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
             <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
-            <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">已收藏</span></div>
+            <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
             <div class="n" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
             <div class="n" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
             <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
