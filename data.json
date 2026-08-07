@@ -3,18 +3,30 @@
     {
       "id": 1,
       "name": "KOFXIIISTEAM",
-      "desc": "高仿拳皇13的MUGEN整合",
-      "size": "1.62GB",
-      "compat": "通用",
-      "dl": "https://1838371411.share.123pan.cn/123pan/ZwDFTd-Kx49d",
-      "price": "¥0",
       "cover": "https://s41.ax1x.com/2026/08/05/pmT1smT.jpg",
       "img1": "https://s41.ax1x.com/2026/08/05/pmT1DXV.jpg",
       "img2": "https://s41.ax1x.com/2026/08/05/pmT1smT.jpg",
       "img3": "https://s41.ax1x.com/2026/08/05/pmT1y0U.jpg",
+      "size": "1.62GB",
       "time": "2026-08-05",
-      "paid": false,
-      "fav": false
+      "compat": "通用",
+      "desc": "高仿拳皇13的MUGEN整合",
+      "dl": "https://1838371411.share.123pan.cn/123pan/ZwDFTd-Kx49d",
+      "price": "0"
+    },
+    {
+      "id": 2,
+      "name": "测试",
+      "cover": "",
+      "img1": "",
+      "img2": "",
+      "img3": "",
+      "size": "",
+      "time": "2026-08-07",
+      "compat": "",
+      "desc": "",
+      "dl": "",
+      "price": "¥8"
     }
   ],
   "updates": []
