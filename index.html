@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>MUGEN整合分享</title>
+    <meta name="theme-color" id="themeColorMeta" content="#0a0a0f">
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js">
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+        body {
+            font-family: Inter, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: #0a0a0f
+        }
+        .bg {
+            position: fixed;
+            inset: 0;
+            background: url('固定图片/主页背景.jpg')center/cover no-repeat;
+            z-index: 0
+        }
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .25s ease;
+            will-change: opacity
+        }
+        body:not(.light-theme) .bg-overlay {
+            opacity: 1
+        }
+        .glass {
+            background: rgba(18, 18, 24, .4);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, .05)
+        }
+        .glass-side {
+            background: rgba(12, 12, 18, .4);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: 20px;
+            margin: 10px;
+            height: calc(100% - 20px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .25)
+        }
+        .i {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: #fff;
+            transition: transform .2s, opacity .2s
+        }
+        .i::placeholder {
+            color: rgba(255, 255, 255, .3)
+        }
+        .i:focus {
+            outline: none;
+            background: rgba(255, 255, 255, .11);
+            border-color: rgba(255, 255, 255, .22)
+        }
+        .n {
+            color: rgba(255, 255, 255, .45);
+            transition: color .2s;
+            cursor: pointer;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px
+        }
+        .n:hover,
+        .n.on {
+            color: #fff;
+            background: rgba(255, 255, 255, .1)
+        }
+        .n.on {
+            background: rgba(255, 255, 255, .13)
+        }
+        .c {
+            background: rgba(22, 22, 30, .75);
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: 14px;
+            transition: transform .2s ease, background .2s ease;
+            cursor: pointer
+        }
+        .c:hover {
+            will-change: transform;
+            background: rgba(255, 255, 255, .09);
+            border-color: rgba(255, 255, 255, .13);
+            transform: translateY(-2px)
+        }
+        .bd {
+            background: rgba(255, 255, 255, .1);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: #fff;
+            transition: transform .15s;
+            cursor: pointer
+        }
+        .bd:hover {
+            background: rgba(255, 255, 255, .2)
+        }
+        .bd:active {
+            transform: scale(0.96)
+        }
+        .ht {
+            color: rgba(255, 255, 255, .3);
+            cursor: pointer;
+            transition: transform .15s, color .15s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none
+        }
+        .ht:hover {
+            transform: scale(1.1)
+        }
+        .ht.on {
+            color: #ef4444
+        }
+        .ov {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease
+        }
+        .ov.sh {
+            opacity: 1;
+            pointer-events: auto
+        }
+        .md {
+            transform: scale(.95);
+            opacity: 0;
+            transition: transform .2s ease, opacity .2s ease
+        }
+        .ov.sh .md {
+            transform: scale(1);
+            opacity: 1
+        }
+        .tc {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center
+        }
+        .ti {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity .2s, transform .2s;
+            pointer-events: none;
+            background: rgba(18, 18, 24, .92);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .3);
+            white-space: nowrap;
+            display: inline-block;
+            margin-bottom: 8px
+        }
+        .ti.sh {
+            opacity: 1;
+            transform: translateY(0)
+        }
+        .pg {
+            display: none
+        }
+        .pg.on {
+            display: block
+        }
+        .db {
+            border: 2px dashed rgba(255, 255, 255, .12);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, .2);
+            font-size: 11px;
+            flex-shrink: 0;
+            overflow: hidden
+        }
+        .db img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+        ::-webkit-scrollbar {
+            width: 5px
+        }
+        ::-webkit-scrollbar-track {
+            background: 0 0
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .1);
+            border-radius: 9px
+        }
+        .sw {
+            width: 44px;
+            height: 24px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, .1);
+            cursor: pointer;
+            transition: background .2s;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, .08);
+            flex-shrink: 0
+        }
+        .sw.on {
+            background: rgba(255, 255, 255, .25)
+        }
+        .sk {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            transition: transform .2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .3)
+        }
+        .sw.on .sk {
+            transform: translateX(18px)
+        }
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, .06);
+            color: rgba(255, 255, 255, .5)
+        }
+        .mini-card {
+            background: rgba(22, 22, 30, .75);
+            border: 1px solid rgba(255, 255, 255, .07);
+            padding: 0 6px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            line-height: 1.5
+        }
+        .mini-card-up {
+            margin-top: -2px;
+            display: inline-block
+        }
+        .login-box .ipt {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(255, 255, 255, .07);
+            color: #fff;
+            font-size: 14px;
+            transition: border-color .2s
+        }
+        .login-box .ipt::placeholder {
+            color: rgba(255, 255, 255, .4)
+        }
+        .login-box .ipt:focus {
+            outline: none;
+            background: rgba(255, 255, 255, .13);
+            border-color: rgba(255, 255, 255, .32)
+        }
+        .login-box .btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 12px;
+            border: none;
+            background: #fff;
+            color: #171717;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform .15s
+        }
+        .login-box .btn:hover {
+            background: rgba(255, 255, 255, .88);
+            transform: translateY(-1px)
+        }
+        .login-box .btn:active {
+            transform: translateY(0)
+        }
+        .login-box .ico {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .07);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: rgba(255, 255, 255, .65);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform .15s
+        }
+        .login-box .ico:hover {
+            background: rgba(255, 255, 255, .18);
+            border-color: rgba(255, 255, 255, .28);
+            color: #fff;
+            transform: translateY(-2px)
+        }
+        .login-box .line {
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, .12)
+        }
+        .login-box .field {
+            position: relative;
+            margin-bottom: 14px
+        }
+        .login-box .field .icn {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, .3);
+            pointer-events: none
+        }
+        .login-box .psw-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, .35);
+            cursor: pointer;
+            transition: color .2s;
+            background: 0 0;
+            border: none;
+            padding: 4px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none
+        }
+        .login-box .psw-toggle:hover {
+            color: rgba(255, 255, 255, .7)
+        }
+        header.glass {
+            margin: 10px 10px 0 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, .05) !important;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
+            background: rgba(18, 18, 24, .45)
+        }
+        .light-theme .glass,
+        .light-theme .glass-side,
+        .light-theme .c,
+        .light-theme .mini-card,
+        .light-theme .sidebar-mobile,
+        .light-theme header.glass,
+        .light-theme .login-box .ipt,
+        .light-theme .i,
+        .light-theme .contact-item,
+        .light-theme .tag,
+        .light-theme .bd,
+        .light-theme .sw,
+        .light-theme .ov .md.glass,
+        .light-theme .login-box .ico,
+        .light-theme .mini-card-up .mini-card,
+        .light-theme #p-fav .c,
+        .light-theme #p-purchased .c,
+        .light-theme #p-detail .glass,
+        .light-theme #dtC .glass,
+        .light-theme .sidebar-desktop {
+            background: rgba(255, 255, 255, 0.4) !important;
+            border-color: rgba(0, 0, 0, 0.07) !important;
+            color: #1a1a1a !important
+        }
+        .light-theme .glass-side {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06)
+        }
+        .light-theme .ti {
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: #1a1a1a !important;
+            border-color: rgba(0, 0, 0, 0.08) !important
+        }
+        .light-theme .n {
+            color: #1a1a1a !important;
+            background: transparent !important
+        }
+        .light-theme .n:hover,
+        .light-theme .n.on {
+            color: #000 !important;
+            background: rgba(0, 0, 0, 0.1) !important
+        }
+        .light-theme .text-white,
+        .light-theme .text-white\/10,
+        .light-theme .text-white\/20,
+        .light-theme .text-white\/25,
+        .light-theme .text-white\/30,
+        .light-theme .text-white\/35,
+        .light-theme .text-white\/40,
+        .light-theme .text-white\/45,
+        .light-theme .text-white\/50,
+        .light-theme .text-white\/60,
+        .light-theme .text-white\/70,
+        .light-theme .text-white\/80,
+        .light-theme h1,
+        .light-theme h2,
+        .light-theme h3,
+        .light-theme p,
+        .light-theme span,
+        .light-theme a,
+        .light-theme .login-box .btn {
+            color: #1a1a1a !important
+        }
+        .light-theme .login-box .btn {
+            background: #111;
+            color: #fff !important
+        }
+        .light-theme .login-box .btn:hover {
+            background: rgba(0, 0, 0, 0.85)
+        }
+        .light-theme .i::placeholder,
+        .light-theme .login-box .ipt::placeholder {
+            color: rgba(0, 0, 0, 0.35)
+        }
+        .light-theme .i:focus,
+        .light-theme .login-box .ipt:focus {
+            border-color: rgba(0, 0, 0, 0.22)
+        }
+        .light-theme .login-box .field .icn {
+            color: rgba(0, 0, 0, 0.45)
+        }
+        .light-theme .login-box .line {
+            background: rgba(0, 0, 0, 0.18)
+        }
+        .light-theme .bd,
+        .light-theme .ht,
+        .light-theme .menu-btn,
+        .light-theme .modal-close,
+        .light-theme .copy-btn,
+        .light-theme .login-box .ico,
+        .light-theme .psw-toggle {
+            color: #1a1a1a !important;
+            border-color: rgba(0, 0, 0, 0.12) !important;
+            background: transparent !important
+        }
+        .light-theme .bd:hover,
+        .light-theme .ht:hover,
+        .light-theme .menu-btn:hover,
+        .light-theme .modal-close:hover,
+        .light-theme .copy-btn:hover,
+        .light-theme .login-box .ico:hover,
+        .light-theme .psw-toggle:hover {
+            color: #000 !important;
+            background: rgba(0, 0, 0, 0.1) !important
+        }
+        .light-theme .ht.on {
+            color: #ef4444 !important
+        }
+        .light-theme .sw {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.08)
+        }
+        .light-theme .sw .sk {
+            background: #222
+        }
+        .light-theme .ov {
+            background: rgba(255, 255, 255, 0.6)
+        }
+        .light-theme .db {
+            border-color: rgba(0, 0, 0, 0.16);
+            color: rgba(0, 0, 0, 0.25)
+        }
+        .light-theme ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2)
+        }
+        .light-theme header.glass {
+            background: rgba(255, 255, 255, 0.45) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important
+        }
+        .light-theme .sidebar-desktop {
+            background: rgba(255, 255, 255, 0.4) !important;
+            border-color: rgba(0, 0, 0, 0.06) !important
+        }
+        iconify-icon {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none
+        }
+        @media(min-width:769px) {
+            .app-wrap {
+                display: flex;
+                height: 100vh;
+                width: 100vw;
+                position: relative;
+                z-index: 1;
+                overflow: hidden;
+                gap: 0;
+                padding: 0
+            }
+            .sidebar-desktop {
+                display: flex !important;
+                width: 260px;
+                flex-shrink: 0;
+                height: calc(100% - 20px);
+                flex-direction: column;
+                padding: 20px;
+                margin: 10px;
+                border-radius: 20px;
+                background: rgba(12, 12, 18, .4);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border: 1px solid rgba(255, 255, 255, .05);
+                box-shadow: 0 4px 24px rgba(0, 0, 0, .25)
+            }
+            .sidebar-mobile,
+            .mo,
+            .menu-btn {
+                display: none !important
+            }
+            .main-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                height: 100%;
+                overflow: hidden;
+                padding: 0 10px 10px 0
+            }
+            .content-scroll {
+                flex: 1;
+                overflow-y: auto;
+                padding: 12px 16px 16px 16px
+            }
+            .card-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px
+            }
+        }
+        @media(max-width:768px) {
+            .app-wrap {
+                display: block;
+                height: 100vh;
+                width: 100vw;
+                overflow: hidden
+            }
+            .sidebar-desktop {
+                display: none !important
+            }
+            .sidebar-mobile {
+                display: flex !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                z-index: 50;
+                transform: translateX(-100%);
+                transition: transform .2s cubic-bezier(.4, 0, .2, 1);
+                padding: 20px;
+                flex-direction: column;
+                height: 100%;
+                background: rgba(12, 12, 18, .2) !important;
+                backdrop-filter: blur(2px);
+                -webkit-backdrop-filter: blur(2px);
+                border-right: 1px solid rgba(255, 255, 255, .05);
+                border-radius: 0 20px 20px 0;
+                margin: 0;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, .3)
+            }
+            .sidebar-mobile.op {
+                transform: translateX(0) !important
+            }
+            .mo {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, .45);
+                z-index: 40;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .2s ease
+            }
+            .mo.sh {
+                opacity: 1;
+                pointer-events: auto
+            }
+            .main-area {
+                position: relative;
+                z-index: 10;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                width: 100%;
+                overflow: hidden
+            }
+            .content-scroll {
+                flex: 1;
+                overflow-y: auto;
+                padding: 10px 12px 12px 12px
+            }
+            .menu-btn {
+                display: flex !important
+            }
+            .card-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+            .md {
+                max-width: calc(100vw - 32px) !important
+            }
+            .c {
+                padding: 12px !important;
+                gap: 10px !important;
+                background: rgba(18, 18, 24, .2) !important
+            }
+            .c .db {
+                width: 60px !important;
+                height: 60px !important
+            }
+            .c h3 {
+                font-size: 13px !important
+            }
+            .c .bd {
+                padding: 4px 10px !important;
+                font-size: 11px !important
+            }
+            .ti {
+                font-size: 13px;
+                padding: 10px 18px;
+                white-space: normal;
+                max-width: 90vw
+            }
+            .contact-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                padding: 10px 12px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, .05);
+                flex-wrap: nowrap
+            }
+            .contact-item .info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                min-width: 0;
+                flex: 1
+            }
+            .contact-item .info span {
+                font-size: 13px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis
+            }
+            .contact-item .copy-btn {
+                flex-shrink: 0;
+                padding: 4px 12px;
+                font-size: 12px;
+                background: rgba(255, 255, 255, .08);
+                border-radius: 8px;
+                border: none;
+                color: rgba(255, 255, 255, .6);
+                transition: transform .15s
+            }
+            .light-theme .contact-item .copy-btn {
+                color: rgba(0, 0, 0, .5);
+                background: rgba(0, 0, 0, .05)
+            }
+            .glass {
+                background: rgba(18, 18, 24, .2) !important;
+                backdrop-filter: blur(2px) !important;
+                -webkit-backdrop-filter: blur(2px) !important
+            }
+            .glass-side {
+                background: rgba(12, 12, 18, .2) !important;
+                backdrop-filter: blur(2px) !important;
+                -webkit-backdrop-filter: blur(2px) !important
+            }
+            .mini-card {
+                background: rgba(22, 22, 30, .75) !important
+            }
+            .ov .md.glass {
+                background: rgba(18, 18, 24, .2) !important;
+                backdrop-filter: blur(2px) !important;
+                -webkit-backdrop-filter: blur(2px) !important
+            }
+            .login-box .ipt {
+                background: rgba(255, 255, 255, .05) !important
+            }
+            .login-box .ico {
+                background: rgba(255, 255, 255, .05) !important
+            }
+            .login-box .btn {
+                background: rgba(255, 255, 255, .15) !important
+            }
+            .bd {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            .n {
+                background: 0 0 !important
+            }
+            .n.on {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            .n:hover {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            .sw {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            .tag {
+                background: rgba(255, 255, 255, .04) !important
+            }
+            .contact-item {
+                background: rgba(255, 255, 255, .04) !important
+            }
+            .db {
+                border-color: rgba(255, 255, 255, .08) !important
+            }
+            .i {
+                background: rgba(255, 255, 255, .04) !important;
+                border-color: rgba(255, 255, 255, .08) !important
+            }
+            .i:focus {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            header.glass {
+                background: rgba(18, 18, 24, .25) !important;
+                margin: 8px 8px 0 8px;
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, .05) !important;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+                backdrop-filter: blur(2px) !important;
+                -webkit-backdrop-filter: blur(2px) !important
+            }
+            .sidebar-mobile .n {
+                background: 0 0 !important
+            }
+            .sidebar-mobile .n.on {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            .sidebar-mobile .n:hover {
+                background: rgba(255, 255, 255, .08) !important
+            }
+            #p-detail .glass {
+                background: rgba(18, 18, 24, .2) !important;
+                backdrop-filter: blur(2px) !important;
+                -webkit-backdrop-filter: blur(2px) !important
+            }
+            #dtC .glass {
+                background: rgba(18, 18, 24, .2) !important;
+                backdrop-filter: blur(2px) !important;
+                -webkit-backdrop-filter: blur(2px) !important
+            }
+            .mini-card-up .mini-card {
+                background: rgba(22, 22, 30, .75) !important
+            }
+            #p-fav .c {
+                background: rgba(18, 18, 24, .2) !important
+            }
+            #p-purchased .c {
+                background: rgba(18, 18, 24, .2) !important
+            }
+            .light-theme .glass,
+            .light-theme .glass-side,
+            .light-theme .c,
+            .light-theme .mini-card,
+            .light-theme .sidebar-mobile,
+            .light-theme header.glass,
+            .light-theme .login-box .ipt,
+            .light-theme .i,
+            .light-theme .contact-item,
+            .light-theme .tag,
+            .light-theme .bd,
+            .light-theme .sw,
+            .light-theme .ov .md.glass,
+            .light-theme .login-box .ico,
+            .light-theme .mini-card-up .mini-card,
+            .light-theme #p-fav .c,
+            .light-theme #p-purchased .c,
+            .light-theme #p-detail .glass,
+            .light-theme #dtC .glass {
+                background: rgba(255, 255, 255, 0.5) !important;
+                border-color: rgba(0, 0, 0, 0.06) !important
+            }
+            .light-theme header.glass {
+                background: rgba(255, 255, 255, 0.5) !important
+            }
+            .light-theme .sidebar-mobile {
+                background: rgba(255, 255, 255, 0.5) !important;
+                border-color: rgba(0, 0, 0, 0.06) !important
+            }
+        }
+        .sidebar-desktop,
+        .sidebar-mobile {
+            flex-shrink: 0
+        }
+        .sidebar-desktop *,
+        .sidebar-mobile * {
+            pointer-events: auto !important
+        }
+        /* 登录消息样式 */
+        #loginMsg {
+            color: #ef4444;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+            min-height: 20px;
+        }
+        .light-theme #loginMsg {
+            color: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="bg-overlay"></div>
+    <div class="mo" id="moOv" onclick="tgSB()"></div>
+    <div class="tc" id="tC"></div>
+
+    <div id="anM" class="ov" onclick="if(event.target===this)clM('anM')">
+        <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6 text-center">
+            <h3 class="text-white text-lg font-semibold mb-3">公告</h3>
+            <p class="text-white/50 text-sm leading-relaxed">欢迎来到MUGEN分享站，目前免费提供下载链接，该站提供直接图片形式帮助用户快速识别整合信息，已对接 Supabase 云存储，支持登录注册和数据保存！010100：致MUGEN玩家</p>
+            <button onclick="clM('anM')" class="mt-5 w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">我知道了</button>
+        </div>
+    </div>
+
+    <div id="dlM" class="ov" onclick="if(event.target===this)clM('dlM')">
+        <div class="md glass rounded-2xl w-full max-w-lg mx-4 p-6">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-white text-lg font-semibold">下载资源</h3>
+                <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('dlM')">
+                    <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+                </span>
+            </div>
+            <div id="dlB"></div>
+        </div>
+    </div>
+
+    <div id="spM" class="ov" onclick="if(event.target===this)clM('spM')">
+        <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h3 class="text-white text-lg font-semibold mb-2">赞助作者</h3>
+                    <p class="text-white/40 text-sm">感谢支持，赞助将用于站点维护与资源更新</p>
+                </div>
+                <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="clM('spM')">
+                    <iconify-icon icon="lucide:x" width="20"></iconify-icon>
+                </span>
+            </div>
+            <div class="mb-6"><img src="固定图片/收款码.jpg" class="w-full max-w-[200px] h-auto mx-auto rounded-lg" alt="赞助二维码"></div>
+            <button onclick="clM('spM');toast('感谢您的支持 (⸝⸝⸝>`﹏ˊ<⸝⸝⸝)')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">已赞助</button>
+        </div>
+    </div>
+
+    <div id="loginOverlay" class="ov" onclick="if(event.target===this)closeLogin()">
+        <div class="md glass rounded-2xl w-full max-w-sm mx-4 p-6 login-box">
+            <div class="flex justify-end -mt-2 -mr-2">
+                <span class="text-white/40 cursor-pointer hover:text-white/80 transition modal-close" onclick="closeLogin()">
+                    <iconify-icon icon="lucide:x" width="22"></iconify-icon>
+                </span>
+            </div>
+            <div class="text-center mb-5">
+                <h3 class="text-white text-xl font-semibold">欢迎回来</h3>
+                <p class="text-white/40 text-sm mt-1">登录或注册你的账户（使用邮箱）</p>
+            </div>
+            <form id="loginForm" onsubmit="return false;">
+                <div class="field">
+                    <iconify-icon icon="lucide:mail" width="18" class="icn"></iconify-icon>
+                    <input id="loginEmail" type="email" placeholder="邮箱地址" class="ipt" required>
+                </div>
+                <div class="field">
+                    <iconify-icon icon="lucide:lock" width="18" class="icn"></iconify-icon>
+                    <input id="loginPassword" type="password" placeholder="密码（至少6位）" class="ipt" required minlength="6">
+                    <button type="button" class="psw-toggle" onclick="togglePsw()">
+                        <iconify-icon id="lgEye" icon="lucide:eye-off" width="18"></iconify-icon>
+                    </button>
+                </div>
+                <button type="submit" id="loginBtn" class="btn mt-1">登录 / 注册</button>
+                <div id="loginMsg"></div>
+            </form>
+            <div class="flex items-center gap-3 my-5">
+                <div class="line"></div>
+                <span class="text-white/30 text-xs font-light whitespace-nowrap">其他方式</span>
+                <div class="line"></div>
+            </div>
+            <div class="flex justify-center gap-4">
+                <div class="ico" title="微信登录"><iconify-icon icon="ri:wechat-fill" width="22"></iconify-icon></div>
+                <div class="ico" title="QQ登录"><iconify-icon icon="ri:qq-fill" width="22"></iconify-icon></div>
+                <div class="ico" title="邮箱"><iconify-icon icon="lucide:mail" width="20"></iconify-icon></div>
+            </div>
+            <p class="text-center text-white/25 text-xs mt-5 font-light">登录即表示同意 <a href="#" class="text-white/45 hover:text-white/70 transition">服务条款</a> 与 <a href="#" class="text-white/45 hover:text-white/70 transition">隐私政策</a></p>
+        </div>
+    </div>
+
+    <div class="app-wrap">
+        <aside class="sidebar-desktop">
+            <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享</h1>
+            <nav class="flex flex-col gap-1 flex-1">
+                <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
+                <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
+                <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
+                <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">已收藏</span></div>
+                <div class="n" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
+                <div class="n" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
+                <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
+            </nav>
+        </aside>
+
+        <main class="main-area">
+            <header class="glass flex items-center gap-3 px-4 md:px-6 py-3 flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,.05)">
+                <button class="menu-btn text-white/50 hover:text-white transition" onclick="event.stopPropagation();tgSB()">
+                    <iconify-icon icon="lucide:menu" width="22"></iconify-icon>
+                </button>
+                <div class="relative flex-1 max-w-xl">
+                    <iconify-icon icon="lucide:search" width="15" class="absolute left-3 top-1/2 -translate-y-1/2 text-white/25"></iconify-icon>
+                    <input id="sI" type="text" placeholder="输入关键词搜索名称" class="i w-full pl-9 pr-4 py-2 rounded-xl text-sm" oninput="doS()">
+                </div>
+                <span id="cT" class="text-white/35 text-xs whitespace-nowrap hidden sm:inline ml-2 mini-card-up">
+                    <span class="mini-card">共 <span id="totalCount">0</span> 个资源</span>
+                </span>
+                <div id="hAv" class="w-8 h-8 rounded-full bg-white/8 border border-white/8 flex items-center justify-center cursor-pointer hover:bg-white/15 transition flex-shrink-0 ml-auto overflow-hidden" onclick="go('profile')">
+                    <iconify-icon icon="lucide:user" width="14" class="text-white/50"></iconify-icon>
+                </div>
+            </header>
+
+            <div id="ct" class="content-scroll">
+                <div id="p-home" class="pg on">
+                    <div id="hG" class="card-grid"></div>
+                    <div id="hE" class="hidden flex-col items-center justify-center py-20 text-center">
+                        <iconify-icon icon="lucide:search-x" width="44" class="text-white/10 mb-3"></iconify-icon>
+                        <p class="text-white/25 text-sm">没有找到匹配的资源</p>
+                    </div>
+                </div>
+                <div id="p-detail" class="pg">
+                    <button onclick="go('home')" class="flex items-center gap-1.5 text-white/40 hover:text-white/70 text-xs transition modal-close mb-5 -ml-1">
+                        <span class="mini-card"><iconify-icon icon="lucide:arrow-left" width="14"></iconify-icon>返回首页</span>
+                    </button>
+                    <div id="dtC"></div>
+                </div>
+                <div id="p-profile" class="pg">
+                    <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">个人资料</span></h2>
+                    <div id="profileContent" class="glass rounded-2xl p-6 max-w-lg mx-auto text-center mt-12">
+                        <iconify-icon icon="lucide:user" width="48" class="text-white/20 mx-auto mb-4"></iconify-icon>
+                        <p class="text-white/40 text-sm mb-6">登录后查看个人资料</p>
+                        <button onclick="openLogin()" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">登录 / 注册</button>
+                    </div>
+                </div>
+                <div id="p-purchased" class="pg">
+                    <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">已购买</span></h2>
+                    <div id="puG" class="card-grid"></div>
+                    <div id="puE" class="hidden flex-col items-center justify-center py-20 text-center">
+                        <iconify-icon icon="lucide:shopping-bag" width="44" class="text-white/10 mb-3"></iconify-icon>
+                        <p class="text-white/25 text-sm">暂无已购买资源</p>
+                    </div>
+                </div>
+                <div id="p-fav" class="pg">
+                    <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">收藏</span></h2>
+                    <div id="fvG" class="card-grid"></div>
+                    <div id="fvE" class="hidden flex-col items-center justify-center py-20 text-center">
+                        <iconify-icon icon="lucide:heart" width="44" class="text-white/10 mb-3"></iconify-icon>
+                        <p class="text-white/25 text-sm">暂无收藏资源</p>
+                    </div>
+                </div>
+                <div id="p-updates" class="pg">
+                    <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">更新内容</span></h2>
+                    <div class="space-y-4" id="upL"></div>
+                </div>
+                <div id="p-contact" class="pg">
+                    <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">联系作者</span></h2>
+                    <div class="glass rounded-2xl p-4 md:p-6 max-w-lg space-y-3">
+                        <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5">
+                            <div class="info flex items-center gap-3 min-w-0 flex-1">
+                                <iconify-icon icon="ri:wechat-fill" width="20" class="text-green-400/70 flex-shrink-0"></iconify-icon>
+                                <span class="text-white/70 text-sm truncate">WeChat: 无</span>
+                            </div>
+                            <button onclick="cp('MUGEN_Author')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button>
+                        </div>
+                        <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5">
+                            <div class="info flex items-center gap-3 min-w-0 flex-1">
+                                <iconify-icon icon="ri:qq-fill" width="20" class="text-blue-400/70 flex-shrink-0"></iconify-icon>
+                                <span class="text-white/70 text-sm truncate">【作者010100】QQ: 2368529252</span>
+                            </div>
+                            <button onclick="cp('123456789')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button>
+                        </div>
+                        <div class="contact-item flex items-center justify-between gap-2 p-3 rounded-xl bg-white/5">
+                            <div class="info flex items-center gap-3 min-w-0 flex-1">
+                                <iconify-icon icon="lucide:mail" width="18" class="text-red-400/70 flex-shrink-0"></iconify-icon>
+                                <span class="text-white/70 text-sm truncate">Email: chenjunhen81@gmail.com</span>
+                            </div>
+                            <button onclick="cp('author@mugen.com')" class="copy-btn flex-shrink-0 text-xs text-white/50 hover:text-white/70 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button>
+                        </div>
+                        <button onclick="opM('spM')" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition mt-2 flex items-center justify-center gap-2">
+                            <iconify-icon icon="lucide:heart" width="16" class="text-pink-400/70"></iconify-icon>赞助作者
+                        </button>
+                    </div>
+                </div>
+                <div id="p-settings" class="pg">
+                    <h2 class="text-white text-base font-semibold mb-6 -ml-1"><span class="mini-card">设置</span></h2>
+                    <div class="glass rounded-2xl p-6 max-w-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-white/80 text-sm font-medium">模式选择</p>
+                                <p class="text-white/30 text-xs mt-0.5">日间模式和夜间模式</p>
+                            </div>
+                            <div class="sw on" id="themeToggle" onclick="tgSw(this)">
+                                <div class="sk"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <aside id="sbMobile" class="sidebar-mobile">
+        <h1 class="text-white font-semibold text-base tracking-tight mb-7 px-2">MUGEN整合分享</h1>
+        <nav class="flex flex-col gap-1 flex-1">
+            <div class="n on" data-p="home" onclick="go('home')"><iconify-icon icon="lucide:home" width="18"></iconify-icon><span class="text-sm">首页</span></div>
+            <div class="n" data-p="profile" onclick="go('profile')"><iconify-icon icon="lucide:user" width="18"></iconify-icon><span class="text-sm">个人资料</span></div>
+            <div class="n" data-p="purchased" onclick="go('purchased')"><iconify-icon icon="lucide:shopping-bag" width="18"></iconify-icon><span class="text-sm">已购买</span></div>
+            <div class="n" data-p="fav" onclick="go('fav')"><iconify-icon icon="lucide:heart" width="18"></iconify-icon><span class="text-sm">收藏</span></div>
+            <div class="n" data-p="updates" onclick="go('updates')"><iconify-icon icon="lucide:refresh-cw" width="18"></iconify-icon><span class="text-sm">更新内容</span></div>
+            <div class="n" data-p="contact" onclick="go('contact')"><iconify-icon icon="lucide:mail" width="18"></iconify-icon><span class="text-sm">联系作者</span></div>
+            <div class="n" data-p="settings" onclick="go('settings')"><iconify-icon icon="lucide:settings" width="18"></iconify-icon><span class="text-sm">设置</span></div>
+        </nav>
+    </aside>
+
+    <script>
+        // ====== 本地缓存工具 ======
+        function saveToCache(k, v) { try { localStorage.setItem('mugen_' + k, JSON.stringify(v)) } catch (e) {} }
+
+        function loadFromCache(k, d) { try { const v = localStorage.getItem('mugen_' + k); if (v !== null) return JSON.parse(v) } catch (e) {} return d }
+
+        // ====== Supabase 初始化 ======
+        const supabaseUrl = 'https://zsqqyvmoejbljzvztclf.supabase.co';
+        const supabaseKey = 'sb_publishable_W8Wz85rKZOwqa76AG0WNGw_JjK2_8qE';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        let currentUser = null;
+        let userDataContent = null;
+
+        // ====== 核心登录函数 ======
+        async function handleLogin(email, password) {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+            if (error) {
+                if (error.message.includes('Invalid login credentials')) {
+                    // 尝试注册
+                    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                        email: email,
+                        password: password
+                    });
+                    if (signUpError) {
+                        document.getElementById('loginMsg').textContent = '操作失败: ' + signUpError.message;
+                        return false;
+                    }
+                    document.getElementById('loginMsg').textContent = '✅ 注册成功！请去邮箱验证后登录';
+                    return false;
+                }
+                document.getElementById('loginMsg').textContent = '❌ ' + error.message;
+                return false;
+            }
+            currentUser = data.user;
+            document.getElementById('loginMsg').textContent = '✅ 登录成功！';
+            closeLogin();
+            updateUIForLoggedIn(currentUser);
+            await loadUserData();
+            toast('欢迎 ' + currentUser.email);
+            return true;
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            updateUIForLoggedOut();
+            toast('已退出');
+            go('home');
+        }
+
+        // ====== 数据操作 ======
+        async function saveUserData(content) {
+            if (!currentUser) {
+                toast('请先登录');
+                return false;
+            }
+            const { error } = await supabase
+                .from('user_data')
+                .upsert({ user_id: currentUser.id, content: content }, { onConflict: 'user_id' });
+            if (error) {
+                toast('保存失败: ' + error.message);
+                return false;
+            }
+            userDataContent = content;
+            toast('✅ 数据已保存！');
+            return true;
+        }
+
+        async function loadUserData() {
+            if (!currentUser) return null;
+            const { data, error } = await supabase
+                .from('user_data')
+                .select('content')
+                .eq('user_id', currentUser.id)
+                .single();
+            if (error && error.code !== 'PGRST116') {
+                console.warn('读取失败:', error);
+                return null;
+            }
+            userDataContent = data ? data.content : null;
+            return userDataContent;
+        }
+
+        // ====== UI 更新 ======
+        function updateUIForLoggedIn(user) {
+            const avatar = document.getElementById('hAv');
+            if (avatar) {
+                avatar.innerHTML = `<span class="text-white/80 text-xs font-medium">${user.email.charAt(0).toUpperCase()}</span>`;
+                avatar.title = user.email;
+            }
+            const profile = document.getElementById('profileContent');
+            if (profile) {
+                profile.innerHTML = `
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-full bg-white/10 mx-auto mb-3 flex items-center justify-center">
+                            <span class="text-white/60 text-xl font-semibold">${user.email.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <p class="text-white text-sm font-medium break-all">${user.email}</p>
+                        <p class="text-white/30 text-xs mt-1">✅ 已登录</p>
+                        <div class="mt-4 text-left">
+                            <p class="text-white/40 text-xs">📦 已保存数据：</p>
+                            <p class="text-white/70 text-sm break-all bg-white/5 p-2 rounded mt-1">${userDataContent || '暂无数据'}</p>
+                        </div>
+                        <div class="flex gap-3 mt-4 justify-center flex-wrap">
+                            <button onclick="handleLogout()" class="px-6 py-2 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">退出登录</button>
+                            <button onclick="editUserData()" class="px-6 py-2 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">编辑数据</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateUIForLoggedOut() {
+            const avatar = document.getElementById('hAv');
+            if (avatar) {
+                avatar.innerHTML = `<iconify-icon icon="lucide:user" width="14" class="text-white/50"></iconify-icon>`;
+                avatar.title = '点击登录';
+            }
+            const profile = document.getElementById('profileContent');
+            if (profile) {
+                profile.innerHTML = `
+                    <div class="text-center">
+                        <iconify-icon icon="lucide:user" width="48" class="text-white/20 mx-auto mb-4"></iconify-icon>
+                        <p class="text-white/40 text-sm mb-6">登录后查看个人资料</p>
+                        <button onclick="openLogin()" class="w-full py-2.5 rounded-xl text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition">登录 / 注册</button>
+                    </div>
+                `;
+            }
+            userDataContent = null;
+        }
+
+        function editUserData() {
+            const newData = prompt('请输入要保存的数据：', userDataContent || '');
+            if (newData !== null) {
+                saveUserData(newData);
+                updateUIForLoggedIn(currentUser);
+            }
+        }
+
+        // ====== 登录表单事件 ======
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            if (form) {
+                form.onsubmit = async function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+                    const msg = document.getElementById('loginMsg');
+                    if (!email || !password) {
+                        msg.textContent = '请填写完整信息';
+                        return;
+                    }
+                    if (password.length < 6) {
+                        msg.textContent = '密码至少6位';
+                        return;
+                    }
+                    msg.textContent = '⏳ 处理中...';
+                    await handleLogin(email, password);
+                };
+            }
+
+            // 检查登录状态
+            checkAuth();
+        });
+
+        async function checkAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                currentUser = user;
+                updateUIForLoggedIn(user);
+                await loadUserData();
+                updateUIForLoggedIn(user);
+            } else {
+                updateUIForLoggedOut();
+            }
+        }
+
+        // ====== 保留原有函数（只替换登录相关） ======
+        function openLogin() {
+            document.getElementById('loginOverlay').classList.add('sh');
+            document.body.style.overflow = 'hidden';
+            const msg = document.getElementById('loginMsg');
+            if (msg) msg.textContent = '';
+            const form = document.getElementById('loginForm');
+            if (form) form.reset();
+        }
+
+        function closeLogin() {
+            document.getElementById('loginOverlay').classList.remove('sh');
+            document.body.style.overflow = '';
+        }
+
+        function togglePsw() {
+            const p = document.getElementById('loginPassword'),
+                e = document.getElementById('lgEye');
+            if (p.type === 'password') { p.type = 'text';
+                e.setAttribute('icon', 'lucide:eye') } else { p.type = 'password';
+                e.setAttribute('icon', 'lucide:eye-off') }
+        }
+
+        // ====== 原有功能函数 ======
+        function toast(m) {
+            const d = document.createElement('div');
+            d.className = 'ti';
+            d.textContent = m;
+            document.getElementById('tC').appendChild(d);
+            requestAnimationFrame(() => d.classList.add('sh'));
+            setTimeout(() => { d.classList.remove('sh');
+                setTimeout(() => d.remove(), 300) }, 2500)
+        }
+
+        function opM(id) { document.getElementById(id).classList.add('sh');
+            document.body.style.overflow = 'hidden' }
+
+        function clM(id) { document.getElementById(id).classList.remove('sh');
+            document.body.style.overflow = '' }
+
+        function cp(t) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(t).then(() => toast('复制成功')).catch(() => fallbackCopy(t))
+            } else fallbackCopy(t)
+        }
+
+        function fallbackCopy(t) {
+            try { const i = document.createElement('input');
+                i.value = t;
+                i.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0';
+                document.body.appendChild(i);
+                i.select();
+                document.execCommand('copy');
+                document.body.removeChild(i);
+                toast('复制成功') } catch (e) { toast('复制失败，请手动复制') }
+        }
+
+        function updateThemeColor(isLight) { const meta = document.getElementById('themeColorMeta'); if (meta) { meta.content = isLight ? '#f5f5f5' : '#0a0a0f' } }
+
+        function tgSw(el) {
+            el.classList.toggle('on');
+            const isLight = el.classList.contains('on');
+            if (isLight) { document.body.classList.remove('light-theme');
+                saveToCache('theme', 'dark') } else { document.body.classList.add('light-theme');
+                saveToCache('theme', 'light') }
+            updateThemeColor(!isLight);
+            toast(isLight ? '夜间模式' : '日间模式')
+        }
+
+        function tgSB() {
+            const sb = document.getElementById('sbMobile'),
+                mo = document.getElementById('moOv');
+            const isOpen = sb.classList.toggle('op');
+            mo.classList.toggle('sh', isOpen);
+            document.body.style.overflow = isOpen ? '' : ''
+        }
+
+        let R = [],
+            updatesData = [],
+            cP = 'home',
+            sQ = '',
+            _sTimer = null;
+        const _ct = document.getElementById('ct'),
+            _sI = document.getElementById('sI');
+        let _navItems = null,
+            _pages = null;
+
+        function getNavItems() { if (!_navItems) _navItems = document.querySelectorAll('.n'); return _navItems }
+
+        function getPages() { if (!_pages) _pages = document.querySelectorAll('.pg'); return _pages }
+
+        function go(p) {
+            cP = p;
+            getNavItems().forEach(n => n.classList.toggle('on', n.dataset.p === p));
+            getPages().forEach(el => el.classList.remove('on'));
+            const target = document.getElementById('p-' + p);
+            if (target) target.classList.add('on');
+            _sI.value = '';
+            sQ = '';
+            if (p === 'home') rH();
+            if (p === 'fav') rF();
+            if (p === 'purchased') rP();
+            if (p === 'updates') rU();
+            _ct.scrollTop = 0;
+            if (window.innerWidth <= 768 && document.getElementById('sbMobile').classList.contains('op')) tgSB()
+        }
+
+        function doS() {
+            clearTimeout(_sTimer);
+            _sTimer = setTimeout(() => {
+                sQ = _sI.value.trim().toLowerCase();
+                if (cP !== 'home') go('home');
+                rH()
+            }, 300)
+        }
+
+        function cHTML(r, sp) {
+            const fc = r.fav ? 'on' : '';
+            let pt = '';
+            if (sp && r.paid) pt = '<span class="text-xs text-emerald-400/70 bg-emerald-400/10 px-2 py-0.5 rounded-md ml-2">已付费</span>';
+            return `<div class="c p-4 flex gap-4 items-start" onclick="goDt(${r.id})"><div class="db w-20 h-20 flex-shrink-0"><img src="${r.cover||''}" class="w-full h-full object-cover rounded" onerror="this.parentElement.innerHTML='图片'"></div><div class="flex-1 min-w-0"><div class="flex items-center"><h3 class="text-white text-sm font-medium leading-snug truncate">${r.name||'未命名'}</h3>${pt}</div><p class="text-white/30 text-xs mt-1.5">${r.size||'未知大小'} · ${r.time||'刚刚'}</p></div><div class="flex flex-col gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="ht ${fc}" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="18"></iconify-icon></span><button class="bd px-3 py-1.5 rounded-lg text-xs" onclick="opD(${r.id})">下载</button></div></div>`
+        }
+
+        function renderList(gId, eId, filter) {
+            let items = R.filter(filter);
+            items.sort((a, b) => (b.time || '').localeCompare(a.time || ''));
+            const g = document.getElementById(gId),
+                e = document.getElementById(eId);
+            if (!g || !e) return;
+            if (items.length) {
+                g.innerHTML = items.map(r => cHTML(r, false)).join('');
+                g.classList.remove('hidden');
+                e.classList.add('hidden');
+                e.classList.remove('flex')
+            } else {
+                g.classList.add('hidden');
+                e.classList.remove('hidden');
+                e.classList.add('flex')
+            }
+            const tc = document.getElementById('totalCount');
+            if (tc) tc.textContent = R.length
+        }
+
+        function rH() { renderList('hG', 'hE', r => sQ ? r.name.toLowerCase().includes(sQ) : true) }
+
+        function rF() { renderList('fvG', 'fvE', r => r.fav) }
+
+        function rP() { renderList('puG', 'puE', r => r.paid) }
+
+        function rU() {
+            const list = document.getElementById('upL');
+            if (!list) return;
+            if (updatesData.length) {
+                const sorted = [...updatesData].sort((a, b) => b.d.localeCompare(a.d));
+                list.innerHTML = sorted.map(x =>
+                    `<div class="glass rounded-xl p-4"><div class="flex items-center gap-3 mb-2"><span class="text-xs font-medium text-white/70 bg-white/10 px-2 py-0.5 rounded-md">${x.v}</span><span class="text-xs text-white/30">${x.d}</span></div><p class="text-white/50 text-sm">${x.t}</p></div>`
+                ).join('')
+            }
+        }
+
+        function tgF(id) {
+            const r = R.find(item => item.id === id);
+            if (!r) return;
+            r.fav = !r.fav;
+            toast(r.fav ? '已收藏' : '已取消收藏');
+            saveToCache('favs', R.filter(item => item.fav).map(item => item.id));
+            if (cP === 'home') rH();
+            else if (cP === 'fav') rF();
+            else if (cP === 'purchased') rP();
+            else if (cP === 'detail') { const h = document.querySelector('#dtC .ht'); if (h) h.classList.toggle('on', r.fav) }
+        }
+
+        function goDt(id) {
+            const r = R.find(item => item.id === id);
+            if (!r) { toast('资源不存在'); return }
+            document.getElementById('dtC').innerHTML =
+                `<div class="glass rounded-2xl overflow-hidden max-w-4xl"><div class="grid grid-cols-1 sm:grid-cols-3 gap-0"><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img1||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片1</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img2||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片2</span>'"></div><div class="aspect-[4/3] bg-white/5 flex items-center justify-center overflow-hidden"><img src="${r.img3||r.cover||''}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'text-white/15 text-xs\\'>图片3</span>'"></div></div><div class="p-6 md:p-8"><h2 class="text-white text-xl font-semibold mb-3">${r.name||'未命名'}</h2><div class="flex flex-wrap gap-2 mb-5"><span class="tag"><iconify-icon icon="lucide:hard-drive" width="12"></iconify-icon>${r.size||'未知大小'}</span><span class="tag"><iconify-icon icon="lucide:clock" width="12"></iconify-icon>${r.time||'刚刚'}</span><span class="tag"><iconify-icon icon="lucide:monitor" width="12"></iconify-icon>${r.compat||'通用'}</span></div><div class="mb-6"><h3 class="text-white/60 text-xs font-medium uppercase tracking-wider mb-2">资源介绍</h3><p class="text-white/40 text-sm leading-relaxed">${r.desc||'暂无介绍'}</p></div><div class="flex items-center gap-3"><span class="ht ${r.fav?'on':''} text-lg" onclick="tgF(${r.id})" title="收藏"><iconify-icon icon="lucide:heart" width="20"></iconify-icon></span><button class="bd px-5 py-2.5 rounded-xl text-sm font-medium" onclick="opD(${r.id})">下载</button></div></div></div>`;
+            cP = 'detail';
+            getPages().forEach(el => el.classList.remove('on'));
+            document.getElementById('p-detail').classList.add('on');
+            _ct.scrollTop = 0
+        }
+
+        function opD(id) {
+            const r = R.find(item => item.id === id);
+            if (!r) return;
+            if (r.paid) {
+                document.getElementById('dlB').innerHTML =
+                    `<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5"><div class="flex-1 min-w-0"><p class="text-white/40 text-xs mb-1">下载链接</p><p class="text-white text-sm truncate">${r.dl||''}</p></div><button onclick="cp('${r.dl||''}')" class="copy-btn text-xs text-white/50 hover:text-white/80 transition px-3 py-1.5 rounded-lg bg-white/8 hover:bg-white/15">复制</button></div>`
+            } else {
+                document.getElementById('dlB').innerHTML =
+                    `<div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">付费下载</p><img src="固定图片/收款码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white text-lg font-semibold mb-3">${r.price||'¥0'}</p><button onclick="mkPd(${r.id})" class="w-full py-2 rounded-xl text-sm font-medium bg-white/15 text-white hover:bg-white/25 transition">我已付费</button></div><div class="p-4 rounded-xl bg-white/5 flex flex-col items-center"><p class="text-white/60 text-xs font-medium mb-3">免费下载</p><img src="/固定图片/群二维码.jpg" class="w-full max-w-[160px] h-auto rounded-lg mb-3 object-cover" onerror="this.style.display='none'"><p class="text-white/40 text-xs mt-1">加入QQ群：1044609733</p><button onclick="cp('1044609733')" class="copy-btn text-xs text-white/40 hover:text-white/70 transition px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10">复制</button></div></div>`
+            }
+            opM('dlM')
+        }
+
+        function mkPd(id) {
+            const r = R.find(item => item.id === id);
+            if (!r) { toast('资源不存在'); return }
+            if (r.paid) { toast('该资源已付费'); return }
+            r.paid = true;
+            clM('dlM');
+            toast('付费成功');
+            saveToCache('paid', R.filter(item => item.paid).map(item => item.id));
+            rP();
+            opD(id)
+        }
+
+        function restoreCache() {
+            const theme = loadFromCache('theme', 'dark');
+            const toggle = document.getElementById('themeToggle');
+            let isLight = false;
+            if (theme === 'light') { toggle.classList.remove('on');
+                document.body.classList.add('light-theme');
+                isLight = true } else { toggle.classList.add('on');
+                document.body.classList.remove('light-theme') }
+            updateThemeColor(isLight);
+            return { favIds: loadFromCache('favs', []), paidIds: loadFromCache('paid', []) }
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { clM('dlM');
+                clM('spM');
+                clM('anM');
+                closeLogin() } });
+
+        const cache = restoreCache();
+        fetch('data.json').then(res => res.json()).then(data => {
+            R = data.resources || [];
+            updatesData = data.updates || [];
+            R.forEach(item => { if (cache.favIds.includes(item.id)) item.fav = true; if (cache.paidIds.includes(item
+                    .id)) item.paid = true });
+            if (!R.length) toast('暂无资源');
+            rH()
+        }).catch(() => { toast('加载失败');
+            rH() });
+        opM('anM');
+    </script>
+</body>
+</html>
